@@ -26,12 +26,6 @@ class Hierarchy(models.Model):
     def get_top_level(self):
         return self.get_root().get_children()
 
-    def menu(self):
-        return [c.menu() for c in self.get_top_level()]
-
-    def as_ul(self):
-        return [c.as_ul() for c in self.get_top_level()]
-
 class Section(models.Model):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
@@ -64,23 +58,6 @@ class Section(models.Model):
         if self.is_root:
             return -1
         return SectionChildren.objects.get(parent=self.get_parent(),child=self).ordinality
-
-    def as_ul(self,**kwargs):
-        t = get_template("pagetree/section_ul.html")
-        d = kwargs
-        d['section'] = self
-        c = Context(d)
-        return t.render(c)
-
-    def as_edit_ul(self,**kwargs):
-        t = get_template("pagetree/section_edit_ul.html")
-        d = kwargs
-        d['s'] = self
-        c = Context(d)
-        return t.render(c)
-
-    def menu(self):
-        return dict(s=self,children=[c.menu() for c in self.get_children()])
 
     def get_children(self):
         return [sc.child for sc in SectionChildren.objects.filter(parent=self).order_by("ordinality")]
