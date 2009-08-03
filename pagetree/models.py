@@ -16,6 +16,7 @@ class Hierarchy(models.Model):
         return self.name
 
     def get_root(self):
+        # will create it if it doesn't exist
         try:
             return Section.objects.get(hierarchy=self,is_root=True)
         except Section.DoesNotExist:
@@ -31,28 +32,6 @@ class Hierarchy(models.Model):
     def as_ul(self):
         return [c.as_ul() for c in self.get_top_level()]
 
-def flatten(x):
-    """flatten(sequence) -> list
-
-    Returns a single, flat list which contains all elements retrieved
-    from the sequence and all recursively contained sub-sequences
-    (iterables).
-
-    Examples:
-    >>> [1, 2, [3,4], (5,6)]
-    [1, 2, [3, 4], (5, 6)]
-    >>> flatten([[[1,2,3], (42,None)], [4,5], [6], 7, MyVector(8,9,10)])
-    [1, 2, 3, 42, None, 4, 5, 6, 7, 8, 9, 10]"""
-
-    result = []
-    for el in x:
-        #if isinstance(el, (list, tuple)):
-        if hasattr(el, "__iter__") and not isinstance(el, basestring):
-            result.extend(flatten(el))
-        else:
-            result.append(el)
-    return result
-
 class Section(models.Model):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
@@ -61,6 +40,12 @@ class Section(models.Model):
     # it never gets displayed. just exists to be a parent
     # to the top_level sections.
     is_root = models.BooleanField(default=False)
+
+    def get_root(self):
+        if self.is_root:
+            return self
+        else:
+            return self.get_parent().get_root()
 
     def depth(self):
         """ return count of how deep in the hierarchy this section is """
@@ -112,34 +97,33 @@ class Section(models.Model):
             l.extend(c.get_descendents())
         return l
 
-    def get_next(self):
-        if self.is_leaf():
-            if self.is_root:
-                # leaf and root? only one section in the tree
-                return None
-            # get next sibling
-            next_siblings = SectionChildren.objects.filter(parent=self.get_parent())
-            if next_siblings.count() > 0:
-                return next_siblings[0].child
-            else:
-                # no next siblings at this level, so return the parent's
-                # next.
-                parent = self.get_parent()
-                if parent is not None:
-                    return parent.get_next()
+    def get_previous(self):
+        depth_first_traversal = self.get_root().get_descendents() 
+        for (i,s) in enumerate(depth_first_traversal):
+            if s.id == self.id:
+                # first element is the root, so we don't want to
+                # return that
+                if i > 1:
+                    return depth_first_traversal[i-1]
                 else:
-                    # no more next siblings and no parent?
-                    # we're at the end.
                     return None
-        else:
-            # has children, so go to the first child
-            return self.get_children()[0]
+        # made it through without finding ourselves? weird.
+        return None
+
+    def get_next(self):
+        depth_first_traversal = self.get_root().get_descendents() 
+        for (i,s) in enumerate(depth_first_traversal):
+            if s.id == self.id:
+                if i < len(depth_first_traversal) - 1:
+                    return depth_first_traversal[i+1]
+                else:
+                    return None
+        # made it through without finding ourselves? weird.
+        return None
+
 
     def get_siblings(self):
         return [sc.child for sc in SectionChildren.objects.filter(parent=self.get_parent())]
-
-    def get_prev(self):
-        pass
 
     def is_leaf(self):
         return SectionChildren.objects.filter(parent=self).count() == 0
@@ -206,12 +190,10 @@ class PageBlock(models.Model):
 
     def _get_block_object(self):
         if hasattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
-            print "hasattr"
             for pb in getattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
                 pbc = self._load_block_object(pb)
                 r = pbc.objects.filter(pageblock=self)
                 if r.count() > 0:
-                    print "none for %s" % pb
                     return r[0]
         # no matches
         return None
