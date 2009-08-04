@@ -3,6 +3,7 @@ from django.db import models
 from django import forms
 from django.template import Template,Context
 from django.template.loader import get_template
+from django.http import Http404
 
 
 class Hierarchy(models.Model):
@@ -25,6 +26,24 @@ class Hierarchy(models.Model):
 
     def get_top_level(self):
         return self.get_root().get_children()
+
+    def get_section_from_path(self,path):
+        if path.endswith("/"):
+            path = path[:-1]
+        root = self.get_root()
+        current = root
+        if path == "":
+            return current
+        for slug in path.split("/"):
+            slugs = dict()
+            for c in current.get_children():
+                slugs[c.slug] = c
+            if slugs.has_key(slug):
+                current = slugs[slug]
+            else:
+                raise Http404()
+        return current
+
 
 class Section(models.Model):
     label = models.CharField(max_length=256)
@@ -132,6 +151,13 @@ class Section(models.Model):
             label = forms.CharField()
             slug = forms.CharField()
         return AddChildSectionForm()
+
+    def renumber_pageblocks(self):
+        i = 1
+        for block in self.pageblock_set.all():
+            block.ordinality = i
+            block.save()
+            i += 1
             
 
 class SectionChildren(models.Model):
@@ -165,7 +191,7 @@ class PageBlock(models.Model):
             raise ImproperlyConfigured, 'Module "%s" does not define a "%s" pageblock class' % (module, attr)
         return cls
 
-    def _get_block_object(self):
+    def block(self):
         if hasattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
             for pb in getattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
                 pbc = self._load_block_object(pb)
@@ -176,7 +202,7 @@ class PageBlock(models.Model):
         return None
 
     def render(self,**kwargs):
-        pb = self._get_block_object()
+        pb = self.block()
         if hasattr(pb,"template_file"):
             t = get_template(getattr(pb,"template_file"))
             d = kwargs
@@ -185,5 +211,18 @@ class PageBlock(models.Model):
             return t.render(c)
         else:
             return pb.render()
-            
+
+    def default_edit_form(self):
+        class EditForm(forms.Form):
+            label = forms.CharField(initial=self.label)
+        return EditForm()
+
+    def edit_form(self):
+        return self.block().edit_form()
+
+    def edit(self,vals):
+        self.label = vals.get('label','')
+        self.save()
+        self.block().edit(vals)
+        
         
