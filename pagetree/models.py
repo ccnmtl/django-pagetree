@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.db import models
 from django import forms
 from django.template import Template,Context
 from django.template.loader import get_template
 from django.http import Http404
-
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
@@ -131,9 +131,9 @@ class Section(models.Model):
         nsc = SectionChildren.objects.create(parent=self,child=ns,ordinality=neword)
         return ns
 
-    def append_pageblock(self,label):
+    def append_pageblock(self,label,content_object):
         neword = self.pageblock_set.count() + 1
-        return PageBlock.objects.create(section=self,label=label,ordinality=neword)
+        return PageBlock.objects.create(section=self,label=label,ordinality=neword,content_object=content_object)
 
     def insert_child(self,child,position):
         pass
@@ -158,59 +158,46 @@ class Section(models.Model):
             block.ordinality = i
             block.save()
             i += 1
-            
+    def edit_form(self):
+        class EditSectionForm(forms.Form):
+            label = forms.CharField(initial=self.label)
+            slug = forms.CharField(initial=self.slug)
+        return EditSectionForm()
+
 
 class SectionChildren(models.Model):
     parent = models.ForeignKey(Section,related_name="parent")
     child = models.ForeignKey(Section,related_name="child")
-    ordinality = models.IntegerField(default=1)
+    ordinality = models.PositiveIntegerField(default=1)
 
     class Meta:
         ordering = ('ordinality',)
 
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
-    ordinality = models.IntegerField(default=1)
+    ordinality = models.PositiveIntegerField(default=1)
     label = models.CharField(max_length=256)
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
 
     class Meta:
         ordering = ('section','ordinality',)
 
-    def _load_block_object(self,path):
-        i = path.rfind('.')
-        module, attr = path[:i], path[i+1:]
-        try:
-            mod = __import__(module, {}, {}, [attr])
-        except ImportError, e:
-            raise ImproperlyConfigured, 'Error importing pagetree pageblock class %s: "%s"' % (module, e)
-        except ValueError, e:
-            raise ImproperlyConfigured, 'Error importing pagetree pagebock class. '
-        try:
-            cls = getattr(mod, attr)
-        except AttributeError:
-            raise ImproperlyConfigured, 'Module "%s" does not define a "%s" pageblock class' % (module, attr)
-        return cls
-
     def block(self):
-        if hasattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
-            for pb in getattr(settings,'PAGETREE_PAGEBLOCK_CLASSES'):
-                pbc = self._load_block_object(pb)
-                r = pbc.objects.filter(pageblock=self)
-                if r.count() > 0:
-                    return r[0]
-        # no matches
-        return None
+        return self.content_object
 
     def render(self,**kwargs):
-        pb = self.block()
-        if hasattr(pb,"template_file"):
-            t = get_template(getattr(pb,"template_file"))
+        if hasattr(self.content_object,"template_file"):
+            t = get_template(getattr(self.content_object,"template_file"))
             d = kwargs
-            d['block'] = pb
+            d['block'] = self.content_object
             c = Context(d)
             return t.render(c)
         else:
-            return pb.render()
+            return self.content_object.render()
 
     def default_edit_form(self):
         class EditForm(forms.Form):
@@ -218,11 +205,11 @@ class PageBlock(models.Model):
         return EditForm()
 
     def edit_form(self):
-        return self.block().edit_form()
+        return self.content_object.edit_form()
 
-    def edit(self,vals):
+    def edit(self,vals,files):
         self.label = vals.get('label','')
         self.save()
-        self.block().edit(vals)
+        self.content_object.edit(vals,files)
         
         
