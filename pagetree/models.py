@@ -67,6 +67,15 @@ class Section(models.Model):
         else:
             return self.get_parent().depth() + 1
 
+    def get_ancestors(self,acc=None):
+        if acc is None:
+            acc = []
+        acc = [self] + acc
+        if self.is_root:
+            return acc
+        else:
+            return self.get_parent().get_ancestors(acc)
+
     def is_first_child(self):
         return SectionChildren.objects.filter(parent=self.get_parent(),ordinality__lt=self.get_ordinality()).count() == 0
 
