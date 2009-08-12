@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from django.template import Template,Context
+from django.template import Context
 from django.template.loader import get_template
 from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
