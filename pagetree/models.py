@@ -167,12 +167,25 @@ class Section(models.Model):
             block.ordinality = i
             block.save()
             i += 1
+
     def edit_form(self):
         class EditSectionForm(forms.Form):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
         return EditSectionForm()
 
+    def update_children_order(self,children_ids):
+        """children_ids is a list of Section ids for the children
+        in the order that they should be set to.
+
+        use with caution. if the ids in children_ids don't match up
+        right it will break or do strange things.
+        """
+        for (i,id) in enumerate(children_ids):
+            sc = SectionChildren.objects.get(parent=self,child__id=id)
+            sc.ordinality = i + 1
+            sc.save()
+            
 
 class SectionChildren(models.Model):
     parent = models.ForeignKey(Section,related_name="parent")
