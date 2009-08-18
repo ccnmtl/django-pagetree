@@ -185,6 +185,18 @@ class Section(models.Model):
             sc = SectionChildren.objects.get(parent=self,child__id=id)
             sc.ordinality = i + 1
             sc.save()
+
+    def update_pageblocks_order(self,pageblock_ids):
+        """pageblock_ids is a list of PageBlock ids for the children
+        in the order that they should be set to.
+
+        use with caution. if the ids in pageblock_ids don't match up
+        right it will break or do strange things.
+        """
+        for (i,id) in enumerate(pageblock_ids):
+            sc = PageBlock.objects.get(id=id)
+            sc.ordinality = i + 1
+            sc.save()
             
 
 class SectionChildren(models.Model):
