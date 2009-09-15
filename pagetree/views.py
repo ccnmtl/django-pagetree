@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from pagetree.models import Section, PageBlock
 
@@ -22,3 +22,17 @@ def reorder_section_children(request,id):
     children = [int(request.GET[k]) for k in keys if k.startswith('section_id_')]
     section.update_children_order(children)
     return HttpResponse("ok")
+
+def delete_pageblock(request,id):
+    block = get_object_or_404(PageBlock,id=id)
+    section = block.section
+    block.block().delete()
+    block.delete()
+    section.renumber_pageblocks()
+    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+
+def edit_pageblock(request,id):
+    block = get_object_or_404(PageBlock,id=id)
+    section = block.section
+    block.edit(request.POST,request.FILES)
+    return HttpResponseRedirect("/edit" + section.get_absolute_url())
