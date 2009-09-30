@@ -207,6 +207,9 @@ class SectionChildren(models.Model):
     class Meta:
         ordering = ('ordinality',)
 
+    def __unicode__(self):
+        return "%s -> [%d] %s" % (self.parent.label,self.ordinality,self.child.label)
+
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
     ordinality = models.PositiveIntegerField(default=1)
@@ -219,6 +222,9 @@ class PageBlock(models.Model):
 
     class Meta:
         ordering = ('section','ordinality',)
+
+    def __unicode__(self):
+        return "%s [%d]: %s" % (self.section.label,self.ordinality,self.label)
 
     def block(self):
         return self.content_object
