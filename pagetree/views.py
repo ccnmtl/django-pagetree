@@ -65,3 +65,9 @@ def add_pageblock(request,id):
             block = pb_class.create(request)
             pageblock = section.append_pageblock(label=request.POST.get('label',''),content_object=block)
     return HttpResponseRedirect("/edit" + section.get_absolute_url())
+
+def add_child_section(request,id):
+    section = get_object_or_404(Section,id=id)
+    child = section.append_child(request.POST.get('label','unnamed'),
+                                 request.POST.get('slug','unknown'))
+    return HttpResponseRedirect("/edit" + section.get_absolute_url())

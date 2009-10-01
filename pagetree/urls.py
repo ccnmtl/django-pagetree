@@ -8,4 +8,5 @@ urlpatterns = patterns('pagetree.views',
                        (r'^delete_section/(?P<id>\d+)/$','delete_section'),
                        (r'^edit_section/(?P<id>\d+)/$','edit_section'),
                        (r'^section/(?P<id>\d+)/add_pageblock/$','add_pageblock'),
+                       (r'^section/(?P<id>\d+)/add_child_section/$','add_child_section'),
 )
