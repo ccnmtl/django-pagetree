@@ -5,6 +5,16 @@ from django.template.loader import get_template
 from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.db.models import get_model
+settings = None
+try:
+    import settings
+except:
+    # if we can't import settings, it just means
+    # they won't be able to get a list of available
+    # pageblock classes
+    settings = None
+ 
 
 class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
@@ -43,6 +53,13 @@ class Hierarchy(models.Model):
             else:
                 raise Http404()
         return current
+
+    def available_pageblocks(self):
+        if hasattr(settings,'PAGEBLOCKS'):
+            return [get_model(*pb.split('.')) for pb in settings.PAGEBLOCKS]
+        else:
+            return []
+
 
 
 class Section(models.Model):
@@ -197,6 +214,13 @@ class Section(models.Model):
             sc = PageBlock.objects.get(id=id)
             sc.ordinality = i + 1
             sc.save()
+
+    def available_pageblocks(self):
+        return self.hierarchy.available_pageblocks()
+    def add_pageblock_form(self):
+        class EditForm(forms.Form):
+            label = forms.CharField()
+        return EditForm()
             
 
 class SectionChildren(models.Model):

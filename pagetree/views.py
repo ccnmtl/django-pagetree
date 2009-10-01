@@ -54,3 +54,14 @@ def delete_section(request,id):
 <html><body><form action="." method="post">Are you Sure?
 <input type="submit" value="Yes, delete it" /></form></body></html>
 """)
+
+def add_pageblock(request,id):
+    section = get_object_or_404(Section,id=id)
+    blocktype = request.POST.get('blocktype','')
+    # now we need to figure out which kind of pageblock to create
+    for pb_class in section.available_pageblocks():
+        if pb_class.display_name == blocktype:
+            # a match
+            block = pb_class.create(request)
+            pageblock = section.append_pageblock(label=request.POST.get('label',''),content_object=block)
+    return HttpResponseRedirect("/edit" + section.get_absolute_url())
