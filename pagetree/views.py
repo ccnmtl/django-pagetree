@@ -26,7 +26,15 @@ def reorder_section_children(request,id):
 def delete_pageblock(request,id):
     block = get_object_or_404(PageBlock,id=id)
     section = block.section
-    block.block().delete()
+    try:
+        block.block().delete()
+    except AttributeError:
+        # if the model has been refactored, we sometimes
+        # end up with 'stub' pageblocks floating around
+        # that no longer have a block object associated
+        # it's nice to still be able to delete them
+        # without having to scrap the whole db and start over
+        pass
     block.delete()
     section.renumber_pageblocks()
     return HttpResponseRedirect("/edit" + section.get_absolute_url())
