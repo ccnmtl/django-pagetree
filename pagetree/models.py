@@ -60,7 +60,11 @@ class Hierarchy(models.Model):
         else:
             return []
 
-
+    def get_first_leaf(section):
+        if (section.is_leaf()):
+            return section
+    
+        return get_first_leaf(section.get_children()[0])
 
 class Section(models.Model):
     label = models.CharField(max_length=256)
