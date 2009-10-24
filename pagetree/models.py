@@ -60,11 +60,11 @@ class Hierarchy(models.Model):
         else:
             return []
 
-    def get_first_leaf(section):
+    def get_first_leaf(self, section):
         if (section.is_leaf()):
             return section
     
-        return get_first_leaf(section.get_children()[0])
+        return self.get_first_leaf(section.get_children()[0])
 
 class Section(models.Model):
     label = models.CharField(max_length=256)
@@ -74,6 +74,7 @@ class Section(models.Model):
     # it never gets displayed. just exists to be a parent
     # to the top_level sections.
     is_root = models.BooleanField(default=False)
+    template = models.CharField(max_length=50, default="base.html")
 
     def get_root(self):
         if self.is_root:
@@ -154,9 +155,9 @@ class Section(models.Model):
     def is_leaf(self):
         return SectionChildren.objects.filter(parent=self).count() == 0
 
-    def append_child(self,label,slug):
+    def append_child(self,label,slug,template):
         ns = Section.objects.create(hierarchy=self.hierarchy,
-                                    label=label,slug=slug,is_root=False)
+                                    label=label,slug=slug,is_root=False,template=template)
         neword = SectionChildren.objects.filter(parent=self).count() + 1
         nsc = SectionChildren.objects.create(parent=self,child=ns,ordinality=neword)
         return ns
@@ -180,6 +181,8 @@ class Section(models.Model):
         class AddChildSectionForm(forms.Form):
             label = forms.CharField()
             slug = forms.CharField()
+            template = forms.CharField(initial=self.template)
+
         return AddChildSectionForm()
 
     def renumber_pageblocks(self):
@@ -193,6 +196,7 @@ class Section(models.Model):
         class EditSectionForm(forms.Form):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
+            template = forms.CharField(initial=self.template)
         return EditSectionForm()
 
     def update_children_order(self,children_ids):
