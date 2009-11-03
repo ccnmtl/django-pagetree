@@ -60,11 +60,13 @@ class Hierarchy(models.Model):
         else:
             return []
 
-    def get_first_leaf(section):
+    def get_first_leaf(self,section):
         if (section.is_leaf()):
             return section
     
-        return get_first_leaf(section.get_children()[0])
+        return self.get_first_leaf(section.get_children()[0])
+
+_descendents_cache = dict()
 
 class Section(models.Model):
     label = models.CharField(max_length=256)
@@ -118,9 +120,13 @@ class Section(models.Model):
 
     def get_descendents(self):
         """ returns flattened depth-first traversal of this section and its children """
+        # quick/dirty memoize
+        if _descendents_cache.has_key(self.id):
+            return _descendents_cache[self.id]
         l = [self]
         for c in self.get_children():
             l.extend(c.get_descendents())
+        _descendents_cache[self.id] = l
         return l
 
     def get_previous(self):
@@ -159,6 +165,7 @@ class Section(models.Model):
                                     label=label,slug=slug,is_root=False)
         neword = SectionChildren.objects.filter(parent=self).count() + 1
         nsc = SectionChildren.objects.create(parent=self,child=ns,ordinality=neword)
+        _descendents_cache = dict()
         return ns
 
     def append_pageblock(self,label,content_object):
@@ -206,6 +213,7 @@ class Section(models.Model):
             sc = SectionChildren.objects.get(parent=self,child__id=id)
             sc.ordinality = i + 1
             sc.save()
+        _descendents_cache = dict()
 
     def update_pageblocks_order(self,pageblock_ids):
         """pageblock_ids is a list of PageBlock ids for the children
