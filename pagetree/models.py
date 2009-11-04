@@ -240,6 +240,18 @@ class Section(models.Model):
         class EditForm(forms.Form):
             label = forms.CharField()
         return EditForm()
+
+    def get_first_leaf(self):
+        if (self.is_leaf()):
+            return self
+    
+        return self.get_children()[0].get_first_leaf()
+
+    def get_last_leaf(self):
+        if (self.is_leaf()):
+            return self
+    
+        return self.get_children()[-1].get_last_leaf()
             
 
 class SectionChildren(models.Model):
