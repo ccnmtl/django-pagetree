@@ -20,6 +20,10 @@ class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
     base_url = models.CharField(max_length=256,default="")
 
+    @staticmethod
+    def get_hierarchy(name):
+        return Hierarchy.objects.get_or_create(name=name,defaults=dict(base_url="/"))[0]
+
     def get_absolute_url(self):
         return self.base_url
 
@@ -82,6 +86,12 @@ class Section(models.Model):
         else:
             return self.get_parent().get_root()
 
+    def get_module(self):
+        """ get the top level module that the section is in"""
+        if self.is_root:
+            return None
+        return self.get_ancestors()[1]
+
     def depth(self):
         """ return count of how deep in the hierarchy this section is """
         if self.is_root:
@@ -136,6 +146,24 @@ class Section(models.Model):
                     return None
         # made it through without finding ourselves? weird.
         return None
+
+    def get_previous_leaf(self):
+        depth_first_traversal = self.get_root().get_descendents()
+        for (i,s) in enumerate(depth_first_traversal):
+            if s.id == self.id:
+                # first element is the root, so we don't want to
+                # return that
+                prev = None
+                while i > 1 and not prev:
+                    node = depth_first_traversal[i-1]
+                    if node and len(node.get_children()) > 0:
+                        i -= 1
+                    else:
+                        prev = node
+                return prev
+        # made it through without finding ourselves? weird.
+        return None
+
 
     def get_next(self):
         depth_first_traversal = self.get_root().get_descendents() 
