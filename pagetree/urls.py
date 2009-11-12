@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns
 
 urlpatterns = patterns('pagetree.views',
-                       (r'^reorder_pageblocks/$', 'reorder_pageblocks',{},"reorder-pageblocks"),
+                       (r'^reorder_pageblocks/(?P<id>\d+)/', 'reorder_pageblocks',{},"reorder-pageblocks"),
                        (r'^reorder_section_children/(?P<id>\d+)/','reorder_section_children',{},"reorder-section-children"),
                        (r'^delete_pageblock/(?P<id>\d+)/$','delete_pageblock',{},"delete-pageblock"),
                        (r'^edit_pageblock/(?P<id>\d+)/$','edit_pageblock',{},"edit-pageblock"),
