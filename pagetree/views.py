@@ -1,7 +1,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.template import Context, loader
 from pagetree.models import Section, PageBlock
 from django.template.defaultfilters import slugify
+from django.utils import simplejson
+from django.core.urlresolvers import reverse
+import string
 
 def reorder_pageblocks(request,id):
     if request.method != "POST":
@@ -23,61 +27,48 @@ def reorder_section_children(request,id):
     section.update_children_order(children)
     return HttpResponse("ok")
 
-def delete_pageblock(request,id):
-    block = get_object_or_404(PageBlock,id=id)
-    section = block.section
-    try:
-        block.block().delete()
-    except AttributeError:
-        # if the model has been refactored, we sometimes
-        # end up with 'stub' pageblocks floating around
-        # that no longer have a block object associated
-        # it's nice to still be able to delete them
-        # without having to scrap the whole db and start over
-        pass
-    block.delete()
-    section.renumber_pageblocks()
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
-
-def edit_pageblock(request,id):
-    block = get_object_or_404(PageBlock,id=id)
-    section = block.section
-    block.edit(request.POST,request.FILES)
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
-
-def edit_section(request,id):
-    section = get_object_or_404(Section,id=id)
-    section.label = request.POST.get('label','')
-    section.slug = request.POST.get('slug',slugify(section.label))
-    section.template = request.POST.get('template', '')
-    section.save()
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
-
-def delete_section(request,id):
-    section = get_object_or_404(Section,id=id)
+def add_childsection(request,section_id):
+    parent = get_object_or_404(Section,id=section_id)
+    
     if request.method == "POST":
-        parent = section.get_parent()
-        section.delete()
-        return HttpResponseRedirect("/edit" + parent.get_absolute_url())
-    return HttpResponse("""
-<html><body><form action="." method="post">Are you Sure?
-<input type="submit" value="Yes, delete it" /></form></body></html>
-""")
+        parent.append_child(request.POST.get('label','unnamed'),
+                            request.POST.get('slug','unknown'),
+                            request.POST.get('template', ''))
+        return HttpResponse('<script type="text/javascript">opener.dismissAddSectionPopup(window);</script>')
+    else:
+        ctx = Context({'parent': parent, 'title': 'Add Child Section'})
+        template = loader.get_template('admin/pagetree/section/add_section.html')
+        return HttpResponse(template.render(ctx))
+    
+def add_pageblock(request, section_id):
+    section = get_object_or_404(Section,id=section_id)
+    
+    if request.method == "POST":
+        blocktype = request.POST.get('blocktype','')
+        # now we need to figure out which kind of pageblock to create
+        for pb_class in section.available_pageblocks():
+            if pb_class.display_name == blocktype:
+                # a match
+                block = pb_class.create(request)
+                pageblock = section.append_pageblock(label=request.POST.get('label',''),content_object=block)
+        return HttpResponse('<script type="text/javascript">opener.dismissPageBlockPopup(window);</script>')
+    else:
+        ctx = Context({'section': section, 'title': 'Add Page Block'})
+        template = loader.get_template('admin/pagetree/pageblock/add_pageblock.html')
+        return HttpResponse(template.render(ctx))
+    
+def edit_pageblock(request, block_id):
+    block = get_object_or_404(PageBlock,id=block_id)
+        
+    if request.method == "POST":
+        block.edit(request.POST,request.FILES)
+        if request.POST.has_key('_continue'):
+            return HttpResponseRedirect(reverse('edit-pageblock', args=[block.id]))
+        else:
+            return HttpResponse('<script type="text/javascript">opener.dismissPageBlockPopup(window);</script>')
+    else:
+        ctx = Context({'pageblock': block, 'title': 'Edit ' + string.capwords(block.content_type.name)})
+        template = loader.get_template('admin/pagetree/pageblock/edit_pageblock.html')
+        return HttpResponse(template.render(ctx))
 
-def add_pageblock(request,id):
-    section = get_object_or_404(Section,id=id)
-    blocktype = request.POST.get('blocktype','')
-    # now we need to figure out which kind of pageblock to create
-    for pb_class in section.available_pageblocks():
-        if pb_class.display_name == blocktype:
-            # a match
-            block = pb_class.create(request)
-            pageblock = section.append_pageblock(label=request.POST.get('label',''),content_object=block)
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
 
-def add_child_section(request,id):
-    section = get_object_or_404(Section,id=id)
-    child = section.append_child(request.POST.get('label','unnamed'),
-                                 request.POST.get('slug','unknown'),
-                                 request.POST.get('template', ''))
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
