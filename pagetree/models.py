@@ -6,6 +6,8 @@ from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
+from django.core.cache import cache
+
 settings = None
 try:
     import settings
@@ -64,11 +66,18 @@ class Hierarchy(models.Model):
         else:
             return []
 
-    def get_first_leaf(self, section):
+    def get_first_leaf(self,section):
         if (section.is_leaf()):
             return section
     
         return self.get_first_leaf(section.get_children()[0])
+
+    def get_last_leaf(self,section):
+        if (section.is_leaf()):
+            return section
+    
+        return self.get_last_leaf(section.get_children()[-1])
+
 
 class Section(models.Model):
     label = models.CharField(max_length=256)
@@ -129,9 +138,16 @@ class Section(models.Model):
 
     def get_descendents(self):
         """ returns flattened depth-first traversal of this section and its children """
+        # quick/dirty memorize
+        if cache.get("descendents_%d" % self.id):
+            return cache.get("descendents_%d" % self.id)
         l = [self]
         for c in self.get_children():
             l.extend(c.get_descendents())
+        # just cache it for 1 second. The idea is to make
+        # repeated calls fast, but not have to worry much about
+        # dirtying the cache
+        cache.set("descendents_%d" % self.id,l,1)
         return l
 
     def get_previous(self):
@@ -258,6 +274,19 @@ class Section(models.Model):
             label = forms.CharField()
         return EditForm()
             
+
+    def get_first_leaf(self):
+        if (self.is_leaf()):
+            return self
+    
+        return self.get_children()[0].get_first_leaf()
+
+    def get_last_leaf(self):
+        if (self.is_leaf()):
+            return self
+    
+        return self.get_children()[-1].get_last_leaf()
+
 
 class SectionChildren(models.Model):
     parent = models.ForeignKey(Section,related_name="parent")

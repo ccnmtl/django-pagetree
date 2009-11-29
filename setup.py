@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pagetree",
-    version="0.1",
+    version="0.2",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="http://wiki.ccnmtl.columbia.edu/",
