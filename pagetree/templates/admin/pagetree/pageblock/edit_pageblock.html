@@ -1,7 +1,9 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_modify adminmedia %}
 
-{% block extrahead %}{{ pageblock.super }}
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+
 <script type="text/javascript" src="../../../jsi18n/"></script>
 <script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
 
@@ -14,6 +16,7 @@ function refreshUnderlyingPage()
 
 MochiKit.Signal.connect(window, "onload", refreshUnderlyingPage)
 </script>
+
 {{ media }}
 {% endblock %}
 

@@ -2,7 +2,33 @@
 {% load i18n admin_modify adminmedia %}
 
 {% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+
 <script type="text/javascript" src="../../../jsi18n/"></script>
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
+
+<script type="text/javascript">
+
+function showForm(selectCtrl)
+{
+   for (i=0; i < selectCtrl.options.length; i++)
+   {
+      setStyle('form_' + selectCtrl.options[i].value, {'display': 'none'})
+   }
+
+   setStyle('form_' + selectCtrl.options[selectCtrl.selectedIndex].value, {'display': 'block'});
+}
+
+function selectPageBlock()
+{
+   $('blocktype').selectedIndex = 0
+   showForm($('blocktype'))
+}
+
+MochiKit.Signal.connect(window, "onload", selectPageBlock)
+
+</script>
+
 {{ media }}
 {% endblock %}
 
@@ -31,32 +57,32 @@
 
 <div id="content-main">
 
-{% if errors %}
-    <p class="errornote">
-    {% blocktrans count errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
-    </p>
-    <ul class="errorlist">{% for error in adminform.form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
-{% endif %}
-
+Type: <select id="blocktype" name="blocktype" onchange="showForm(this)">
+{% for blocktype in section.available_pageblocks %}
+   {% if blocktype %}
+      <option value="{{blocktype.display_name|slugify}}">{{blocktype.display_name}}</option> 
+   {% endif %}
+{% endfor %}
+</select>
+<br /><br />
 {% for blocktype in section.available_pageblocks %}
 	{% if blocktype %}
-		<form action="{% url add-pageblock section.id %}"
-			{% if blocktype.add_form.is_multipart %}
-			   enctype="multipart/form-data"
-			{% endif %}
-			method="post">
-			<fieldset class="module aligned">
-			   <legend>add {{ blocktype.display_name }}</legend>
-				<input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
-				<table width="100%">
-				{{section.add_pageblock_form.as_table}}
-				{{blocktype.add_form.as_table}}
-				</table>
-				<div class="submit-row">
-	            <input value="Add {{blocktype.display_name}}" class="default" name="_save" type="submit">
-	         </div>
-			</fieldset>
-		</form>
+			<form action="{% url add-pageblock section.id %}" id="form_{{blocktype.display_name|slugify}}" {% ifnotequal forloop.counter 1 %}style="display: none" {% endifnotequal %}
+				{% if blocktype.add_form.is_multipart %}
+				   enctype="multipart/form-data"
+				{% endif %}
+				method="post">
+				<fieldset class="module">
+					<input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
+					<table width="100%">
+					{{section.add_pageblock_form.as_table}}
+					{{blocktype.add_form.as_table}}
+					</table>
+					<div class="submit-row">
+		            <input value="Add {{blocktype.display_name}}" class="default" name="_save" type="submit">
+		         </div>
+				</fieldset>
+			</form>
 	{% endif %}
 {% endfor %}
 
