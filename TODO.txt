@@ -1,0 +1,18 @@
+Probably backwards compatible:
+
+* refine threading algorithm to pull out all sections in one query,
+  parent-child relationships in a second query, then sort into threads
+  without incurring more db hits. should be fast. will still want to
+  cache some though.
+* implement insert_child
+* implement named url, reverse() stuff
+* include base menu template
+* menu templatetag?
+* auto slugify for edits
+
+
+Non-backwards compatible:
+
+* replace 'ordinality' fields with django's built-in
+  order_with_respect_to stuff
+* connect Hierarchy with django sites framework for easy farming
