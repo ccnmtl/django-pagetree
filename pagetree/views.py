@@ -3,27 +3,27 @@ from django.shortcuts import get_object_or_404
 from pagetree.models import Section, PageBlock
 from django.template.defaultfilters import slugify
 
-def reorder_pageblocks(request,id):
+def reorder_pageblocks(request,id,id_prefix="pageblock_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section,id=id)
     keys = request.GET.keys()
     keys.sort(key=lambda x: int(x.split('_')[-1]))
-    pageblocks = [int(request.GET[k]) for k in keys if k.startswith('pageblock_id_')]
+    pageblocks = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
     section.update_pageblocks_order(pageblocks)
     return HttpResponse("ok")
 
-def reorder_section_children(request,id):
+def reorder_section_children(request,id,id_prefix="section_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section,id=id)
     keys = request.GET.keys()
     keys.sort(key=lambda x: int(x.split('_')[-1]))
-    children = [int(request.GET[k]) for k in keys if k.startswith('section_id_')]
+    children = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
     section.update_children_order(children)
     return HttpResponse("ok")
 
-def delete_pageblock(request,id):
+def delete_pageblock(request,id,success_url=None):
     block = get_object_or_404(PageBlock,id=id)
     section = block.section
     try:
@@ -37,33 +37,41 @@ def delete_pageblock(request,id):
         pass
     block.delete()
     section.renumber_pageblocks()
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+    if success_url is None:
+        success_url = "/edit" + section.get_absolute_url()
+    return HttpResponseRedirect(success_url)
 
-def edit_pageblock(request,id):
+def edit_pageblock(request,id,success_url=None):
     block = get_object_or_404(PageBlock,id=id)
     section = block.section
     block.edit(request.POST,request.FILES)
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+    if success_url is None:
+        success_url = "/edit" + section.get_absolute_url()
+    return HttpResponseRedirect(success_url)
 
-def edit_section(request,id):
+def edit_section(request,id,success_url=None):
     section = get_object_or_404(Section,id=id)
     section.label = request.POST.get('label','')
     section.slug = request.POST.get('slug',slugify(section.label))
     section.save()
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+    if success_url is None:
+        success_url = "/edit" + section.get_absolute_url()
+    return HttpResponseRedirect(success_url)
 
-def delete_section(request,id):
+def delete_section(request,id,success_url=None):
     section = get_object_or_404(Section,id=id)
     if request.method == "POST":
         parent = section.get_parent()
         section.delete()
-        return HttpResponseRedirect("/edit" + parent.get_absolute_url())
+        if success_url is None:
+            success_url = "/edit" + parent.get_absolute_url()
+        return HttpResponseRedirect(success_url)
     return HttpResponse("""
 <html><body><form action="." method="post">Are you Sure?
 <input type="submit" value="Yes, delete it" /></form></body></html>
 """)
 
-def add_pageblock(request,id):
+def add_pageblock(request,id,success_url=None):
     section = get_object_or_404(Section,id=id)
     blocktype = request.POST.get('blocktype','')
     # now we need to figure out which kind of pageblock to create
@@ -72,10 +80,15 @@ def add_pageblock(request,id):
             # a match
             block = pb_class.create(request)
             pageblock = section.append_pageblock(label=request.POST.get('label',''),content_object=block)
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+    if success_url is None:
+        success_url = "/edit" + section.get_absolute_url()
+    return HttpResponseRedirect(success_url)
 
-def add_child_section(request,id):
+def add_child_section(request,id,success_url=None):
     section = get_object_or_404(Section,id=id)
     child = section.append_child(request.POST.get('label','unnamed'),
                                  request.POST.get('slug','unknown'))
-    return HttpResponseRedirect("/edit" + section.get_absolute_url())
+    if success_url is None:
+        success_url = "/edit" + section.get_absolute_url()
+    return HttpResponseRedirect(success_url)
+
