@@ -11,4 +11,5 @@ urlpatterns = patterns('pagetree.views',
                        (r'^pageblock/edit/(?P<block_id>\d+)/$','edit_pageblock',{},"edit-pageblock"),
                        (r'^delete_section/(?P<id>\d+)/$','delete_section',{},"delete-section"),
                        (r'^edit_section/(?P<id>\d+)/$','edit_section',{},"edit-section"),
+                       (r'^delete_pageblock/(?P<id>\d+)/$','delete_pageblock',{},"delete-pageblock"),
 )
