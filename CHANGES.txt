@@ -1,0 +1,9 @@
+0.3.1  (2010-08-17)
+===================
+
+* fixing brokenness in my last merge attempt
+
+0.3  (2010-08-17)
+=================
+
+* merged in Susan's admin integration work.

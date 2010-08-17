@@ -15,8 +15,8 @@ class PageBlockInline(admin.StackedInline):
     template = 'admin/pagetree/pageblock/edit_inline/stacked.html'
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('label', 'slug', 'template')
-    fields = ('label', 'slug', 'template')
+    list_display = ('label', 'slug')
+    fields = ('label', 'slug')
 
     inlines = [ 
             SectionChildrenInline,
