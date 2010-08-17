@@ -1,0 +1,90 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+
+<script type="text/javascript" src="../../../jsi18n/"></script>
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
+
+<script type="text/javascript">
+
+function showForm(selectCtrl)
+{
+   for (i=0; i < selectCtrl.options.length; i++)
+   {
+      setStyle('form_' + selectCtrl.options[i].value, {'display': 'none'})
+   }
+
+   setStyle('form_' + selectCtrl.options[selectCtrl.selectedIndex].value, {'display': 'block'});
+}
+
+function selectPageBlock()
+{
+   $('blocktype').selectedIndex = 0
+   showForm($('blocktype'))
+}
+
+MochiKit.Signal.connect(window, "onload", selectPageBlock)
+
+</script>
+
+{{ media }}
+{% endblock %}
+
+{% block stylesheet %}{% admin_media_prefix %}css/forms.css{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     {% trans "Home" %} &rsaquo;
+     Pagetree &rsaquo;
+     Site Hierarchy &rsaquo;
+      
+     {% for s in section.get_ancestors %}
+        {{s.label}}
+        {% ifnotequal s.label section.label %}
+           &rsaquo;
+        {% endifnotequal %}
+     {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div id="content-main">
+
+Type: <select id="blocktype" name="blocktype" onchange="showForm(this)">
+{% for blocktype in section.available_pageblocks %}
+   {% if blocktype %}
+      <option value="{{blocktype.display_name|slugify}}">{{blocktype.display_name}}</option> 
+   {% endif %}
+{% endfor %}
+</select>
+<br /><br />
+{% for blocktype in section.available_pageblocks %}
+	{% if blocktype %}
+			<form action="{% url add-pageblock section.id %}" id="form_{{blocktype.display_name|slugify}}" {% ifnotequal forloop.counter 1 %}style="display: none" {% endifnotequal %}
+				{% if blocktype.add_form.is_multipart %}
+				   enctype="multipart/form-data"
+				{% endif %}
+				method="post">
+				<fieldset class="module">
+					<input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
+					<table width="100%">
+					{{section.add_pageblock_form.as_table}}
+					{{blocktype.add_form.as_table}}
+					</table>
+					<div class="submit-row">
+		            <input value="Add {{blocktype.display_name}}" class="default" name="_save" type="submit">
+		         </div>
+				</fieldset>
+			</form>
+	{% endif %}
+{% endfor %}
+
+
+{% endblock %}

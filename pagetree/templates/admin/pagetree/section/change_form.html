@@ -1,0 +1,159 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+
+<script type="text/javascript" src="../../../jsi18n/"></script>
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/Visual.js"></script>
+<script type="text/javascript" src="/site_media/js/dragdropreorder.js"></script>
+
+<script type="text/javascript">
+var saveOrder = function() {
+   saveOrderOfChildren();
+   saveOrderOfPageBlocks();
+};
+
+var saveOrderOfChildren = function() {
+    var url = "/admin/pagetree/reorder_section_children/{{ adminform.form.instance.id }}/?";
+    var p = $('children-order-list');
+    var lis = p.getElementsByTagName('div');
+    var cnt = 0;
+    for (var i = 0; i < lis.length; i++) {
+        var li = lis[i];
+        var id = li.id;
+        var parts = id.split("-");
+        url += "section_id_" + i + "=" + parts[1] + ";";
+        cnt++;
+    }
+    
+    if (cnt > 1) {
+        var req = new XMLHttpRequest();
+        req.open("POST",url,true);
+        req.send(null);
+    }
+};
+
+var saveOrderOfPageBlocks = function() {
+    var url = "/admin/pagetree/reorder_pageblocks/{{ adminform.form.instance.id }}/?";
+    var p = $('blocks');
+    var divs = p.getElementsByTagName('tr');
+    var cnt = 0;
+    for (var i = 0; i < divs.length; i++) {
+         var div = divs[i];
+         
+         if (div.className.indexOf("draggable") != -1) {
+            var id = div.id;
+            var parts = id.split("-");
+            url += "pageblock_id_" + i + "=" + parts[1] + ";";
+            cnt++;
+          }
+    }
+    if (cnt > 1) {
+        var req = new XMLHttpRequest();
+        req.open("POST",url,true);
+        req.send(null);
+    }
+}
+
+</script>
+{{ media }}
+{% endblock %}
+
+{% block stylesheet %}{% admin_media_prefix %}css/forms.css{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+	{% if not is_popup %}
+		<div class="breadcrumbs">
+		     <a href="/admin/">{% trans "Home" %}</a> &rsaquo;
+		     <a href="/admin/pagetree/">{{ app_label|capfirst|escape }}</a> &rsaquo;
+		     <a href="/admin/pagetree/section/">Site Hierarchy</a> &rsaquo;
+		     
+		     {% for section in adminform.form.instance.get_ancestors %}
+		        {% ifequal section.label adminform.form.instance.label %}
+		           {{section.label}}
+		        {% else %}
+			         <a href="/admin/pagetree/section/{{section.id}}/">{{section.label}}</a> &rsaquo;
+			     {% endifequal %}
+		     {% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block content %}<div id="content-main">
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools"><li><a href="history/" class="historylink">{% trans "History" %}</a></li>
+  {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% block form_top %}{% endblock %}
+
+{% if adminform.form.instance.is_root %}
+<div style="margin-bottom: 5px"><i>The Root node represents the top of the hierarchy. The node's attributes cannot be edited. The node cannot be deleted.</i></div>  
+{% endif %}
+
+<div>
+{% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+{% if save_on_top %}{% submit_row %}{% endif %}
+{% if errors %}
+    <p class="errornote">
+    {% blocktrans count errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+    <ul class="errorlist">{% for error in adminform.form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if not adminform.form.instance.is_root %}
+	{% for fieldset in adminform %}
+	  {% include "admin/includes/fieldset.html" %}
+	{% endfor %}
+{% else %}
+  <fieldset class="module aligned">
+      <div class="form-row label">
+         <div>
+            <label for="id_label" class="required">Label:</label><input readonly="readonly" name="label" value="Root" class="vTextField" maxlength="256" id="id_label" type="text">
+         </div>
+      </div>
+      <div class="form-row slug">
+         <div>
+            <label for="id_slug" class="required">Slug:</label><input readonly="readonly" id="id_slug" class="vTextField" name="slug" maxlength="50" type="text" value="root">
+         </div>
+      </div>
+      <div class="form-row template">
+         <div>
+              <label for="id_template" class="required">Template:</label><input readonly="readonly" name="template" value="project_two_col_left.html" class="vTextField" maxlength="50" id="id_template" type="text">
+         </div>
+      </div>
+   </fieldset>
+{% endif %}
+
+{% block after_field_sets %}{% endblock %}
+
+{% for inline_admin_formset in inline_admin_formsets %}
+    {% include inline_admin_formset.opts.template %}
+{% endfor %}
+
+{% block after_related_objects %}{% endblock %}
+	<div class="submit-row">
+		<input value="Save" class="default" name="_save" type="submit">
+		{% if not adminform.form.instance.is_root %}
+		   <p class="deletelink-box"><a href="delete/" class="deletelink">Delete</a></p>
+		{% endif %}
+		<input value="Save and continue editing" name="_continue" type="submit">
+	</div>
+{% if add %}
+   <script type="text/javascript">document.getElementById("{{ adminform.first_field.auto_id }}").focus();</script>
+{% endif %}
+
+{# JavaScript for prepopulated fields #}
+{% prepopulated_fields_js %}
+
+</div>
+</div>
+{% endblock %}

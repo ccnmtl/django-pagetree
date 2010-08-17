@@ -1,0 +1,72 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+
+<script type="text/javascript" src="../../../jsi18n/"></script>
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
+
+<script type="text/javascript" >
+
+function refreshUnderlyingPage()
+{
+   window.opener.location.reload()
+}
+
+MochiKit.Signal.connect(window, "onload", refreshUnderlyingPage)
+</script>
+
+{{ media }}
+{% endblock %}
+
+{% block stylesheet %}{% admin_media_prefix %}css/forms.css{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     {% trans "Home" %} &rsaquo;
+     Pagetree &rsaquo;
+     Site Hierarchy &rsaquo;
+      
+     {% for s in section.get_ancestors %}
+        {{s.label}}
+        {% ifnotequal s.label section.label %}
+           &rsaquo;
+        {% endifnotequal %}
+     {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div id="content-main">
+   <p id='edit_error' class="errornote" style='display: none'></p>
+   <form id='pageblock_edit_form' action="{% url edit-pageblock pageblock.id %}" method="post"
+     {% if pageblock.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+     <table width="100%">
+        {{ pageblock.default_edit_form.as_table }}
+        {% with pageblock.edit_form as ef %}
+           {{ ef.as_table }}
+           {% if ef.alt_text %}
+              <tr><td colspan="2">
+              {{ ef.alt_text|safe }}
+              </td></tr>
+           {% endif %}
+        {% endwith %}
+     </table>
+     <div class="submit-row">
+        <input value="Cancel" class="default" name="_cancel" type="submit" onclick="window.opener.dismissPageBlockPopup(window, false); return false;"/>
+        
+        <input value="Save and continue editing" class="default" name="_continue" type="submit"/>
+
+        <input value="Save and close" class="default" name="_save" type="submit"/>
+     </div>
+   </form>
+          
+</div>
+
+{% endblock %}

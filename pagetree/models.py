@@ -22,6 +22,10 @@ class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
     base_url = models.CharField(max_length=256,default="")
 
+    @staticmethod
+    def get_hierarchy(name):
+        return Hierarchy.objects.get_or_create(name=name,defaults=dict(base_url="/"))[0]
+
     def get_absolute_url(self):
         return self.base_url
 
@@ -89,6 +93,12 @@ class Section(models.Model):
         else:
             return self.get_parent().get_root()
 
+    def get_module(self):
+        """ get the top level module that the section is in"""
+        if self.is_root:
+            return None
+        return self.get_ancestors()[1]
+
     def depth(self):
         """ return count of how deep in the hierarchy this section is """
         if self.is_root:
@@ -138,6 +148,7 @@ class Section(models.Model):
         cache.set("descendents_%d" % self.id,l,1)
         return l
 
+
     def get_previous(self):
         depth_first_traversal = self.get_root().get_descendents() 
         for (i,s) in enumerate(depth_first_traversal):
@@ -151,6 +162,23 @@ class Section(models.Model):
         # made it through without finding ourselves? weird.
         return None
 
+    def get_previous_leaf(self):
+        depth_first_traversal = self.get_root().get_descendents()
+        for (i,s) in enumerate(depth_first_traversal):
+            if s.id == self.id:
+                # first element is the root, so we don't want to
+                # return that
+                prev = None
+                while i > 1 and not prev:
+                    node = depth_first_traversal[i-1]
+                    if node and len(node.get_children()) > 0:
+                        i -= 1
+                    else:
+                        prev = node
+                return prev
+        # made it through without finding ourselves? weird.
+        return None
+
     def get_next(self):
         depth_first_traversal = self.get_root().get_descendents() 
         for (i,s) in enumerate(depth_first_traversal):
@@ -161,7 +189,6 @@ class Section(models.Model):
                     return None
         # made it through without finding ourselves? weird.
         return None
-
 
     def get_siblings(self):
         return [sc.child for sc in SectionChildren.objects.filter(parent=self.get_parent())]
@@ -195,6 +222,7 @@ class Section(models.Model):
         class AddChildSectionForm(forms.Form):
             label = forms.CharField()
             slug = forms.CharField()
+
         return AddChildSectionForm()
 
     def renumber_pageblocks(self):
@@ -240,7 +268,6 @@ class Section(models.Model):
         class EditForm(forms.Form):
             label = forms.CharField()
         return EditForm()
-
     def get_first_leaf(self):
         if (self.is_leaf()):
             return self
@@ -252,7 +279,6 @@ class Section(models.Model):
             return self
     
         return self.get_children()[-1].get_last_leaf()
-            
 
 class SectionChildren(models.Model):
     parent = models.ForeignKey(Section,related_name="parent")
@@ -268,12 +294,11 @@ class SectionChildren(models.Model):
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
     ordinality = models.PositiveIntegerField(default=1)
-    label = models.CharField(max_length=256)
+    label = models.CharField(max_length=256, blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-
 
     class Meta:
         ordering = ('section','ordinality',)
@@ -306,5 +331,4 @@ class PageBlock(models.Model):
         self.label = vals.get('label','')
         self.save()
         self.content_object.edit(vals,files)
-        
         

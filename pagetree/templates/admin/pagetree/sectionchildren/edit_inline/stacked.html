@@ -1,0 +1,58 @@
+
+<script type="text/javascript">
+function showAddSectionPopup(parent_id) 
+{
+   var win = window.open('/admin/pagetree/section/add/' + parent_id, 'Add Child Section', 'height=500,width=780,resizable=yes,scrollbars=yes');
+   win.focus();
+   return false;
+}
+
+function dismissAddSectionPopup(window)
+{
+   window.close();
+   if (window.opener && !window.opener.closed) 
+   {
+      window.opener.location.reload();
+   } 
+}
+</script>
+
+
+{% load i18n %}
+<div class="inline-group">
+  <h2>{{ inline_admin_formset.opts.verbose_name_plural|title }} &nbsp; (drag and drop to reorder) </h2>
+		{{ inline_admin_formset.formset.management_form }}
+		{{ inline_admin_formset.formset.non_form_errors }}
+		
+		<div id='children-order-list' class='dragparent'>
+			{% for inline_admin_form in inline_admin_formset %}
+				<div id="child-{{inline_admin_form.original.child.id}}" class="draggable inline-related {% if forloop.last %}last-related{% endif %}">
+				  
+				  <h3 onmouseover="this.style.cursor='move'">
+				      {{ inline_admin_form.original.child.label }}
+				      <span class="edit">
+				         <a style="position: absolute; top: 2px; right: 100px" href="/admin/pagetree/section/{{inline_admin_form.original.child.id}}" class="changelink">{% trans 'Change' %}</a></span>
+				      </span>
+				    {% if inline_admin_formset.formset.can_delete %}
+				       <span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>
+				    {% endif %}
+				  </h3>
+				  {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
+				
+				  <!--  required for delete to work. do not remove -->
+				  <input type='hidden' name='parent-{{forloop.counter|add:"-1"}}-child' id='id_parent-{{forloop.counter|add:"-1"}}-child' value="{{ inline_admin_form.original.child.id }}" />
+				  
+				  {{ inline_admin_form.pk_field.field }}
+				  {{ inline_admin_form.fk_field.field }}
+				</div>
+			{% endfor %}
+		</div>
+		<br /><br /><br />
+		
+		<ul class="object-tools">
+		   <li>
+		       <a id='add-new-sectionchild' href="/admin/pagetree/section/add/" onclick="return showAddSectionPopup({{ inline_admin_formset.formset.instance.id }});" class="addlink">Add New Child</a>
+		   </li>
+		</ul>
+
+</div>

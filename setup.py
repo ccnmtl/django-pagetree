@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pagetree",
-    version="0.2",
+    version="0.3",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="http://wiki.ccnmtl.columbia.edu/",
@@ -38,7 +38,7 @@ setup(
     license = "BSD",
     platforms = ["any"],
     zip_safe=False,
-    package_data = {'' : ['*.*']},
     packages=['pagetree'],
     test_suite='nose.collector',
+    include_package_data=True,
     )

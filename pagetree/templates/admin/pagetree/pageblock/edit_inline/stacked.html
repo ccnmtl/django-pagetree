@@ -1,0 +1,76 @@
+
+<script type="text/javascript">
+
+function showPageBlockPopup(type, title, parent_id) 
+{
+   var win = window.open('/admin/pagetree/pageblock/' + type + '/' + parent_id, title, 'height=500,width=780,resizable=yes,scrollbars=yes');
+   win.focus();
+   return false;
+}
+
+// The add-page-block view handler returns a reference to this function
+function dismissPageBlockPopup(window)
+{
+   window.close();
+   if (window.opener && !window.opener.closed) 
+   {
+      window.opener.location.reload();
+   } 
+}
+
+</script>
+
+{% load i18n %}
+<div class="inline-group">
+  {% with inline_admin_formset.formset.instance as section %}
+
+  <h2>{{ inline_admin_formset.opts.verbose_name_plural|title }} &nbsp; (drag and drop to reorder)</h2>
+      {{ inline_admin_formset.formset.management_form }}
+      {{ inline_admin_formset.formset.non_form_errors }}
+
+  <div id='blocks' class='dragparent'>
+      {% if inline_admin_formset.formset.instance.is_root %}
+         <div style="margin-top: 5px; margin-left: 5px;"><i>The Root node has no page blocks.</i></div>
+      {% endif %}
+      
+      <table width="100%">
+			{% for block in section.pageblock_set.all %}
+			   {% ifequal forloop.counter 1 %}
+	            <tr style="border-bottom-width: 2px; border-bottom-color: #aaa; border-bottom-style: solid;"><td><h3>Page Title</h3><td><h3>{{section.label}}</h3></td><td></td></tr>
+	         {% endifequal %}
+			   <tr id="pageblock-{{block.id}}" class="draggable {% cycle 'admin_block_view_row1' 'admin_block_view_row2' %}">
+	            <td width="15%">
+	              <h3 onmouseover="this.style.cursor='move'">{{block.content_type.name|title}}
+	              </h3>
+	            </td>
+			      <td class="admin_block_column">
+				      {% if block.label%}<h4>{{ block.label }}</h4>{%endif%}
+				      {{ block.render }}
+			      </td>
+			      <td class="admin_tools_column">
+			         <span class="edit">
+                     <a href="#" onclick="return showPageBlockPopup('edit', 'Edit {{block.content_type.name|title}}', {{ block.id }});" class="changelink">{% trans 'Change' %}</a></span>
+                  </span>
+			         &nbsp;&nbsp;
+			         <!--  required for delete to work. do not remove -->
+	               <input name='pageblock_set-{{forloop.counter|add:"-1"}}-label' value="{{ block.label }}" id='id_pagetblock_set-{{forloop.counter|add:"-1"}}-label'  type='hidden' />
+	               <input name='pageblock_set-{{forloop.counter|add:"-1"}}-id' value="{{ block.id }}" id='id_pageblock_set-{{forloop.counter|add:"-1"}}-id' type="hidden">
+	               <input name='pageblock_set-{{forloop.counter|add:"-1"}}-section' value="{{block.section.id}}" id='id_pageblock_set-{{forloop.counter|add:"-1"}}-section' type="hidden">
+			      
+			         <span class="delete"><input name='pageblock_set-{{forloop.counter|add:"-1"}}-DELETE' id='id_pageblock_set-{{forloop.counter|add:"-1"}}-DELETE' type="checkbox"> <label for="id_pageblock_set-0-DELETE" class="vCheckboxLabel inline">Delete</label></span>
+			      </td>
+				</tr>
+			 {% endfor %}
+		 </table>
+   </div>
+   <br /><br /><br />
+   {% if not inline_admin_formset.formset.instance.is_root %}
+	   <ul class="object-tools">
+	      <li>
+	         <a id='add-new-pageblock' href="/admin/pagetree/pageblock/add/" onclick="return showPageBlockPopup('add', 'Add Page Block', {{ section.id }});" class="addlink">Add Page Block</a>
+	      </li>
+	   </ul>
+   {% endif %}
+   
+   {% endwith %}
+</div>
