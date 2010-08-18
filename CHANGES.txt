@@ -1,5 +1,8 @@
-* added submitted() and block_submitted() to helpers
+0.5.0 (2010-08-18)
+==================
 
+* fixed bug with section_id vs id arguments
+* added submitted() and block_submitted() to helpers
 
 0.4.0  (2010-08-17)
 ===================
