@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
 from django.core.cache import cache
+from django.template.defaultfilters import slugify
 
 settings = None
 try:
@@ -196,7 +197,9 @@ class Section(models.Model):
     def is_leaf(self):
         return SectionChildren.objects.filter(parent=self).count() == 0
 
-    def append_child(self,label,slug):
+    def append_child(self,label,slug=''):
+        if slug == '':
+            slug = slugify(label)
         ns = Section.objects.create(hierarchy=self.hierarchy,
                                     label=label,slug=slug,is_root=False)
         neword = SectionChildren.objects.filter(parent=self).count() + 1
@@ -221,7 +224,6 @@ class Section(models.Model):
     def add_child_section_form(self):
         class AddChildSectionForm(forms.Form):
             label = forms.CharField()
-            slug = forms.CharField()
 
         return AddChildSectionForm()
 

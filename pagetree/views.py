@@ -81,7 +81,7 @@ def add_pageblock(request,section_id,success_url=None):
 def add_child_section(request,section_id,success_url=None):
     section = get_object_or_404(Section,id=section_id)
     child = section.append_child(request.POST.get('label','unnamed'),
-                                 request.POST.get('slug','unknown'))
+                                 request.POST.get('slug',''))
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
