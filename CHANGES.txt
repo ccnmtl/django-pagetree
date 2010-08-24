@@ -1,3 +1,5 @@
+* included render templatetag
+
 0.5.1 (2010-08-24)
 
 * fixed delete_section bug
