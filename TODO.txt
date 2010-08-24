@@ -8,7 +8,6 @@ Probably backwards compatible:
 * implement named url, reverse() stuff
 * include base menu template
 * menu templatetag?
-* auto slugify for edits
 
 
 Non-backwards compatible:

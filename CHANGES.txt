@@ -1,3 +1,8 @@
+0.5.1 (2010-08-24)
+
+* fixed delete_section bug
+* auto-slugify for add child section
+
 0.5.0 (2010-08-18)
 ==================
 

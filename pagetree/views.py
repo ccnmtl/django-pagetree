@@ -64,6 +64,16 @@ def edit_section(request,section_id,success_url=None):
 
 def delete_section(request,section_id,success_url=None):
     section = get_object_or_404(Section,id=section_id)
+    if request.method == "POST":
+        parent = section.get_parent()
+        section.delete()
+        if success_url is None:
+            success_url = "/edit" + parent.get_absolute_url()
+        return HttpResponseRedirect(success_url)
+    return HttpResponse("""
+<html><body><form action="." method="post">Are you Sure?
+<input type="submit" value="Yes, delete it" /></form></body></html>
+""")
 
 def add_pageblock(request,section_id,success_url=None):
     section = get_object_or_404(Section,id=section_id)
