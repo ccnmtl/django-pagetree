@@ -137,9 +137,14 @@ class Section(models.Model):
 
     def get_descendents(self):
         """ returns flattened depth-first traversal of this section and its children """
-        # quick/dirty memoize
-        if cache.get("descendents_%d" % self.id):
-            return cache.get("descendents_%d" % self.id)
+        # quick/dirty memorize
+        try:
+            descendents = cache.get("descendents_%d" % self.id)
+            if descendents:
+                return descendents
+        except KeyError:
+            pass
+
         l = [self]
         for c in self.get_children():
             l.extend(c.get_descendents())
