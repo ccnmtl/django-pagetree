@@ -1,3 +1,7 @@
+0.5.3
+
+* getroot templatetag
+
 0.5.2
 
 * caching race condition fix (sdreher)
