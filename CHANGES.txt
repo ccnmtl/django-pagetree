@@ -1,3 +1,8 @@
+0.5.4
+
+* added closing_children() to allow for a tricky
+  menu template rendering bug to be fixed.
+
 0.5.3
 
 * getroot templatetag

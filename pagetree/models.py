@@ -122,6 +122,18 @@ class Section(models.Model):
     def is_last_child(self):
         return SectionChildren.objects.filter(parent=self.get_parent(),ordinality__gt=self.get_ordinality()).count() == 0
 
+    def closing_children(self):
+        """ this returns the list of adjacent last children.
+        we need this to know how many levels deep need to be closed
+        when making the menus as flattened nested lists. 
+        look for 'closing_children' in a menu.html in a project
+        that uses pagetree to see exactly what i mean. """
+
+        s = self
+        while not s.is_root and s.is_last_child():
+            yield s
+            s = s.get_parent()
+
     def get_ordinality(self):
         if self.is_root:
             return -1
