@@ -79,6 +79,39 @@ class Hierarchy(models.Model):
     
         return self.get_last_leaf(section.get_children()[-1])
 
+
+    def get_tree(self):
+        rels = list(SectionChildren.objects.filter(parent__hierarchy=self))
+        children = dict()
+        for r in rels:
+            children.setdefault(r.parent.id,[]).append((r.child,r.ordinality))
+
+        root = self.get_root()
+        def get_descendents(section):
+            l = [section]
+            if children.has_key(section.id):
+                section_children = [a for (a,ordinality) in children[section.id]]
+                for c in section_children:
+                    l.extend(get_descendents(c))
+            return l
+        return get_descendents(root)[1:]
+
+    def get_descendents(self,section):
+        rels = list(SectionChildren.objects.filter(parent__hierarchy=self))
+        children = dict()
+        for r in rels:
+            children.setdefault(r.parent.id,[]).append((r.child,r.ordinality))
+
+        def get_desc(s):
+            l = [s]
+            if children.has_key(s.id):
+                section_children = [a for (a,ordinality) in children[s.id]]
+                for c in section_children:
+                    l.extend(get_desc(c))
+            return l
+        return get_desc(section)
+
+
 class Section(models.Model):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
@@ -168,7 +201,7 @@ class Section(models.Model):
 
 
     def get_previous(self):
-        depth_first_traversal = self.get_root().get_descendents() 
+        depth_first_traversal = self.hierarchy.get_tree()
         for (i,s) in enumerate(depth_first_traversal):
             if s.id == self.id:
                 # first element is the root, so we don't want to
@@ -198,7 +231,7 @@ class Section(models.Model):
         return None
 
     def get_next(self):
-        depth_first_traversal = self.get_root().get_descendents() 
+        depth_first_traversal = self.hierarchy.get_tree()
         for (i,s) in enumerate(depth_first_traversal):
             if s.id == self.id:
                 if i < len(depth_first_traversal) - 1:
