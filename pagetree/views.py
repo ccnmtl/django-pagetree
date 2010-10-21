@@ -6,6 +6,11 @@ from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 import string
+from pagetree.helpers import get_section_from_path
+
+def create_tree_root(request):
+    section = get_section_from_path("") # creates a root if one doesn't exist
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 def reorder_pageblocks(request,section_id,id_prefix="pageblock_id_"):
     if request.method != "POST":

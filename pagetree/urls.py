@@ -1,9 +1,14 @@
-from django.conf.urls.defaults import patterns
+from django.conf.urls.defaults import patterns, url
 import os.path
+from pagetree.models import Section, PageBlock
 media_root = os.path.join(os.path.dirname(__file__),"media")
 
+urlpatterns = patterns('',
+                       (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': media_root}),
+)
 
-urlpatterns = patterns('pagetree.views',
+urlpatterns += patterns('pagetree.views',
+                       (r'^create_tree_root$', 'create_tree_root',{},"create_tree_root"),
                        (r'^reorder_pageblocks/(?P<section_id>\d+)/$', 'reorder_pageblocks',{},"reorder-pageblocks"),
                        (r'^reorder_section_children/(?P<section_id>\d+)/$','reorder_section_children',{},"reorder-section-children"),
                        (r'^section/add/(?P<section_id>\d+)/$', 'add_child_section', {}, "add-child-section"),
@@ -13,3 +18,13 @@ urlpatterns = patterns('pagetree.views',
                        (r'^edit_section/(?P<section_id>\d+)/$','edit_section',{},"edit-section"),
                        (r'^delete_pageblock/(?P<pageblock_id>\d+)/$','delete_pageblock',{},"delete-pageblock"),
 )
+
+# Django Admin Console views
+sections = { 'queryset': Section.objects.all() }
+blocks = { 'queryset': PageBlock.objects.all() }
+
+urlpatterns += patterns('django.views.generic.list_detail',
+   url(r'^add/section/(?P<object_id>\d+)/$', 'object_detail', dict(sections, template_name='admin/pagetree/section/add_section.html'), 'admin-add-section'),
+   url(r'^add/pageblock/(?P<object_id>\d+)/$', 'object_detail', dict(sections, template_name='admin/pagetree/pageblock/add_pageblock.html'), 'admin-add-pageblock'),
+   url(r'^edit/pageblock/(?P<object_id>\d+)/$', 'object_detail', dict(blocks, template_name='admin/pagetree/pageblock/edit_pageblock.html'), 'admin-edit-pageblock'),
+) 
