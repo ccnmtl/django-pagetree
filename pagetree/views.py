@@ -45,7 +45,6 @@ def delete_pageblock(request,pageblock_id,success_url=None):
         # without having to scrap the whole db and start over
         pass
     block.delete()
-    section.renumber_pageblocks()
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)

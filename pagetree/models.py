@@ -351,3 +351,8 @@ class PageBlock(models.Model):
         self.save()
         self.content_object.edit(vals,files)
         
+    def delete(self):
+         section = self.section
+         super(PageBlock, self).delete() # Call the "real" delete() method
+         section.renumber_pageblocks()
+        
