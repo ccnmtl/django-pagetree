@@ -10,8 +10,10 @@ def get_section_from_path(path,hierarchy="main"):
 
 def get_module(section):
     """ get the top level module that the section is in"""
-    if section.is_root:
+    if section.is_root():
         return None
+    if section.depth == 2:
+        return section
     return section.get_ancestors()[1]
 
 def needs_submit(section):

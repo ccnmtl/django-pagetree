@@ -24,6 +24,7 @@ def reorder_section_children(request,section_id,id_prefix="section_id_"):
     keys = request.GET.keys()
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     children = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
+    # TODO: this is broken
     section.update_children_order(children)
     return HttpResponse("ok")
 
