@@ -8,6 +8,24 @@
     <link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
 {% endblock %}
 
+{% block extrahead %}
+    {{ block.super }}
+
+    {% if not cl.result_list.0 %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url create_tree_root %}",
+                    success: function() {
+                        window.location.reload()
+                    },
+                });
+            });
+        </script>
+    {% endif %}    
+{% endblock %}
+
 {% block bodyclass %}change-list{% endblock %}
 
 {% if not is_popup %}{% block breadcrumbs %}<div class="breadcrumbs"><a href="../../">{% trans "Home" %}</a> &rsaquo; <a href="../">{{ app_label|capfirst }}</a> &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}</div>{% endblock %}{% endif %}
@@ -23,37 +41,28 @@
 <div id="content-main">
 {% block object-tools %}
 {% endblock %}
-    {% if not cl.result_list.0 %}
-        <ul></ul>
-        <form id="id_create_tree_root" action="{% url create_tree_root %}" method="GET">
-            <div class="submit-row">
-                <input style="float: left" value="Create Root" class="default" name="_create_tree_root" type="submit">
-            </div>
-        </form>
-   {% else %}
-       {% with cl.result_list.0.hierarchy.get_root as root %}
-    	<div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
-    	   <br />
-    		{% block result_list %}
-    		   <ul>
-    		   {% for s in root.get_descendents %}
-    					<li class="menu">
-    					   {% ifnotequal s.id section.id %}
-    					      <a href="../section/{{s.id}}">{{s.label}}</a>
-    					   {%else%}
-    					      <b>{{s.label}}</b>
-    					   {% endifnotequal %}
-    
-    						{% with s.get_children as has_children %}
-    							{% if has_children %}<ul>{% endif %}
-    							{% if not has_children and s.is_last_child %}</ul>{% endif %}
-    						{% endwith %}
-    					</li>
-    			{% endfor %}
-    			</ul>
-    		{% endblock %}
-    	</div>
-    	{% endwith %}
-    {% endif %}	
+   {% with cl.result_list.0.hierarchy.get_root as root %}
+	<div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+	   <br />
+		{% block result_list %}
+		   <ul>
+		   {% for s in root.get_descendents %}
+					<li class="menu">
+					   {% ifnotequal s.id section.id %}
+					      <a href="../section/{{s.id}}">{{s.label}}</a>
+					   {%else%}
+					      <b>{{s.label}}</b>
+					   {% endifnotequal %}
+
+						{% with s.get_children as has_children %}
+							{% if has_children %}<ul>{% endif %}
+							{% if not has_children and s.is_last_child %}</ul>{% endif %}
+						{% endwith %}
+					</li>
+			{% endfor %}
+			</ul>
+		{% endblock %}
+	</div>
+	{% endwith %}
 </div>
 {% endblock %}

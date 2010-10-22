@@ -8,7 +8,6 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('pagetree.views',
-                       (r'^create_tree_root$', 'create_tree_root',{},"create_tree_root"),
                        (r'^reorder_pageblocks/(?P<section_id>\d+)/$', 'reorder_pageblocks',{},"reorder-pageblocks"),
                        (r'^reorder_section_children/(?P<section_id>\d+)/$','reorder_section_children',{},"reorder-section-children"),
                        (r'^section/add/(?P<section_id>\d+)/$', 'add_child_section', {}, "add-child-section"),
@@ -17,6 +16,7 @@ urlpatterns += patterns('pagetree.views',
                        (r'^delete_section/(?P<section_id>\d+)/$','delete_section',{},"delete-section"),
                        (r'^edit_section/(?P<section_id>\d+)/$','edit_section',{},"edit-section"),
                        (r'^delete_pageblock/(?P<pageblock_id>\d+)/$','delete_pageblock',{},"delete-pageblock"),
+                       (r'^create_tree_root$', 'create_tree_root',{},"create_tree_root"),
 )
 
 # Django Admin Console views

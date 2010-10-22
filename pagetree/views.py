@@ -8,10 +8,6 @@ from django.core.urlresolvers import reverse
 import string
 from pagetree.helpers import get_section_from_path
 
-def create_tree_root(request):
-    section = get_section_from_path("") # creates a root if one doesn't exist
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
 def reorder_pageblocks(request,section_id,id_prefix="pageblock_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
@@ -99,5 +95,10 @@ def add_child_section(request,section_id,success_url=None):
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
+
+def create_tree_root(request):
+    section = get_section_from_path("") # creates a root if one doesn't exist
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
 
 
