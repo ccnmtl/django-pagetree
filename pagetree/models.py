@@ -178,7 +178,10 @@ class Section(MP_Node):
         use with caution. if the ids in children_ids don't match up
         right it will break or do strange things.
         """
-        # TODO
+        for section_id in children_ids:
+            s = Section.objects.get(id=section_id)
+            p = s.get_parent()
+            s.move(p,pos="last-child")
         return 
 
     def update_pageblocks_order(self,pageblock_ids):
