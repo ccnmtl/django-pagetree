@@ -1,13 +1,6 @@
-from models import Section, Hierarchy, SectionChildren, PageBlock
+from models import Section, Hierarchy, PageBlock
 from django.contrib import admin
 
-class SectionChildrenInline(admin.StackedInline):
-    model = SectionChildren
-    fk_name = 'parent' 
-    extra = 0
-    fields = ('child',)
-    template = 'admin/pagetree/sectionchildren/edit_inline/stacked.html'
-    
 class PageBlockInline(admin.StackedInline):
     model = PageBlock
     extra = 0
@@ -19,7 +12,6 @@ class SectionAdmin(admin.ModelAdmin):
     fields = ('label', 'slug')
 
     inlines = [ 
-            SectionChildrenInline,
             PageBlockInline,
         ]
 
