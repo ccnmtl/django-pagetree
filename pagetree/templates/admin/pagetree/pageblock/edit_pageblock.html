@@ -17,11 +17,6 @@
 <script type="text/javascript">
     $(document).ready(function() { 
     
-        $("#id_cancel").click(function() {
-            window.opener.dismissPopup(window, false); 
-            return false;
-        });
-        
         // Edit Form Submit
         $('#pageblock_edit_form').submit(function() {
         
@@ -101,7 +96,6 @@
         {% endwith %}
      </table>
      <div class="submit-row">
-        <input value="Cancel" class="default" name="_cancel" type="submit" id="id_cancel" />
         <input value="Save" class="default" name="_save" type="submit" id="id_save" />
      </div>
    </form>

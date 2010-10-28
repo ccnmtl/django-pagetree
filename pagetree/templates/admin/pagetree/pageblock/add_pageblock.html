@@ -56,11 +56,6 @@
     $(document).ready(function() { 
         $('#blocktype').selectedIndex = 0;
         showForm('blocktype');
-
-        $("#id_cancel").click(function() {
-            window.opener.dismissPopup(window, false); 
-            return false;
-        });
         
         $('#blocktype').change(function() {
             showForm('blocktype');
@@ -126,7 +121,6 @@
 					{{blocktype.add_form.as_table}}
 					</table>
 					<div class="submit-row">
-                        <input value="Cancel" class="default" name="_cancel" type="submit" id="id_cancel" />
 		                <input value="Add {{blocktype.display_name}}" class="default" name="_save" type="submit" id="id_save">
 		            </div>
 				</fieldset>

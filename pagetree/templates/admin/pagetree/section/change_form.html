@@ -44,6 +44,12 @@
        return false;
     }
 
+    function showDeletePopup(type, object_id) {
+        var win = window.open('/admin/pagetree/delete/' + type.toLowerCase() + '/' + object_id, 'Delete ' + type, 'height=200,width=400,resizable=yes,scrollbars=no');
+        win.focus();
+        return false;
+    }
+
     function showPageBlockPopup(type, title, parent_id) 
     {
        var win = window.open('/admin/pagetree/' + type + '/pageblock/' + parent_id, title, 'height=500,width=780,resizable=yes,scrollbars=yes');
@@ -116,6 +122,7 @@
 			         <a href="/admin/pagetree/section/{{section.id}}/">{{section.label}}</a> &rsaquo;
 			     {% endifequal %}
 		     {% endfor %}
+             {{ adminform.form.instance.label }}
 		</div>
 	{% endif %}
 {% endblock %}
@@ -165,6 +172,10 @@
 {% endif %}
 
 {% block after_field_sets %}{% endblock %}
+
+{% with adminform.form.instance as parent %}
+    {% include "admin/pagetree/sectionchildren/edit_inline/stacked.html" %}
+{% endwith %}
 
 {% for inline_admin_formset in inline_admin_formsets %}
     {% include inline_admin_formset.opts.template %}

@@ -46,20 +46,29 @@
 	   <br />
 		{% block result_list %}
 		   <ul>
-		   {% for s in root.get_descendents %}
-					<li class="menu">
-					   {% ifnotequal s.id section.id %}
-					      <a href="../section/{{s.id}}">{{s.label}}</a>
-					   {%else%}
-					      <b>{{s.label}}</b>
-					   {% endifnotequal %}
-
-						{% with s.get_children as has_children %}
-							{% if has_children %}<ul>{% endif %}
-							{% if not has_children and s.is_last_child %}</ul>{% endif %}
-						{% endwith %}
-					</li>
+           <li class="menu">
+           {% ifnotequal root.id section.id %}
+              <a href="../section/{{root.id}}">{{root.label}}</a>
+           {%else%}
+              <b>{{root.label}}</b>
+           {% endifnotequal %}
+           
+           <ul>
+		   {% for s in root.get_descendants %}
+    			<li class="menu">
+    			   {% ifnotequal s.id section.id %}
+    			      <a href="../section/{{s.id}}">{{s.label}}</a>
+    			   {%else%}
+    			      <b>{{s.label}}</b>
+    			   {% endifnotequal %}
+    
+    				{% with s.get_children as has_children %}
+    					{% if has_children %}<ul>{% endif %}
+    					{% if not has_children and s.is_last_child %}</ul>{% endif %}
+    				{% endwith %}
+    			</li>
 			{% endfor %}
+            </ul>
 			</ul>
 		{% endblock %}
 	</div>
