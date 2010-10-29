@@ -26,6 +26,10 @@
                 // Validate Form
                  $("#id_save").removeAttr("disabled");
             } else {
+
+                if (typeof tinyMCE != 'undefined')
+                    tinyMCE.triggerSave();
+                
                 $("#form_error_msg").hide();
                 
                 $.ajax({
