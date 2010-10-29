@@ -1,6 +1,6 @@
 .admin_block_column
 {
-   width: 800px;
+   width: 870px;
    margin: 5px 0 0 15px;
    padding: 5px 0 0 25px;
    border: 0;
@@ -15,7 +15,7 @@
 
 .admin_tools_column
 {
-   text-align: right
+   text-align: left;
 }
 
 .admin_block_view_row1
@@ -32,3 +32,5 @@
 {
     width: 300px;
 }
+
+.draghandle { float: left; }

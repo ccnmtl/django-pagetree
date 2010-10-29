@@ -2,7 +2,29 @@
 {% load adminmedia admin_list i18n %}
 {% load smartif %}
 
-{% block stylesheet %}{% admin_media_prefix %}css/changelists.css{% endblock %}
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+    <link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    {% if not cl.result_list.0 %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url create_tree_root %}",
+                    success: function() {
+                        window.location.reload()
+                    },
+                });
+            });
+        </script>
+    {% endif %}    
+{% endblock %}
 
 {% block bodyclass %}change-list{% endblock %}
 
@@ -19,31 +41,37 @@
 <div id="content-main">
 {% block object-tools %}
 {% endblock %}
-
    {% with cl.result_list.0.hierarchy.get_root as root %}
 	<div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
 	   <br />
 		{% block result_list %}
 		   <ul>
-		   {% for s in root.get_descendents %}
-					<li class="menu">
-					   {% ifnotequal s.id section.id %}
-					      <a href="../section/{{s.id}}">{{s.label}}</a>
-					   {%else%}
-					      <b>{{s.label}}</b>
-					   {% endifnotequal %}
-
-						{% with s.get_children as has_children %}
-							{% if has_children %}<ul>{% endif %}
-							{% if not has_children and s.is_last_child %}</ul>{% endif %}
-						{% endwith %}
-					</li>
+           <li class="menu">
+           {% ifnotequal root.id section.id %}
+              <a href="../section/{{root.id}}">{{root.label}}</a>
+           {%else%}
+              <b>{{root.label}}</b>
+           {% endifnotequal %}
+           
+           <ul>
+		   {% for s in root.get_descendants %}
+    			<li class="menu">
+    			   {% ifnotequal s.id section.id %}
+    			      <a href="../section/{{s.id}}">{{s.label}}</a>
+    			   {%else%}
+    			      <b>{{s.label}}</b>
+    			   {% endifnotequal %}
+    
+    				{% with s.get_children as has_children %}
+    					{% if has_children %}<ul>{% endif %}
+    					{% if not has_children and s.is_last_child %}</ul>{% endif %}
+    				{% endwith %}
+    			</li>
 			{% endfor %}
+            </ul>
 			</ul>
 		{% endblock %}
 	</div>
-	
 	{% endwith %}
-	
 </div>
 {% endblock %}

@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 import string
+from pagetree.helpers import get_section_from_path
 
 def reorder_pageblocks(request,section_id,id_prefix="pageblock_id_"):
     if request.method != "POST":
@@ -40,7 +41,6 @@ def delete_pageblock(request,pageblock_id,success_url=None):
         # without having to scrap the whole db and start over
         pass
     block.delete()
-    section.renumber_pageblocks()
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
@@ -95,5 +95,10 @@ def add_child_section(request,section_id,success_url=None):
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
+
+def create_tree_root(request):
+    section = get_section_from_path("") # creates a root if one doesn't exist
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
 
 
