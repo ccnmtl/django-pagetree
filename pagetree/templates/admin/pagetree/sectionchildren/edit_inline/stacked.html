@@ -3,7 +3,7 @@
     <h2>Section Children (drag and drop to reorder) </h2>
 	<div id='children-order-list'>
 		{% for child in parent.get_children %}
-				<div id="child-{{child.id}}" class="draggable inline-related {% if forloop.last %}last-related{% endif %}">
+				<div id="child-{{child.id}}" class="inline-related {% if forloop.last %}last-related{% endif %}">
     				<span title="drag to reorder sections" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
     				<h3>
                         &nbsp;

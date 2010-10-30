@@ -11,9 +11,10 @@
 {% block extrahead %}
     {{ block.super }}
 
-    {% if not cl.result_list.0 %}
-        <script type="text/javascript">
-            $(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function() {
+           {% if not cl.result_list.0 %}
+                // Hackish -- on first view create a root if it doesn't exist
                 $.ajax({
                     type: "POST",
                     url: "{% url create_tree_root %}",
@@ -21,9 +22,9 @@
                         window.location.reload()
                     },
                 });
-            });
-        </script>
-    {% endif %}    
+            {% endif %}
+        });
+    </script>
 {% endblock %}
 
 {% block bodyclass %}change-list{% endblock %}
@@ -32,46 +33,39 @@
 
 {% block coltype %}flex{% endblock %}
 
-{% block title %}Site Hierarchy | {% trans "Django Admin" %}{% endblock %}
+{% block title %}Site Hierarchies | {% trans "Django Admin" %}{% endblock %}
 
-{% block content_title %}<h1>Site Hierarchy</h1>{% endblock %}
+{% block content_title %}<h1>Site Hierarchies</h1>{% endblock %}
 
 {% block content %}
 
 <div id="content-main">
-{% block object-tools %}
-{% endblock %}
-   {% with cl.result_list.0.hierarchy.get_root as root %}
-	<div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
-	   <br />
-		{% block result_list %}
-		   <ul>
-           <li class="menu">
-           {% ifnotequal root.id section.id %}
-              <a href="../section/{{root.id}}">{{root.label}}</a>
-           {%else%}
-              <b>{{root.label}}</b>
-           {% endifnotequal %}
-           
-           <ul>
-		   {% for s in root.get_descendants %}
-    			<li class="menu">
-    			   {% ifnotequal s.id section.id %}
-    			      <a href="../section/{{s.id}}">{{s.label}}</a>
-    			   {%else%}
-    			      <b>{{s.label}}</b>
-    			   {% endifnotequal %}
+    {% block object-tools %}
+    {% endblock %}
     
-    				{% with s.get_children as has_children %}
-    					{% if has_children %}<ul>{% endif %}
-    					{% if not has_children and s.is_last_child %}</ul>{% endif %}
-    				{% endwith %}
-    			</li>
-			{% endfor %}
-            </ul>
-			</ul>
-		{% endblock %}
-	</div>
-	{% endwith %}
+    {% for h in hierarchies %}
+        <fieldset class="module aligned">
+            <h2><a href="/admin/pagetree/hierarchy/{{h.id}}">{{h|capfirst}}</a></h2>
+            {% with h.get_root as root %}
+        	    <div style="margin-top: 5px; margin-left: 5px;"><a href="../section/{{root.id}}"><b>Root</b></a></div>
+    		    <ul>
+            	    {% for s in root.get_descendants %}
+            			<li class="menu" style="list-style: none; line-height: 150%">
+            			   <a href="/admin/pagetree/section/{{s.id}}">{{s.label}}</a>
+
+                           {% if s.get_children %}
+                               <ul>
+                           {% else %}{% if s.is_last_child %}
+                               {% for lc in s.closing_children %}
+                                   </ul>
+                               {% endfor %}
+                           {% endif %}{% endif %} 
+            			</li>
+        			{% endfor %}
+                </ul>
+    	    {% endwith %}
+        </fieldset>
+        <br />               
+    {% endfor %}
 </div>
 {% endblock %}

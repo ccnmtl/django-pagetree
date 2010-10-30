@@ -4,6 +4,7 @@
 {% block extrahead %}
 
 {{ block.super }}
+
 <script type="text/javascript">
     var saveOrderOfChildren = function(sectionId, childTag) {
         var url = "/pagetree/reorder_section_children/" + sectionId + "/?";
@@ -39,7 +40,7 @@
 
 <script type="text/javascript">
     function showAddSectionPopup(parent_id) {
-       var win = window.open('{% url admin-add-section adminform.form.instance.id %}', 'Add Child Section', 'height=500,width=780,resizable=yes,scrollbars=yes');
+       var win = window.open('/admin/pagetree/add/section/{{adminform.form.instance.id}}', 'Add Child Section', 'height=500,width=780,resizable=yes,scrollbars=yes');
        win.focus();
        return false;
     }
@@ -79,7 +80,6 @@
 
         jQuery("#children-order-list").disableSelection();
         
-        
         jQuery("#blocks").sortable({
           items : 'tr'
           , axis: 'y'
@@ -116,13 +116,18 @@
 		     <a href="/admin/pagetree/section/">Site Hierarchy</a> &rsaquo;
 		     
 		     {% for section in adminform.form.instance.get_ancestors %}
-		        {% ifequal section.label adminform.form.instance.label %}
-		           {{section.label}}
-		        {% else %}
-			         <a href="/admin/pagetree/section/{{section.id}}/">{{section.label}}</a> &rsaquo;
-			     {% endifequal %}
+                {% ifequal section.label "Root" %}
+                    <a href="/admin/pagetree/section/{{section.id}}/">{{section.hierarchy.name|capfirst}} Root</a> &rsaquo;
+                {% else %}
+			        <a href="/admin/pagetree/section/{{section.id}}/">{{section.label}}</a> &rsaquo;
+                {% endifequal %}
+                 
 		     {% endfor %}
-             {{ adminform.form.instance.label }}
+             {% ifequal adminform.form.instance.label "Root" %}
+                {{ adminform.form.instance.hierarchy.name|capfirst }} Root
+             {% else %}
+                {{ adminform.form.instance.label }}
+             {% endifequal %}
 		</div>
 	{% endif %}
 {% endblock %}

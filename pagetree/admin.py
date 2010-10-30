@@ -11,10 +11,15 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = ('label', 'slug')
     fields = ('label', 'slug')
 
-    inlines = [ 
-            PageBlockInline,
-        ]
+    inlines = [ PageBlockInline, ]
+    
+    def changelist_view(self, request, extra_context=None):
+        my_context = {
+            'hierarchies': Hierarchy.objects.all()
+        }
+        return super(SectionAdmin, self).changelist_view(request, extra_context=my_context)
 
 admin.site.register(Section, SectionAdmin)
+admin.site.register(Hierarchy)
 
     
