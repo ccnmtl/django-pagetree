@@ -6,7 +6,7 @@
 {{ block.super }}
 
 <script type="text/javascript">
-    var saveOrderOfChildren = function(sectionId, childTag) {
+    var saveOrderOfSections = function(sectionId, childTag) {
         var url = "/pagetree/reorder_section_children/" + sectionId + "/?";
         var worktodo = 0;
         jQuery("#children-order-list " + childTag).each(function(index,element) {
@@ -36,37 +36,7 @@
             req.send(null);
         }
     }
-</script>
 
-<script type="text/javascript">
-    function showAddSectionPopup(parent_id) {
-       var win = window.open('/admin/pagetree/add/section/{{adminform.form.instance.id}}', 'Add Child Section', 'height=500,width=780,resizable=yes,scrollbars=yes');
-       win.focus();
-       return false;
-    }
-
-    function showDeletePopup(type, object_id) {
-        var win = window.open('/admin/pagetree/delete/' + type.toLowerCase() + '/' + object_id, 'Delete ' + type, 'height=200,width=400,resizable=yes,scrollbars=no');
-        win.focus();
-        return false;
-    }
-
-    function showPageBlockPopup(type, title, parent_id) 
-    {
-       var win = window.open('/admin/pagetree/' + type + '/pageblock/' + parent_id, title, 'height=500,width=780,resizable=yes,scrollbars=yes');
-       win.focus();
-       return false;
-    }
-    
-    function dismissPopup(window, reload) {
-       window.close();
-       if (reload && window.opener && !window.opener.closed) {
-          window.opener.location.reload();
-       } 
-    }
-</script>
-
-<script type="text/javascript">
     $(document).ready(function() { 
         jQuery("#children-order-list").sortable({
           items : 'div'
@@ -75,7 +45,7 @@
           , tolerance: 'pointer'
           , activeClass: 'dragging'
           , handle: '.draghandle'
-          , stop: function (event,ui) { saveOrderOfChildren({{adminform.form.instance.id}}, "div"); }
+          , stop: function (event,ui) { saveOrderOfSections({{adminform.form.instance.id}}, "div"); }
         });
 
         jQuery("#children-order-list").disableSelection();
@@ -91,8 +61,40 @@
         });
 
         jQuery("#blocks").disableSelection();
-        
     });
+</script>
+
+<script type="text/javascript">
+    function showAddSectionPopup(parent_id) {
+       var win = window.open('/admin/pagetree/add/section/{{adminform.form.instance.id}}', 'Add Child Section', 'height=500,width=780,resizable=yes,scrollbars=yes');
+       win.focus();
+       return false;
+    }
+
+    function showDeletePopup(type, object_id) {
+        var win = window.open('/admin/pagetree/delete/' + type.toLowerCase() + '/' + object_id, 'Delete ' + type, 'height=200,width=400,resizable=yes,scrollbars=no');
+        win.focus();
+        return false;
+    }
+
+    function showPageBlockPopup(type, title, parent_id) {
+       var win = window.open('/admin/pagetree/' + type + '/pageblock/' + parent_id, title, 'height=500,width=780,resizable=yes,scrollbars=yes');
+       win.focus();
+       return false;
+    }
+
+    function showEditPopup(href) {
+       var win = window.open(href, "Edit", 'height=500,width=780,resizable=yes,scrollbars=yes');
+       win.focus();
+       return false;
+    }
+    
+    function dismissPopup(window, reload) {
+       window.close();
+       if (reload && window.opener && !window.opener.closed) {
+          window.opener.location.reload();
+       } 
+    }
 </script>
 
 {{ media }}

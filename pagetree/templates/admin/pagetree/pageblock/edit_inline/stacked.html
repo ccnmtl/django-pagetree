@@ -1,4 +1,7 @@
 {% load i18n %}
+{% load render %}
+{% load hasrelated %}
+
 <div class="inline-group">
   {% with inline_admin_formset.formset.instance as section %}
 
@@ -19,18 +22,22 @@
 	                   <h3 onmouseover="this.style.cursor='move'">{{block.content_type.name|title}}</h3>
 	               </td>
 			       <td class="admin_block_column">
-				       {% if block.label%}<h4>{{ block.label }}</h4>{%endif%}
-				       {{ block.render }}
+				       {% if block.label %}<h4>{{ block.label }}</h4>{% endif %}
+				       {% render block %}
 			       </td>
 			      <td class="admin_tools_column">
 			         <span class="edit">
-                        <a href="#" onclick="return showPageBlockPopup('edit', 'Edit {{block.content_type.name|title}}', {{ block.id }});" class="changelink"><b>{% trans 'Change' %}</b></a></span>
+                        <!-- If this is a complex object, punt to the admin console. Otherwise, do the pop-up action -->
+                        {% if block.content_object|hasrelated %}
+                            <a href="/admin/{{block.content_type.app_label}}/{{block.content_type.model}}/{{block.object_id}}/" class="changelink"><b>{% trans 'Change' %}</b></a></span>
+                        {% else %}
+                            <a href="#" onclick="return showPageBlockPopup('edit', 'Edit {{block.content_type.name|title}}', {{ block.id }});" class="changelink"><b>{% trans 'Change' %}</b></a></span>
+                        {% endif %}
                      </span>
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
 			         <span class="delete">
                         <a href='#' onclick="return showDeletePopup('PageBlock', {{ block.id }});" class="deletelink">{% trans 'Delete' %}</a></span>
                      </span>  
-                     
 			      </td>
 				</tr>
 			 {% endfor %}

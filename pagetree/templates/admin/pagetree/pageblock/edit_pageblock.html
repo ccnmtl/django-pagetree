@@ -81,29 +81,21 @@
 {% endblock %}
 
 {% block content %}
-
-<div id="content-main">
-   <p id='edit_error' class="errornote" style='display: none'></p>
-   <div id="form_error_msg" class="errornote" style="display:none"></div>
-   <form id='pageblock_edit_form' action="{% url edit-pageblock object.id %}" method="post"
-     {% if object.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
-     <table width="100%">
-        <tr><th><label>Type:</label></th><td>{{object.content_type.name|title}}</td></tr>
-        {{ object.default_edit_form.as_table }}
-        {% with object.edit_form as ef %}
-           {{ ef.as_table }}
-           {% if ef.alt_text %}
-              <tr><td colspan="2">
-              {{ ef.alt_text|safe }}
-              </td></tr>
-           {% endif %}
-        {% endwith %}
-     </table>
-     <div class="submit-row">
-        <input value="Save" class="default" name="_save" type="submit" id="id_save" />
-     </div>
-   </form>
-          
-</div>
-
+    <div id="content-main">
+        <p id='edit_error' class="errornote" style='display: none'></p>
+        <div id="form_error_msg" class="errornote" style="display:none"></div>
+        <form id='pageblock_edit_form' action="{% url edit-pageblock object.id %}" method="post"
+            {% if object.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+            <table width="100%">
+                <tr><th><label>Type:</label></th><td>{{object.content_type.name|title}}</td></tr>
+                {{ object.default_edit_form.as_table }}
+                {% with object.edit_form as ef %}
+                    {{ ef.as_table }}
+                {% endwith %}
+            </table>
+            <div class="submit-row">
+                <input value="Save" class="default" name="_save" type="submit" id="id_save" />
+            </div>
+        </form>
+    </div>
 {% endblock %}

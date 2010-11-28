@@ -1,17 +1,17 @@
 from models import Section, Hierarchy, PageBlock
 from django.contrib import admin
 
-class PageBlockInline(admin.StackedInline):
+class PageBlockInlineAdmin(admin.StackedInline):
     model = PageBlock
     extra = 0
     fields = ('label', )
     template = 'admin/pagetree/pageblock/edit_inline/stacked.html'
-
+    
 class SectionAdmin(admin.ModelAdmin):
     list_display = ('label', 'slug')
     fields = ('label', 'slug')
 
-    inlines = [ PageBlockInline, ]
+    inlines = [ PageBlockInlineAdmin, ]
     
     def changelist_view(self, request, extra_context=None):
         my_context = {
