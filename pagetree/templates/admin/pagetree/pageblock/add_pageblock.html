@@ -17,53 +17,91 @@
 
 {{ block.super }}
 
+<script type="text/javascript" src="/admin/pagetree/media/js/ajaxupload.js"></script>
+
 <script type="text/javascript">
+    var ajax_file_uploader = null;
+    var ajax_params = {};
+
+    jQuery(document).ready(function() { 
+        jQuery('#blocktype').selectedIndex = 0;
+        showForm('blocktype');
+        
+        jQuery('#blocktype').change(function() {
+            showForm('blocktype');
+         });
+
+         if (jQuery('#id_image').length > 0) {
+             ajax_file_uploader = new AjaxUpload('id_image', { action: "{% url add-pageblock object.id %}",
+                  name: 'image',
+                  onComplete: function(file, response) {
+                      opener.dismissPopup(window, true);
+                  },
+                  autoSubmit: false,
+                  onSubmit: function() {
+                      // allow only 1 upload
+                      this.disable();
+                      this.setData(ajax_params);
+                  },
+                  onChange: function(file, extension){
+                      jQuery('#id_image').parents("tr").hide();
+                      jQuery('#id_image').parents("tr").after('<tr><td /><td>Uploading ' + file + '</td></tr>');
+                      
+                  },
+            });
+        }
+    });    
+    
+    
     function showForm(selectCtrlId) {
         ctrl = document.getElementById(selectCtrlId);
         
         for (var i=0; i < ctrl.options.length; i++)
-            $('#form_' + ctrl.options[i].value).hide();
+            jQuery('#form_' + ctrl.options[i].value).hide();
 
-        $('#form_' + ctrl.options[ctrl.selectedIndex].value).show();
+        jQuery('#form_' + ctrl.options[ctrl.selectedIndex].value).show();
     }
 
     function addBlock(form) {
         formId = '#' + form.id;
 
-        $("#id_save").attr("disabled", "true");
+        jQuery("#id_save").attr("disabled", "true");
 
         if (1 == 0) {
             // Validate Form
-            $("#id_save").removeAttr("disabled");
+            jQuery("#id_save").removeAttr("disabled");
         } else {
             if (typeof tinyMCE != 'undefined')
                 tinyMCE.triggerSave();
             
-            $("#form_error_msg").hide();
-            $.ajax({
-                type: "POST",
-                url: $(formId).attr('action'),
-                data: $(formId).serialize(),
-                success: function() {
-                    opener.dismissPopup(window, true);
-                },
-                error: function() {
-                    $("#form_error_msg").html("An error occurred. Please try again.");
-                    $("#form_error_msg").show();
-                    $("#id_save").removeAttr("disabled");
-                }
-            });
+            jQuery("#form_error_msg").hide();
+
+            if (form.enctype == "multipart/form-data" && ajax_file_uploader) {
+                ajax_params = {};
+
+                jQuery("#" + form.id + " :input").each(function(index) {
+                    ajax_params[jQuery(this).attr("name")] = jQuery(this).val();
+                });
+                
+                ajax_file_uploader.submit();
+            } else {    
+                jQuery.ajax({
+                        type: "POST",
+                        url: form.action,
+                        data: jQuery(formId).serialize(),
+                        success: function() {
+                            opener.dismissPopup(window, true);
+                        },
+                        error: function() {
+                            jQuery("#form_error_msg").html("An error occurred. Please try again.");
+                            jQuery("#form_error_msg").show();
+                            jQuery("#id_save").removeAttr("disabled");
+                        }
+                });
+            }
         }
     }
 
-    $(document).ready(function() { 
-        $('#blocktype').selectedIndex = 0;
-        showForm('blocktype');
-        
-        $('#blocktype').change(function() {
-            showForm('blocktype');
-         });
-    });    
     
 </script>
     

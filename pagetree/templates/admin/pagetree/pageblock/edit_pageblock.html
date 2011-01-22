@@ -13,38 +13,77 @@
     {% endwith %}
 {% endblock %}
 
-{% block extrahead %}{{ block.super }}
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/admin/pagetree/media/js/ajaxupload.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() { 
+   var ajax_file_uploader = null;
+   var ajax_params = {};
+
+    jQuery(document).ready(function() { 
+
+        if (jQuery('#id_image').length > 0) {
+            ajax_file_uploader = new AjaxUpload('id_image', { action: "{% url edit-pageblock object.id %}",
+                 name: 'image',
+                 onComplete: function(file, response) {
+                     opener.dismissPopup(window, true);
+                 },
+                 autoSubmit: false,
+                 onSubmit: function() {
+                     alert("onSubmit");
+                             
+                     // allow only 1 upload
+                     this.disable();
+                     this.setData(ajax_params);
+                 },
+                 onChange: function(file, extension){
+                     jQuery('#id_image').parents("tr").hide();
+                     jQuery('#id_image').parents("tr").after('<tr><td /><td>Uploading ' + file + '</td></tr>');
+                     
+                 },
+            });
+        }
     
         // Edit Form Submit
-        $('#pageblock_edit_form').submit(function() {
-        
-            $("#id_save").attr("disabled", "true");
-            
+        jQuery('#pageblock_edit_form').submit(function() {
+            jQuery("#id_save").attr("disabled", "true");
+                        
             if (1 == 0) {
                 // Validate Form
-                 $("#id_save").removeAttr("disabled");
+                 jQuery("#id_save").removeAttr("disabled");
             } else {
 
                 if (typeof tinyMCE != 'undefined')
                     tinyMCE.triggerSave();
-                
-                $("#form_error_msg").hide();
-                
-                $.ajax({
-                    type: "POST",
-                    url: $("#pageblock_edit_form").attr('action'),
-                    data: $("#pageblock_edit_form").serialize(),
-                    success: function() {
-                        opener.dismissPopup(window, true);
-                    },
-                    error: function() {
-                        $("#form_error_msg").html("An error occurred. Please try again.");
-                        $("#form_error_msg").show();
-                        $("#id_save").removeAttr("disabled");
-                    }
-                });
+
+                jQuery("#form_error_msg").hide();
+
+                var form = jQuery("#pageblock_edit_form");
+                if (form.attr("enctype") == "multipart/form-data" && ajax_file_uploader) {
+                    alert("Uploading via ajax file uploader");
+                    
+                    ajax_params = {};
+
+                    jQuery("#" + form.attr("id") + " :input").each(function(index) {
+                        ajax_params[jQuery(this).attr("name")] = jQuery(this).val();
+                    });
+                    
+                    ajax_file_uploader.submit();
+                } else { 
+                    jQuery.ajax({
+                        type: "POST",
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        success: function() {
+                            opener.dismissPopup(window, true);
+                        },
+                        error: function() {
+                            jQuery("#form_error_msg").html("An error occurred. Please try again.");
+                            jQuery("#form_error_msg").show();
+                            jQuery("#id_save").removeAttr("disabled");
+                        }
+                    });
+                }
             }            
             return false;          
          });
