@@ -50,14 +50,13 @@
                 // Validate Form
                  jQuery("#id_save").removeAttr("disabled");
             } else {
-
                 if (typeof tinyMCE != 'undefined')
                     tinyMCE.triggerSave();
 
                 jQuery("#form_error_msg").hide();
 
                 var form = jQuery("#pageblock_edit_form");
-                if (form.attr("enctype") == "multipart/form-data" && ajax_file_uploader) {
+                if (form.attr("enctype") == "multipart/form-data" && ajax_file_uploader && !jQuery("#id_image").is(":visible")) {
                     ajax_params = {};
 
                     jQuery("#" + form.attr("id") + " :input").each(function(index) {
@@ -65,7 +64,7 @@
                     });
                     
                     ajax_file_uploader.submit();
-                } else { 
+                } else {
                     jQuery.ajax({
                         type: "POST",
                         url: form.attr('action'),
