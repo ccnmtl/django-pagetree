@@ -30,8 +30,6 @@
                  },
                  autoSubmit: false,
                  onSubmit: function() {
-                     alert("onSubmit");
-                             
                      // allow only 1 upload
                      this.disable();
                      this.setData(ajax_params);
@@ -60,8 +58,6 @@
 
                 var form = jQuery("#pageblock_edit_form");
                 if (form.attr("enctype") == "multipart/form-data" && ajax_file_uploader) {
-                    alert("Uploading via ajax file uploader");
-                    
                     ajax_params = {};
 
                     jQuery("#" + form.attr("id") + " :input").each(function(index) {
