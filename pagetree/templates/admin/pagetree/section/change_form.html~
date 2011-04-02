@@ -138,9 +138,7 @@
 {% block object-tools %}
 {% if change %}{% if not is_popup %}
   <ul class="object-tools">
-  {% ifnotequal adminform.form.instance.label "Root" %}
-     <li><a href="/admin/pagetree/section/move/{{adminform.form.instance.id}}" class="historylink">{% trans "Move" %}</a></li>
-  {% endifnotequal %}
+  <li><a href="/admin/pagetree/section/move/{{adminform.form.instance.id}}" class="historylink">{% trans "Move" %}</a></li>
   <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
   {% if has_absolute_url %}<li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
   </ul>

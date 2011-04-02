@@ -7,6 +7,8 @@ from django.utils import simplejson
 from django.core.urlresolvers import reverse
 import string
 from pagetree.helpers import get_section_from_path
+from django.shortcuts import render_to_response
+
 
 def reorder_pageblocks(request,section_id,id_prefix="pageblock_id_"):
     if request.method != "POST":
@@ -100,5 +102,20 @@ def create_tree_root(request):
     section = get_section_from_path("") # creates a root if one doesn't exist
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
-
-
+from treebeard.forms import MoveNodeForm
+def move_section(request, section_id):
+    section = get_object_or_404(Section,id=section_id)
+    
+    if request.method == 'POST': # If the form has been submitted...
+        form = MoveNodeForm(request.POST, instance=section) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            to_section = get_object_or_404(Section,id=form.cleaned_data['_ref_node_id'])
+            position = form.cleaned_data['_position']
+            section.move(to_section, position)
+        
+            redirect = '/admin/pagetree/section/%s' % (section.id)
+            return HttpResponseRedirect(redirect) # Redirect after POST
+    else:
+        form = MoveNodeForm(instance=section) # An unbound form
+        
+    return render_to_response('movenodeform.html', { 'form': form, 'instance': section, 'app_label': 'Pagetree' })
