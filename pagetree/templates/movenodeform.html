@@ -1,0 +1,53 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not is_popup %}
+        <div class="breadcrumbs">
+             <a href="/admin/">{% trans "Home" %}</a> &rsaquo;
+             <a href="/admin/pagetree/">{{ app_label|capfirst|escape }}</a> &rsaquo;
+             <a href="/admin/pagetree/section/">Site Hierarchy</a> &rsaquo;
+             
+             {% for section in instance.get_ancestors %}
+                {% ifequal section.label "Root" %}
+                    <a href="/admin/pagetree/section/{{section.id}}/">{{section.hierarchy.name|capfirst}} Root</a> &rsaquo;
+                {% else %}
+                    <a href="/admin/pagetree/section/{{section.id}}/">{{section.label}}</a> &rsaquo;
+                {% endifequal %}
+             {% endfor %}
+             
+             {% ifequal instance.label "Root" %}
+                 <a href="/admin/pagetree/section/{{instance.id}}/">{{instance.hierarchy.name|capfirst}} Root</a> &rsaquo; Move
+             {% else %}
+                 <a href="/admin/pagetree/section/{{instance.id}}/">{{instance.label}}</a> &rsaquo; Move
+             {% endifequal %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Move "{{instance.label}}" Section To...</h1>
+        <form action="." method="post">{% csrf_token %}
+        <fieldset class="module aligned" style="padding: 10px 0px 10px 0px;">
+            {{ form.as_p }}
+        </fieldset>
+        <div class="submit-row">
+            <input value="Save" class="default" name="_save" type="submit">
+        </div>
+        </form>
+    
+</div>
+{% endblock %}
+
+
