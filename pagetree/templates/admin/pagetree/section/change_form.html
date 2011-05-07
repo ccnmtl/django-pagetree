@@ -24,7 +24,7 @@
     var saveOrderOfPageBlocks = function(sectionId, childTag) {
         var url = "/pagetree/reorder_pageblocks/" + sectionId + "/?";
         var worktodo = 0;
-        jQuery("#blocks " + childTag).each(function(index,element) {
+        jQuery("#blocks " + childTag).filter(".draggable").each(function(index,element) {
           worktodo = 1;
           var id = jQuery(element).attr('id').split("-")[1];
           url += "pageblock_id_" + index + "=" + id + ";";
