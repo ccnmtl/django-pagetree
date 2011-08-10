@@ -242,6 +242,31 @@ class PageBlock(models.Model):
         else:
             return self.content_object.render()
 
+    def render_js(self,**kwargs):
+        if hasattr(self.content_object,"js_template_file"):
+            t = get_template(getattr(self.content_object,"js_template_file"))
+            d = kwargs
+            d['block'] = self.content_object
+            c = Context(d)
+            return t.render(c)
+        elif hasattr(self.content_object,"js_render"):
+            return self.content_object.js_render()
+        else:
+            return ""
+
+    def render_css(self,**kwargs):
+        if hasattr(self.content_object,"css_template_file"):
+            t = get_template(getattr(self.content_object,"css_template_file"))
+            d = kwargs
+            d['block'] = self.content_object
+            c = Context(d)
+            return t.render(c)
+        elif hasattr(self.content_object,"css_render"):
+            return self.content_object.css_render()
+        else:
+            return ""
+
+
     def default_edit_form(self):
         class EditForm(forms.Form):
             label = forms.CharField(initial=self.label)

@@ -1,3 +1,11 @@
+0.6.0
+
+* added support for render_js and render_css so those parts of the
+  block's markup can make it up to the document head. They work
+  directly analogously to render. You can specify js_template_file, or
+  css_template_file attributes on your pageblocks. Alternatively, you
+  can specify js_render() or css_render() methods. 
+
 0.5.4
 
 * added closing_children() to allow for a tricky
