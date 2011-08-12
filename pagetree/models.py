@@ -214,6 +214,37 @@ class Section(MP_Node):
     
         return self.get_children()[-1].get_last_leaf()
 
+    def reset(self,user):
+        """ clear a user's responses to all pageblocks on this page """
+        for p in self.pageblock_set.all():
+            if hasattr(p.block(),'needs_submit'):
+                if p.block().needs_submit():
+                    p.block().clear_user_submissions(user)
+
+    def submit(self,request_data,user):
+        """ store users's responses to the pageblocks on this page """
+        proceed = True
+        for p in self.pageblock_set.all():
+            if hasattr(p.block(),'needs_submit'):
+                if p.block().needs_submit():
+                    prefix = "pageblock-%d-" % p.id
+                    data = dict()
+                    for k in request_data.keys():
+                        if k.startswith(prefix):
+                            # handle lists for multi-selects
+                            v = request_data.getlist(k)
+                            if len(v) == 1:
+                                data[k[len(prefix):]] = request_data[k]
+                            else:
+                                data[k[len(prefix):]] = v
+                    p.block().submit(user,data)
+                    if hasattr(p.block(),'redirect_to_self_on_submit'):
+                        # semi bug here?
+                        # proceed will only be set by the last submittable
+                        # block on the page. previous ones get ignored.
+                        proceed = not p.block().redirect_to_self_on_submit()
+        return proceed
+
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
     ordinality = models.PositiveIntegerField(default=1)
