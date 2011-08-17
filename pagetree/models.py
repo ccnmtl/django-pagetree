@@ -152,6 +152,10 @@ class Section(MP_Node):
             return self.hierarchy.get_absolute_url()
         return self.get_parent().get_absolute_url() + self.slug + "/"
 
+    def get_path(self):
+        """ same as get_absolute_url, without the leading /"""
+        return self.get_absolute_url()[1:]
+
     def add_child_section_form(self):
         class AddChildSectionForm(forms.Form):
             label = forms.CharField()

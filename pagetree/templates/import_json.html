@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Import content for this block from json</h2>
+<p><b>caution:</b> this will overwrite any existing content for the block</p>
+<form action="." method="post" enctype="multipart/form-data">
+JSON file: <input type="file" name="file" />
+<input type="submit" value="import" />
+</form>
+{% endblock %}

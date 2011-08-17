@@ -47,6 +47,22 @@ def delete_pageblock(request,pageblock_id,success_url=None):
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
 
+def export_pageblock_json(request,pageblock_id):
+    block = get_object_or_404(PageBlock,id=pageblock_id)
+    json = simplejson.dumps(block.block().as_dict())
+    r = HttpResponse(json,mimetype="application/json")
+    r['Content-Disposition'] = 'attachment; filename=pageblock_%d.json' % int(pageblock_id)
+    return r
+
+def import_pageblock_json(request,pageblock_id):
+    block = get_object_or_404(PageBlock,id=pageblock_id)
+    if request.method == "POST":
+        json = simplejson.loads(request.FILES['file'].read())
+        block.block().import_from_dict(json)
+        return HttpResponseRedirect("/edit" + block.section.get_absolute_url())
+    else:
+        return render_to_response("pagetree/import_json.html",dict())
+
 def edit_pageblock(request,pageblock_id,success_url=None):
     block = get_object_or_404(PageBlock,id=pageblock_id)
     section = block.section
