@@ -61,7 +61,7 @@ def import_pageblock_json(request,pageblock_id):
         block.block().import_from_dict(json)
         return HttpResponseRedirect("/edit" + block.section.get_absolute_url())
     else:
-        return render_to_response("pagetree/import_json.html",dict())
+        return render_to_response("import_json.html",dict())
 
 def edit_pageblock(request,pageblock_id,success_url=None):
     block = get_object_or_404(PageBlock,id=pageblock_id)

@@ -1,8 +1,15 @@
+0.7.1 (2011-08-18)
+==================
+
+* template path bugfix
+
 0.7.0
+=====
 
 * interface for per-pageblock import/export
 
 0.6.0
+=====
 
 * added support for render_js and render_css so those parts of the
   block's markup can make it up to the document head. They work
@@ -11,20 +18,24 @@
   can specify js_render() or css_render() methods. 
 
 0.5.4
+=====
 
 * added closing_children() to allow for a tricky
   menu template rendering bug to be fixed.
 
 0.5.3
+=====
 
 * getroot templatetag
 
 0.5.2
+=====
 
 * caching race condition fix (sdreher)
 * included render templatetag
 
 0.5.1 (2010-08-24)
+==================
 
 * fixed delete_section bug
 * auto-slugify for add child section
