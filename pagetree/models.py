@@ -267,6 +267,13 @@ class PageBlock(models.Model):
     def block(self):
         return self.content_object
 
+    def edit_label(self):
+        """ provide a label for the pageblock to make the edit interface easier to read """
+        if hasattr(self.block(),'edit_label'):
+            return self.block().edit_label()
+        else:
+            return self.block().display_name
+
     def render(self,**kwargs):
         if hasattr(self.content_object,"template_file"):
             t = get_template(getattr(self.content_object,"template_file"))
