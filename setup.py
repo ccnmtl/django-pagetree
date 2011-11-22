@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-pagetree",
-    version="0.8.1",
+    version="0.8.2",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="http://wiki.ccnmtl.columbia.edu/",

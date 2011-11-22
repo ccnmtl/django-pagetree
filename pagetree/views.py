@@ -57,6 +57,8 @@ def export_pageblock_json(request,pageblock_id):
 def import_pageblock_json(request,pageblock_id):
     block = get_object_or_404(PageBlock,id=pageblock_id)
     if request.method == "POST":
+        if not request.FILES.has_key('file'):
+            return HttpResponse("you must upload a json file")
         json = simplejson.loads(request.FILES['file'].read())
         block.block().import_from_dict(json)
         return HttpResponseRedirect("/edit" + block.section.get_absolute_url())
