@@ -12,7 +12,7 @@ from treebeard.mp_tree import MP_Node
 
 settings = None
 try:
-    import settings
+    from django.conf import settings
 except:
     # if we can't import settings, it just means
     # they won't be able to get a list of available
