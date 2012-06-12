@@ -327,3 +327,10 @@ class PageBlock(models.Model):
          super(PageBlock, self).delete() # Call the "real" delete() method
          section.renumber_pageblocks()
         
+    def as_dict(self):
+        d = dict()
+        if hasattr(self.content_object, 'as_dict'):
+            d = self.content_object.as_dict()
+        d['label'] = self.label
+        d['block_type'] = self.content_object.display_name
+        return d
