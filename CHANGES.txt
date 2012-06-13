@@ -1,3 +1,9 @@
+0.8.6 (2012-06-13)
+==================
+
+* Hierarchy.from_dict() and Section/PageBlock import
+  mechanism
+
 0.8.5 (2012-06-13)
 ==================
 
