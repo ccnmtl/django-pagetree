@@ -1,4 +1,4 @@
-""" render templatetag 
+""" render templatetag
 
 let's us do {% render block %}
 
@@ -13,13 +13,13 @@ from django import template
 
 register = template.Library()
 
+
 class RenderNode(template.Node):
     def __init__(self, block):
         self.block = block
 
     def render(self, context):
         b = context[self.block]
-        r = context['request']
         context_dict = {}
         for d in context.dicts:
             context_dict.update(d)
@@ -29,10 +29,12 @@ class RenderNode(template.Node):
                 del context_dict[k]
         return b.render(**context_dict)
 
+
 @register.tag('render')
 def render(parser, token):
     block = token.split_contents()[1:][0]
     return RenderNode(block)
+
 
 class RenderJSNode(template.Node):
     def __init__(self, block):
@@ -40,7 +42,6 @@ class RenderJSNode(template.Node):
 
     def render(self, context):
         b = context[self.block]
-        r = context['request']
         context_dict = {}
         for d in context.dicts:
             context_dict.update(d)
@@ -50,10 +51,12 @@ class RenderJSNode(template.Node):
                 del context_dict[k]
         return b.render_js(**context_dict)
 
+
 @register.tag('renderjs')
 def renderjs(parser, token):
     block = token.split_contents()[1:][0]
     return RenderJSNode(block)
+
 
 class RenderCSSNode(template.Node):
     def __init__(self, block):
@@ -61,7 +64,6 @@ class RenderCSSNode(template.Node):
 
     def render(self, context):
         b = context[self.block]
-        r = context['request']
         context_dict = {}
         for d in context.dicts:
             context_dict.update(d)
@@ -71,8 +73,8 @@ class RenderCSSNode(template.Node):
                 del context_dict[k]
         return b.render_css(**context_dict)
 
+
 @register.tag('rendercss')
 def rendercss(parser, token):
     block = token.split_contents()[1:][0]
     return RenderCSSNode(block)
-
