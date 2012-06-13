@@ -78,6 +78,11 @@ class Hierarchy(models.Model):
             return section
         return self.get_last_leaf(section.get_children()[-1])
 
+    def as_dict(self):
+        return dict(name=self.name,
+                    base_url=self.base_url,
+                    sections=self.get_root().as_dict())
+
 
 class Section(MP_Node):
     label = models.CharField(max_length=256)
@@ -250,6 +255,14 @@ class Section(MP_Node):
                         # block on the page. previous ones get ignored.
                         proceed = not p.block().redirect_to_self_on_submit()
         return proceed
+
+    def as_dict(self):
+        return dict(
+            label=self.label,
+            slug=self.slug,
+            pageblocks=[b.as_dict() for b in self.pageblock_set.all()],
+            children=[s.as_dict() for s in self.get_children()],
+            )
 
 
 class PageBlock(models.Model):
