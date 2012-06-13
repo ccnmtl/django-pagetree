@@ -81,7 +81,7 @@ class Hierarchy(models.Model):
     def as_dict(self):
         return dict(name=self.name,
                     base_url=self.base_url,
-                    sections=self.get_root().as_dict())
+                    sections=[self.get_root().as_dict()])
 
     def add_section_from_dict(self, d):
         s = Section.objects.create(
