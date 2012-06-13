@@ -83,6 +83,25 @@ class Hierarchy(models.Model):
                     base_url=self.base_url,
                     sections=self.get_root().as_dict())
 
+    def add_section_from_dict(self, d):
+        s = Section.objects.create(
+            label=d.get('label', ''),
+            slug=d.get('slug', ''),
+            hierarchy=self)
+        for pb in d.get('pageblocks', []):
+            s.add_pageblock_from_dict(pb)
+        for c in d.get('children', []):
+            s.add_child_section_from_dict(c)
+        return s
+
+    @classmethod
+    def from_dict(cls, d):
+        h = Hierarchy.objects.create(name=d.get('name', ''),
+                                     base_url=d.get('base_url', '/'))
+        for s in d.get('sections', []):
+            h.add_section_from_dict(s)
+        return h
+
 
 class Section(MP_Node):
     label = models.CharField(max_length=256)
@@ -263,6 +282,24 @@ class Section(MP_Node):
             pageblocks=[b.as_dict() for b in self.pageblock_set.all()],
             children=[s.as_dict() for s in self.get_children()],
             )
+
+    def add_pageblock_from_dict(self, d):
+        blocktype = d.get('block_type', '')
+        # now we need to figure out which kind of pageblock to create
+        for pb_class in self.available_pageblocks():
+            if pb_class.display_name == blocktype:
+                # a match
+                if hasattr(pb_class, 'create_from_dict'):
+                    block = pb_class.create_from_dict(d)
+                    self.append_pageblock(label=d.get('label', ''),
+                                          content_object=block)
+
+    def add_child_section_from_dict(self, d):
+        s = self.append_child(d.get('label', ''), d.get('slug', ''))
+        for pb in d.get('pageblocks', []):
+            s.add_pageblock_from_dict(pb)
+        for c in d.get('children', []):
+            c.add_child_section_from_dict(c)
 
 
 class PageBlock(models.Model):
