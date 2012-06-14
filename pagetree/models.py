@@ -62,7 +62,7 @@ class Hierarchy(models.Model):
                 current = slugs[slug]
             else:
                 return None
-        return None
+        return current
 
     def get_section_from_path(self, path):
         s = self.find_section_from_path(path)
