@@ -116,7 +116,7 @@ class Hierarchy(models.Model):
         return ul.path
 
     def get_user_section(self, user):
-        return self.get_section_from_path(
+        return self.find_section_from_path(
             self.get_user_location(user))
 
     def user_visit(self, user, section):
