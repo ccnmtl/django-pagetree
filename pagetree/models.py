@@ -47,7 +47,7 @@ class Hierarchy(models.Model):
     def get_top_level(self):
         return self.get_root().get_children()
 
-    def get_section_from_path(self, path):
+    def find_section_from_path(self, path):
         if path.endswith("/"):
             path = path[:-1]
         root = self.get_root()
@@ -61,8 +61,14 @@ class Hierarchy(models.Model):
             if slug in slugs:
                 current = slugs[slug]
             else:
-                raise Http404()
-        return current
+                return None
+        return None
+
+    def get_section_from_path(self, path):
+        s = self.find_section_from_path()
+        if s is None:
+            raise Http404()
+        return s
 
     def available_pageblocks(self):
         if hasattr(settings, 'PAGEBLOCKS'):
