@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django import forms
 from django.template import Context
@@ -8,6 +9,7 @@ from django.contrib.contenttypes import generic
 from django.db.models import get_model
 from django.template.defaultfilters import slugify
 from treebeard.mp_tree import MP_Node
+
 
 settings = None
 try:
@@ -98,6 +100,26 @@ class Hierarchy(models.Model):
         for s in d.get('sections', []):
             h.add_section_from_dict(s)
         return h
+
+    def get_user_location(self, user):
+        if user.is_anonymous():
+            return "/"
+        (ul, created) = UserLocation.objects.get_or_create(
+            user=user,
+            hierarchy=self)
+        return ul.path
+
+    def get_user_section(self, user):
+        return self.get_section_from_path(
+            self.get_user_location(user))
+
+    def user_visit(self, user, section):
+        path = section.get_absolute_url()
+        (ul, created) = UserLocation.objects.get_or_create(
+            user=user,
+            hierarchy=self)
+        ul.path = path
+        ul.save()
 
 
 class Section(MP_Node):
@@ -298,6 +320,9 @@ class Section(MP_Node):
         for c in d.get('children', []):
             s.add_child_section_from_dict(c)
 
+    def user_visit(self, user):
+        self.hierarchy.user_visit(user, self)
+
 
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
@@ -385,3 +410,9 @@ class PageBlock(models.Model):
         d['label'] = self.label
         d['block_type'] = self.content_object.display_name
         return d
+
+
+class UserLocation(models.Model):
+    user = models.ForeignKey(User)
+    hierarchy = models.ForeignKey(Hierarchy)
+    path = models.CharField(max_length=256, default="/")
