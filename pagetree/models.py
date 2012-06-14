@@ -84,10 +84,7 @@ class Hierarchy(models.Model):
                     sections=[self.get_root().as_dict()])
 
     def add_section_from_dict(self, d):
-        s = Section.objects.create(
-            label=d.get('label', ''),
-            slug=d.get('slug', ''),
-            hierarchy=self)
+        s = Section.add_root(label="Root", slug="", hierarchy=self)
         for pb in d.get('pageblocks', []):
             s.add_pageblock_from_dict(pb)
         for c in d.get('children', []):
