@@ -1,12 +1,12 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from pagetree.models import Section, PageBlock
+from pagetree.models import Section, PageBlock, Hierarchy
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from pagetree.helpers import get_section_from_path
 from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
-
+from django.utils.simplejson import dumps
 
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
     if request.method != "POST":
@@ -148,3 +148,12 @@ def move_section(request, section_id):
     return render_to_response('movenodeform.html',
                               {'form': form, 'instance': section,
                                'app_label': 'Pagetree'})
+
+
+def exporter(request):
+    hierarchy_name = request.GET.get('hierarchy', 'main')
+    h = get_object_or_404(Hierarchy, name=hierarchy_name)
+    data = h.as_dict()
+    resp = HttpResponse(dumps(data))
+    resp['Content-Type'] = 'application/json'
+    return resp

@@ -33,6 +33,7 @@ urlpatterns += patterns(
     (r'^delete_pageblock/(?P<pageblock_id>\d+)/$', 'delete_pageblock', {},
      "delete-pageblock"),
     (r'^create_tree_root$', 'create_tree_root', {}, "create_tree_root"),
+    (r'^export/$', 'exporter', {}, 'export-hierarchy'),
 )
 
 # Django Admin Console views
