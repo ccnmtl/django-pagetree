@@ -1,3 +1,8 @@
+0.8.8 (2012-06-14)
+==================
+
+* bugfixes to finally get export and import working
+
 0.8.7 (2012-06-13)
 ==================
 
