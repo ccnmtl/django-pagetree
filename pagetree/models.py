@@ -65,7 +65,7 @@ class Hierarchy(models.Model):
         return None
 
     def get_section_from_path(self, path):
-        s = self.find_section_from_path()
+        s = self.find_section_from_path(path)
         if s is None:
             raise Http404()
         return s
