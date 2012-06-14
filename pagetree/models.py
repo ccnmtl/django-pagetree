@@ -296,7 +296,7 @@ class Section(MP_Node):
         for pb in d.get('pageblocks', []):
             s.add_pageblock_from_dict(pb)
         for c in d.get('children', []):
-            c.add_child_section_from_dict(c)
+            s.add_child_section_from_dict(c)
 
 
 class PageBlock(models.Model):
