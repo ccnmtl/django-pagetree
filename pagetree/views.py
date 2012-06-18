@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
 from django.utils.simplejson import dumps
 
+
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
@@ -154,6 +155,14 @@ def exporter(request):
     hierarchy_name = request.GET.get('hierarchy', 'main')
     h = get_object_or_404(Hierarchy, name=hierarchy_name)
     data = h.as_dict()
+    resources = []
+    # TODO: will not work on https sites
+    url_base = "http://" + request.get_host()
+    for pb in PageBlock.objects.filter(section__hierarchy=h):
+        if hasattr(pb.block(), 'list_resources'):
+            for r in pb.block().list_resources():
+                resources.append(url_base + r)
+    data['resources'] = resources
     resp = HttpResponse(dumps(data))
     resp['Content-Type'] = 'application/json'
     return resp
