@@ -333,7 +333,7 @@ class Section(MP_Node):
         (upv, created) = UserPageVisit.objects.get_or_create(
             section=self,
             user=user)
-        upv.status=status
+        upv.status = status
         upv.save()
 
     def get_uservisit(self, user):
