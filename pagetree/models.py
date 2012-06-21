@@ -329,6 +329,20 @@ class Section(MP_Node):
     def user_visit(self, user):
         self.hierarchy.user_visit(user, self)
 
+    def user_pagevisit(self, user, status="incomplete"):
+        (upv, created) = UserPageVisit.objects.get_or_create(
+            section=self,
+            user=user)
+        upv.status = status
+        upv.save()
+
+    def get_uservisit(self, user):
+        r = self.userpagevisit_set.filter(user=user)
+        if r.count() > 0:
+            return r[0]
+        else:
+            return None
+
 
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
@@ -419,6 +433,16 @@ class PageBlock(models.Model):
 
 
 class UserLocation(models.Model):
+    """ last path a given user visited (for a particular hierarchy) """
     user = models.ForeignKey(User)
     hierarchy = models.ForeignKey(Hierarchy)
     path = models.CharField(max_length=256, default="/")
+
+
+class UserPageVisit(models.Model):
+    """ for detailed tracking """
+    user = models.ForeignKey(User)
+    section = models.ForeignKey(Section)
+    status = models.CharField(max_length=256, default="incomplete")
+    first_visit = models.DateTimeField(auto_now_add=True)
+    last_visit = models.DateTimeField(auto_now=True)
