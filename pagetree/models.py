@@ -468,3 +468,16 @@ class UserPageVisit(models.Model):
     status = models.CharField(max_length=256, default="incomplete")
     first_visit = models.DateTimeField(auto_now_add=True)
     last_visit = models.DateTimeField(auto_now=True)
+
+
+class Version(models.Model):
+    """ very basic versioning """
+    section = models.ForeignKey(Section)
+    user = models.ForeignKey(User)
+    saved_at = models.DateTimeField(auto_now_add=True)
+    activity = models.TextField(default="", blank=True, null=True)
+    data = models.TextField(default="", blank=True, null=True)
+    comment = models.TextField(default="", blank=True, null=True)
+
+    class Meta:
+        ordering = ["-saved_at", ]
