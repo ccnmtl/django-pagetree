@@ -78,3 +78,25 @@ class RenderCSSNode(template.Node):
 def rendercss(parser, token):
     block = token.split_contents()[1:][0]
     return RenderCSSNode(block)
+
+
+class RenderSummaryNode(template.Node):
+    def __init__(self, block):
+        self.block = block
+
+    def render(self, context):
+        b = context[self.block]
+        context_dict = {}
+        for d in context.dicts:
+            context_dict.update(d)
+        # can only take string keys
+        for k in context_dict.keys():
+            if type(k) != type(''):
+                del context_dict[k]
+        return b.render_summary(**context_dict)
+
+
+@register.tag('rendersummary')
+def rendersummary(parser, token):
+    block = token.split_contents()[1:][0]
+    return RenderSummaryNode(block)

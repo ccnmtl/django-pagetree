@@ -405,6 +405,18 @@ class PageBlock(models.Model):
         else:
             return ""
 
+    def render_summary(self, **kwargs):
+        if hasattr(self.content_object, "summary_template_file"):
+            t = get_template(getattr(self.content_object, "summary_template_file"))
+            d = kwargs
+            d['block'] = self.content_object
+            c = Context(d)
+            return t.render(c)
+        elif hasattr(self.content_object, "summary_render"):
+            return self.content_object.summary_render()
+        else:
+            return ""
+
     def default_edit_form(self):
         class EditForm(forms.Form):
             label = forms.CharField(initial=self.label)
