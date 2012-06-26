@@ -257,6 +257,7 @@ class Section(MP_Node):
     def add_pageblock_form(self):
         class EditForm(forms.Form):
             label = forms.CharField()
+            css_extra = forms.CharField(label="extra CSS classes")
         return EditForm()
 
     def get_first_leaf(self):
@@ -317,6 +318,7 @@ class Section(MP_Node):
                 if hasattr(pb_class, 'create_from_dict'):
                     block = pb_class.create_from_dict(d)
                     self.append_pageblock(label=d.get('label', ''),
+                                          css_extra=d.get('css_extra', ''),
                                           content_object=block)
 
     def add_child_section_from_dict(self, d):
@@ -348,6 +350,9 @@ class PageBlock(models.Model):
     section = models.ForeignKey(Section)
     ordinality = models.PositiveIntegerField(default=1)
     label = models.CharField(max_length=256, blank=True, null=True)
+    css_extra = models.CharField(
+        max_length=256, blank=True, null=True,
+        help_text="extra CSS classes (space separated)")
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -421,6 +426,8 @@ class PageBlock(models.Model):
     def default_edit_form(self):
         class EditForm(forms.Form):
             label = forms.CharField(initial=self.label)
+            css_extra = forms.CharField(initial=self.css_extra,
+                                        label="extra CSS classes")
         return EditForm()
 
     def edit_form(self):
@@ -428,6 +435,7 @@ class PageBlock(models.Model):
 
     def edit(self, vals, files):
         self.label = vals.get('label', '')
+        self.css_extra = vals.get('css_extra', '')
         self.save()
         self.content_object.edit(vals, files)
 
@@ -441,6 +449,7 @@ class PageBlock(models.Model):
         if hasattr(self.content_object, 'as_dict'):
             d = self.content_object.as_dict()
         d['label'] = self.label
+        d['css_extra'] = self.css_extra
         d['block_type'] = self.content_object.display_name
         return d
 
