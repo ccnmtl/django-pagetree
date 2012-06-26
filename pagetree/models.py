@@ -407,7 +407,8 @@ class PageBlock(models.Model):
 
     def render_summary(self, **kwargs):
         if hasattr(self.content_object, "summary_template_file"):
-            t = get_template(getattr(self.content_object, "summary_template_file"))
+            t = get_template(getattr(self.content_object,
+                                     "summary_template_file"))
             d = kwargs
             d['block'] = self.content_object
             c = Context(d)
