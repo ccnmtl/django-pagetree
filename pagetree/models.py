@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
 from django.template.defaultfilters import slugify
+from django.utils.simplejson import dumps
 from treebeard.mp_tree import MP_Node
 
 
@@ -344,6 +345,20 @@ class Section(MP_Node):
             return r[0]
         else:
             return None
+
+    def save_version(self, user, activity=None, comment=None):
+        if not activity:
+            activity = ""
+        if not comment:
+            comment = ""
+        json = dumps(self.as_dict())
+        v = Version.objects.create(
+            section=self,
+            user=user,
+            data=json,
+            activity=activity,
+            comment=comment)
+        return v
 
 
 class PageBlock(models.Model):
