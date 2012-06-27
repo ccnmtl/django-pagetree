@@ -1,18 +1,20 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from pagetree.models import Section, PageBlock, Hierarchy
+from pagetree.models import Section, PageBlock, Hierarchy, Version
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from pagetree.helpers import get_section_from_path
 from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
+from annoying.decorators import render_to
 
 
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section, id=section_id)
+    section.save_version(request.user, activity="reorder pageblocks")
     keys = request.GET.keys()
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     pageblocks = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
@@ -24,6 +26,7 @@ def reorder_section_children(request, section_id, id_prefix="section_id_"):
     if request.method != "POST":
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section, id=section_id)
+    section.save_version(request.user, activity="reorder children")
     keys = request.GET.keys()
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     children = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
@@ -34,6 +37,8 @@ def reorder_section_children(request, section_id, id_prefix="section_id_"):
 def delete_pageblock(request, pageblock_id, success_url=None):
     block = get_object_or_404(PageBlock, id=pageblock_id)
     section = block.section
+    section.save_version(request.user,
+                         activity="delete block [%s]" % unicode(block))
     try:
         block.block().delete()
     except AttributeError:
@@ -60,6 +65,9 @@ def export_pageblock_json(request, pageblock_id):
 
 def import_pageblock_json(request, pageblock_id):
     block = get_object_or_404(PageBlock, id=pageblock_id)
+    block.section.save_version(
+        request.user,
+        activity="importing pageblock json [%s]" % unicode(block))
     if request.method == "POST":
         if 'file' not in request.FILES:
             return HttpResponse("you must upload a json file")
@@ -73,6 +81,9 @@ def import_pageblock_json(request, pageblock_id):
 def edit_pageblock(request, pageblock_id, success_url=None):
     block = get_object_or_404(PageBlock, id=pageblock_id)
     section = block.section
+    section.save_version(
+        request.user,
+        activity="edit pageblock [%s]" % unicode(block))
     block.edit(request.POST, request.FILES)
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
@@ -81,6 +92,7 @@ def edit_pageblock(request, pageblock_id, success_url=None):
 
 def edit_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
+    section.save_version(request.user, activity="edit section")
     section.label = request.POST.get('label', '')
     section.slug = request.POST.get('slug', slugify(section.label))
     section.save()
@@ -93,12 +105,15 @@ def delete_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     if request.method == "POST":
         parent = section.get_parent()
+        parent.save_version(
+            request.user,
+            activity="delete child section [%s]" % unicode(section))
         section.delete()
         if success_url is None:
             success_url = "/edit" + parent.get_absolute_url()
         return HttpResponseRedirect(success_url)
     return HttpResponse("""
-<html><body><form action="." method="post">Are you Sure?
+<html><body><form activity="." method="post">Are you Sure?
 <input type="submit" value="Yes, delete it" /></form></body></html>
 """)
 
@@ -106,6 +121,8 @@ def delete_section(request, section_id, success_url=None):
 def add_pageblock(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     blocktype = request.POST.get('blocktype', '')
+    section.save_version(user=request.user,
+                         activity="add pageblock [%s]" % blocktype)
     # now we need to figure out which kind of pageblock to create
     for pb_class in section.available_pageblocks():
         if pb_class.display_name == blocktype:
@@ -120,6 +137,9 @@ def add_pageblock(request, section_id, success_url=None):
 
 def add_child_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
+    section.save_version(
+        request.user,
+        "add child section [%s]" % request.POST.get('label', 'unnamed'))
     section.append_child(request.POST.get('label', 'unnamed'),
                          request.POST.get('slug', ''))
     if success_url is None:
@@ -134,6 +154,8 @@ def create_tree_root(request):
 
 def move_section(request, section_id):
     section = get_object_or_404(Section, id=section_id)
+    section.save_version(request.user, "move section")
+
     if request.method == 'POST':
         form = MoveNodeForm(request.POST, instance=section)
         if form.is_valid():
@@ -166,3 +188,35 @@ def exporter(request):
     resp = HttpResponse(dumps(data))
     resp['Content-Type'] = 'application/json'
     return resp
+
+
+@render_to("revert_confirm.html")
+def revert_to_version(request, version_id):
+    v = get_object_or_404(Version, pk=version_id)
+    if request.method == "POST":
+        v.section.save_version(
+            request.user,
+            activity="reverting to previous version [%d]" % v.id)
+        # clear all pageblocks on the section
+        for pb in v.section.pageblock_set.all():
+            pb.delete()
+        # clear child sections (since they might get replaced)
+        v.section.get_children().delete()
+        # force the numchild to 0.
+        # possible treebeard bug we are working around
+        # basically, despite calling the treebeard queryset's .delete()
+        # as recommended, child nodes get deleted, but the parent's
+        # numchild never gets reset, so
+        #   section.get_num_children() returns, say, 3
+        # while
+        #   section.get_children() returns []
+        # this really seems like a bug in treebeard, possibly
+        # transaction related
+
+        v.section.numchild = 0
+        v.section.save()
+        v.section.from_dict(loads(v.data))
+
+        return HttpResponseRedirect("/edit" + v.section.get_absolute_url())
+    else:
+        return dict(version=v)

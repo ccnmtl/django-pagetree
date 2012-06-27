@@ -34,6 +34,8 @@ urlpatterns += patterns(
      "delete-pageblock"),
     (r'^create_tree_root$', 'create_tree_root', {}, "create_tree_root"),
     (r'^export/$', 'exporter', {}, 'export-hierarchy'),
+    (r'^version/(?P<version_id>\d+)/revert/$', 'revert_to_version', {},
+     "revert-to-version"),
 )
 
 # Django Admin Console views
