@@ -129,6 +129,7 @@ def add_pageblock(request, section_id, success_url=None):
             # a match
             block = pb_class.create(request)
             section.append_pageblock(label=request.POST.get('label', ''),
+                                     css_extra=request.POST.get('css_extra', ''),
                                      content_object=block)
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
