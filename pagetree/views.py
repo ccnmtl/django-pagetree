@@ -1,12 +1,13 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from pagetree.models import Section, PageBlock, Hierarchy
+from pagetree.models import Section, PageBlock, Hierarchy, Version
 from django.template.defaultfilters import slugify
 from django.utils import simplejson
 from pagetree.helpers import get_section_from_path
 from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
-from django.utils.simplejson import dumps
+from django.utils.simplejson import dumps, loads
+from annoying.decorators import render_to
 
 
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
@@ -187,3 +188,35 @@ def exporter(request):
     resp = HttpResponse(dumps(data))
     resp['Content-Type'] = 'application/json'
     return resp
+
+
+@render_to("revert_confirm.html")
+def revert_to_version(request, version_id):
+    v = get_object_or_404(Version, pk=version_id)
+    if request.method == "POST":
+        v.section.save_version(
+            request.user,
+            activity="reverting to previous version [%d]" % v.id)
+        # clear all pageblocks on the section
+        for pb in v.section.pageblock_set.all():
+            pb.delete()
+        # clear child sections (since they might get replaced)
+        v.section.get_children().delete()
+        # force the numchild to 0.
+        # possible treebeard bug we are working around
+        # basically, despite calling the treebeard queryset's .delete()
+        # as recommended, child nodes get deleted, but the parent's
+        # numchild never gets reset, so
+        #   section.get_num_children() returns, say, 3
+        # while
+        #   section.get_children() returns []
+        # this really seems like a bug in treebeard, possibly
+        # transaction related
+
+        v.section.numchild = 0
+        v.section.save()
+        v.section.from_dict(loads(v.data))
+
+        return HttpResponseRedirect("/edit" + v.section.get_absolute_url())
+    else:
+        return dict(version=v)

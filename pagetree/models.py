@@ -188,9 +188,10 @@ class Section(MP_Node):
     def append_child(self, label, slug=''):
         if slug == '':
             slug = slugify(label)
+        self.save()
         return self.add_child(label=label, slug=slug, hierarchy=self.hierarchy)
 
-    def append_pageblock(self, label, content_object):
+    def append_pageblock(self, label, css_extra, content_object):
         neword = self.pageblock_set.count() + 1
         return PageBlock.objects.create(section=self, label=label,
                                         ordinality=neword,
@@ -310,6 +311,15 @@ class Section(MP_Node):
             children=[s.as_dict() for s in self.get_children()],
             )
 
+    def from_dict(self, d):
+        self.label = d.get('label', '')
+        self.slug = d.get('slug', '')
+        self.save()
+        for pb in d.get('pageblocks', []):
+            self.add_pageblock_from_dict(pb)
+        for c in d.get('children', []):
+            self.add_child_section_from_dict(c)
+
     def add_pageblock_from_dict(self, d):
         blocktype = d.get('block_type', '')
         # now we need to figure out which kind of pageblock to create
@@ -324,6 +334,7 @@ class Section(MP_Node):
 
     def add_child_section_from_dict(self, d):
         s = self.append_child(d.get('label', ''), d.get('slug', ''))
+        s.save()
         for pb in d.get('pageblocks', []):
             s.add_pageblock_from_dict(pb)
         for c in d.get('children', []):
@@ -496,3 +507,12 @@ class Version(models.Model):
 
     class Meta:
         ordering = ["-saved_at", ]
+
+    def more_recent_versions(self):
+        versions = list(self.section.version_set.filter(
+                saved_at__gt=self.saved_at))
+        for s in self.section.get_descendants():
+            for v in s.version_set.filter(saved_at__gt=self.saved_at):
+                versions.append(v)
+        versions.sort(lambda a, b: cmp(b.saved_at, a.saved_at))
+        return versions

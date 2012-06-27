@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="." method="post" class="well">
+
+
+{% if version.more_recent_versions %}
+
+<div class="alert">
+<h3>Are you sure?</h3>
+
+<p>Reverting to this version will undo the following changes that
+	have been made to this section or any child sections:</p>
+</div>
+
+<table class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th>Section</th>
+			<th>Saved At</th>
+			<th>User</th>
+			<th>Activity</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for v in version.more_recent_versions %}
+    <tr>
+			<th>{{v.section.label}}</th>
+			<td>{{v.saved_at}}</td>
+			<td>{{v.user}}</td>
+			<td>{{v.activity}}</td>
+		</tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+<h3>Are you sure?</h3>
+{% endif %}
+
+{% if version.section.get_children_count %} 
+<div class="alert alert-error">
+This section has child sections. Please be aware that reverting this
+section to a previous version will clear all the history on those
+child sections. This is a limitation of the current versioning system,
+unfortunately. 
+</div>
+{% endif %}
+
+<a href="/edit{{version.section.get_absolute_url}}" class="btn">Cancel</a>
+
+<input type="submit" value="Yes, revert to this version" 
+			 class="btn
+			btn-primary" />
+</form>
+
+
+{% endblock %}
