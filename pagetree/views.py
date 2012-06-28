@@ -113,7 +113,7 @@ def delete_section(request, section_id, success_url=None):
             success_url = "/edit" + parent.get_absolute_url()
         return HttpResponseRedirect(success_url)
     return HttpResponse("""
-<html><body><form activity="." method="post">Are you Sure?
+<html><body><form action="." method="post">Are you Sure?
 <input type="submit" value="Yes, delete it" /></form></body></html>
 """)
 
