@@ -119,3 +119,7 @@ class OneLevelDeepTest(unittest.TestCase):
     def test_get_first_leaf(self):
         self.assertEqual(self.h.get_first_leaf(self.root),
                          self.section1)
+
+    def test_get_last_leaf(self):
+        self.assertEqual(self.h.get_last_leaf(self.root),
+                         self.section3)
