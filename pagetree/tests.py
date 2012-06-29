@@ -6,7 +6,8 @@ class EmptyHierarchyTest(unittest.TestCase):
     """ a hierarchy with no sections in it
     (one Root gets created by default) """
     def setUp(self):
-        self.h = Hierarchy.objects.create(name="main", base_url="")
+        self.h = Hierarchy.from_dict({'name' : "main",
+                                      'base_url' : ""})
 
     def tearDown(self):
         self.h.delete()
@@ -123,3 +124,75 @@ class OneLevelDeepTest(unittest.TestCase):
     def test_get_last_leaf(self):
         self.assertEqual(self.h.get_last_leaf(self.root),
                          self.section3)
+
+    def test_get_module(self):
+        self.assertEqual(
+            self.root.get_module(),
+            None)
+        self.assertEqual(
+            self.section1.get_module(),
+            self.section1)
+
+    def test_is_first_child(self):
+        self.assertEqual(
+            self.root.is_first_child(),
+            True)
+        self.assertEqual(
+            self.section1.is_first_child(),
+            True)
+        self.assertEqual(
+            self.section2.is_first_child(),
+            False)
+
+    def test_is_last_child(self):
+        self.assertEqual(
+            self.root.is_last_child(),
+            True)
+        self.assertEqual(
+            self.section1.is_last_child(),
+            False)
+        self.assertEqual(
+            self.section2.is_last_child(),
+            False)
+        self.assertEqual(
+            self.section3.is_last_child(),
+            True)
+
+    def test_get_previous(self):
+        self.assertEqual(
+            self.section1.get_previous(),
+            None)
+        self.assertEqual(
+            self.section2.get_previous(),
+            self.section1)
+        self.assertEqual(
+            self.section3.get_previous(),
+            self.section2)
+        self.assertEqual(
+            self.root.get_previous(),
+            None)
+
+    def test_get_next(self):
+        self.assertEqual(
+            self.section1.get_next(),
+            self.section2)
+        self.assertEqual(
+            self.section2.get_next(),
+            self.section3)
+        self.assertEqual(
+            self.section3.get_next(),
+            None)
+        self.assertEqual(
+            self.root.get_previous(),
+            None)
+
+    def test_section_unicode(self):
+        self.assertEqual(
+            str(self.section1),
+            "Section 1")
+
+    def test_section_get_absolute_url(self):
+        self.assertEqual(
+            self.section1.get_absolute_url(),
+            "section-1/")
+        
