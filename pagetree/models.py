@@ -85,7 +85,7 @@ class Hierarchy(models.Model):
     def get_last_leaf(self, section):
         if (section.is_leaf()):
             return section
-        return self.get_last_leaf(section.get_children()[-1])
+        return self.get_last_leaf(list(section.get_children())[-1])
 
     def as_dict(self):
         return dict(name=self.name,
