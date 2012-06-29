@@ -195,4 +195,20 @@ class OneLevelDeepTest(unittest.TestCase):
         self.assertEqual(
             self.section1.get_absolute_url(),
             "section-1/")
+
+    def test_section_get_first_leaf(self):
+        self.assertEqual(
+            self.section1.get_first_leaf(),
+            self.section1)
+        self.assertEqual(
+            self.root.get_first_leaf(),
+            self.section1)
+
+    def test_section_get_last_leaf(self):
+        self.assertEqual(
+            self.section3.get_last_leaf(),
+            self.section3)
+        self.assertEqual(
+            self.root.get_last_leaf(),
+            self.section3)
         
