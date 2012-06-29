@@ -271,7 +271,7 @@ class Section(MP_Node):
     def get_last_leaf(self):
         if (self.is_leaf()):
             return self
-        return self.get_children()[-1].get_last_leaf()
+        return list(self.get_children())[-1].get_last_leaf()
 
     def reset(self, user):
         """ clear a user's responses to all pageblocks on this page """
