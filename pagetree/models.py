@@ -85,7 +85,7 @@ class Hierarchy(models.Model):
     def get_last_leaf(self, section):
         if (section.is_leaf()):
             return section
-        return self.get_last_leaf(section.get_children()[-1])
+        return self.get_last_leaf(list(section.get_children())[-1])
 
     def as_dict(self):
         return dict(name=self.name,
@@ -207,6 +207,7 @@ class Section(MP_Node):
 
     def get_path(self):
         """ same as get_absolute_url, without the leading /"""
+        # TODO: this is wrong if hierarchy's base_url isn't "/"
         return self.get_absolute_url()[1:]
 
     def add_child_section_form(self):
