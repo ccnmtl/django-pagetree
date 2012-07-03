@@ -1,5 +1,5 @@
 from django.utils import unittest
-from pagetree.models import Hierarchy
+from pagetree.models import Hierarchy, PageBlock
 
 
 class EmptyHierarchyTest(unittest.TestCase):
@@ -289,3 +289,16 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         self.assertEqual(b.label, "new label")
         self.assertEqual(b.css_extra, "new css_extra")
         self.assertEqual(b.block().body, "new_body")
+
+    def test_serialization(self):
+        self.assertEqual(
+            self.section1.as_dict()['pageblocks'][0]['body'],
+            'some body text section 1 block 1')
+
+    def test_delete_block(self):
+        block1 = self.section1.pageblock_set.all()[0]
+        block2 = self.section1.pageblock_set.all()[1]
+        block1.delete()
+        # block2 should now be #1, but we need to re-fetch it
+        block2 = PageBlock.objects.get(id=block2.id)
+        self.assertEqual(block2.ordinality, 1)
