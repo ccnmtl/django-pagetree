@@ -117,8 +117,10 @@ class Hierarchy(models.Model):
         return ul.path
 
     def get_user_section(self, user):
-        return self.find_section_from_path(
-            self.get_user_location(user)[1:])
+        location = self.get_user_location(user)
+        if location.startswith("/"):
+            location = location[1:]
+        return self.find_section_from_path(location)
 
     def user_visit(self, user, section):
         path = section.get_absolute_url()
