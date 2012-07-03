@@ -110,6 +110,26 @@ class OneLevelDeepTest(unittest.TestCase):
             self.section1.label,
             "Section 1")
 
+    def test_add_child_form(self):
+        f = self.section1.add_child_section_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+
+    def test_edit_form(self):
+        f = self.section1.edit_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+        self.assertEqual(
+            'slug' in f.fields,
+            True)
+
+    def test_get_path(self):
+        self.assertEqual(
+            self.section1.get_path(),
+            "section-1")
+
     def test_valid_path(self):
         self.assertEqual(self.h.find_section_from_path("section-1/"),
                          self.section1)
