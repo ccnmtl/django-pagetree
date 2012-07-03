@@ -263,3 +263,29 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         self.assertEqual(
             b.render_summary().strip(),
             "some body text section 1 block 1")
+
+    def test_edit_form(self):
+        b = self.section1.pageblock_set.all()[0]
+        f = b.edit_form()
+        self.assertEqual(
+            "body" in f.fields,
+            True)
+
+    def test_default_edit_form(self):
+        b = self.section1.pageblock_set.all()[0]
+        f = b.default_edit_form()
+        self.assertEqual(
+            "label" in f.fields,
+            True)
+        self.assertEqual(
+            "css_extra" in f.fields,
+            True)
+
+    def test_edit(self):
+        b = self.section1.pageblock_set.all()[0]
+        b.edit(dict(label="new label",
+                    css_extra="new css_extra",
+                    body="new_body"), None)
+        self.assertEqual(b.label, "new label")
+        self.assertEqual(b.css_extra, "new css_extra")
+        self.assertEqual(b.block().body, "new_body")
