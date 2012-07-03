@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.utils import unittest
 from pagetree.models import Hierarchy, PageBlock
 
@@ -240,6 +241,17 @@ class OneLevelWithBlocksTest(unittest.TestCase):
     def tearDown(self):
         self.h.delete()
 
+    def test_unicode(self):
+        b = self.section1.pageblock_set.all()[0]
+        self.assertEqual(
+            str(b),
+            "Section 1 [1]: ")
+
+    def test_edit_label(self):
+        b = self.section1.pageblock_set.all()[0]
+        self.assertEqual(
+            b.edit_label(), 'Text Block')
+
     def test_render(self):
         b = self.section1.pageblock_set.all()[0]
         self.assertEqual(
@@ -302,3 +314,47 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         # block2 should now be #1, but we need to re-fetch it
         block2 = PageBlock.objects.get(id=block2.id)
         self.assertEqual(block2.ordinality, 1)
+
+
+class UserTrackingTest(unittest.TestCase):
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name="main", base_url="")
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict({
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+                })
+        self.root.add_child_section_from_dict({
+                'label': 'Section 2',
+                'slug': 'section-2',
+                'pageblocks': [],
+                'children': [],
+                })
+        self.root.add_child_section_from_dict({
+                'label': 'Section 3',
+                'slug': 'section-3',
+                'pageblocks': [],
+                'children': [],
+                })
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.section2 = r[1]
+        self.section3 = r[2]
+        self.user = User.objects.create(username='testuser')
+
+    def tearDown(self):
+        self.h.delete()
+        self.user.delete()
+
+    def test_user_visit(self):
+        self.h.user_visit(self.user, self.section1)
+        self.assertEqual(
+            self.h.get_user_location(self.user),
+            "section-1/"
+            )
+        self.assertEqual(
+            self.h.get_user_section(self.user),
+            self.section1
+            )
