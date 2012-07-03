@@ -128,7 +128,16 @@ class OneLevelDeepTest(unittest.TestCase):
     def test_get_path(self):
         self.assertEqual(
             self.section1.get_path(),
-            "section-1")
+            "section-1/")
+
+    def test_add_pageblock_form(self):
+        f = self.section1.add_pageblock_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+        self.assertEqual(
+            'css_extra' in f.fields,
+            True)
 
     def test_valid_path(self):
         self.assertEqual(self.h.find_section_from_path("section-1/"),
