@@ -110,6 +110,35 @@ class OneLevelDeepTest(unittest.TestCase):
             self.section1.label,
             "Section 1")
 
+    def test_add_child_form(self):
+        f = self.section1.add_child_section_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+
+    def test_edit_form(self):
+        f = self.section1.edit_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+        self.assertEqual(
+            'slug' in f.fields,
+            True)
+
+    def test_get_path(self):
+        self.assertEqual(
+            self.section1.get_path(),
+            "section-1/")
+
+    def test_add_pageblock_form(self):
+        f = self.section1.add_pageblock_form()
+        self.assertEqual(
+            'label' in f.fields,
+            True)
+        self.assertEqual(
+            'css_extra' in f.fields,
+            True)
+
     def test_valid_path(self):
         self.assertEqual(self.h.find_section_from_path("section-1/"),
                          self.section1)
@@ -358,3 +387,129 @@ class UserTrackingTest(unittest.TestCase):
             self.h.get_user_section(self.user),
             self.section1
             )
+
+    def test_user_visit_section(self):
+        self.section1.user_visit(self.user)
+        self.assertEqual(
+            self.h.get_user_location(self.user),
+            "section-1/"
+            )
+        self.assertEqual(
+            self.h.get_user_section(self.user),
+            self.section1
+            )
+
+    def test_user_pagevisit(self):
+        self.assertEqual(
+            self.section1.get_uservisit(self.user),
+            None
+            )
+        self.section1.user_pagevisit(self.user, status="incomplete")
+        self.assertEqual(
+            self.section1.get_uservisit(self.user).status,
+            "incomplete"
+            )
+        self.section1.user_pagevisit(self.user, status="complete")
+        self.assertEqual(
+            self.section1.get_uservisit(self.user).status,
+            "complete"
+            )
+
+
+class VersionTest(unittest.TestCase):
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name="main", base_url="")
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict({
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [
+                    {'label': '',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'some body text section 1 block 1',
+                     },
+                    {'label': '',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'some body text section 1 block 2',
+                     }
+                    ],
+                'children': [{
+                        'label': 'Child 1',
+                        'slug': 'child-1',
+                        'pageblocks': [],
+                        'children': [{
+                                'label': 'GrandChild 1',
+                                'slug': 'grandchild-1',
+                                'pageblocks': [],
+                                'children': [],
+                                }],
+                        }
+                    ],
+                })
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.user = User.objects.create(username='testuser')
+
+    def tearDown(self):
+        self.h.delete()
+        self.user.delete()
+
+    def test_save_version(self):
+        self.assertEqual(
+            self.section1.version_set.count(),
+            0)
+        self.section1.save_version(self.user, activity="test save")
+        self.assertEqual(
+            self.section1.version_set.count(),
+            1)
+        v = self.section1.version_set.all()[0]
+        self.assertEqual(
+            v.activity, "test save")
+        self.assertEqual(
+            v.user, self.user)
+        # just some quick checks that our block bodies made it into
+        # the data
+        self.assertEqual(
+            "some body text section 1 block 1" in v.data,
+            True)
+        self.assertEqual(
+            "some body text section 1 block 2" in v.data,
+            True)
+        # and make sure the entire subtree got serialized
+        self.assertEqual(
+            'GrandChild 1' in v.data,
+            True)
+
+    def test_more_recent_versions(self):
+        self.section1.save_version(self.user, activity="test save")
+        # grab the most recent version
+        v = list(self.section1.version_set.all())[-1]
+        # should not be any newer ones
+        self.assertEqual(
+            len(v.more_recent_versions()),
+            0)
+        # add another
+        self.section1.save_version(self.user, activity="another test save")
+        # now there should be
+        self.assertEqual(
+            len(v.more_recent_versions()),
+            1)
+
+    def test_more_recent_versions_with_children(self):
+        self.section1.save_version(self.user, activity="test save")
+        # grab the most recent version
+        v = list(self.section1.version_set.all())[-1]
+        # should not be any newer ones
+        self.assertEqual(
+            len(v.more_recent_versions()),
+            0)
+        # add another on a child
+        self.section1.get_children()[0].save_version(
+            self.user,
+            activity="another test save")
+        # now there should be
+        self.assertEqual(
+            len(v.more_recent_versions()),
+            1)

@@ -117,9 +117,7 @@ class Hierarchy(models.Model):
         return ul.path
 
     def get_user_section(self, user):
-        location = self.get_user_location(user)
-        if location.startswith("/"):
-            location = location[1:]
+        location = self.get_user_location(user)[len(self.base_url):]
         return self.find_section_from_path(location)
 
     def user_visit(self, user, section):
@@ -209,8 +207,7 @@ class Section(MP_Node):
 
     def get_path(self):
         """ same as get_absolute_url, without the leading /"""
-        # TODO: this is wrong if hierarchy's base_url isn't "/"
-        return self.get_absolute_url()[1:]
+        return self.get_absolute_url()[len(self.hierarchy.base_url):]
 
     def add_child_section_form(self):
         class AddChildSectionForm(forms.Form):
