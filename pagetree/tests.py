@@ -358,3 +358,32 @@ class UserTrackingTest(unittest.TestCase):
             self.h.get_user_section(self.user),
             self.section1
             )
+
+    def test_user_visit_section(self):
+        self.section1.user_visit(self.user)
+        self.assertEqual(
+            self.h.get_user_location(self.user),
+            "section-1/"
+            )
+        self.assertEqual(
+            self.h.get_user_section(self.user),
+            self.section1
+            )
+
+    def test_user_pagevisit(self):
+        self.assertEqual(
+            self.section1.get_uservisit(self.user),
+            None
+            )
+        self.section1.user_pagevisit(self.user, status="incomplete")
+        self.assertEqual(
+            self.section1.get_uservisit(self.user).status,
+            "incomplete"
+            )
+        self.section1.user_pagevisit(self.user, status="complete")
+        self.assertEqual(
+            self.section1.get_uservisit(self.user).status,
+            "complete"
+            )
+
+
