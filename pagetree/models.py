@@ -489,6 +489,9 @@ class UserLocation(models.Model):
     hierarchy = models.ForeignKey(Hierarchy)
     path = models.CharField(max_length=256, default="/")
 
+    class Meta:
+        unique_together = (('user', 'hierarchy'), )
+
 
 class UserPageVisit(models.Model):
     """ for detailed tracking """
