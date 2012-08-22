@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.utils import unittest
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 import django.core.exceptions
+import django.db
 
 
 class EmptyHierarchyTest(unittest.TestCase):
@@ -418,15 +419,16 @@ class UserTrackingTest(unittest.TestCase):
 
     def test_user_pagevisit_multiple(self):
         self.section1.user_pagevisit(self.user, status="complete")
-        # then stuff another one in manually to simulate a race condition
-        UserPageVisit.objects.create(section=self.section1,
-                                     user=self.user,
-                                     status="bad status")
         try:
-            self.section1.user_pagevisit(self.user, status="complete")
-            self.assertEqual(True, True)
-        except django.core.exceptions.MultipleObjectsReturned:
+            # then stuff another one in manually to simulate a race condition
+            UserPageVisit.objects.create(section=self.section1,
+                                         user=self.user,
+                                         status="bad status")
+            # should not be able to happen
             self.assertEqual(True, False)
+        except django.db.IntegrityError:
+            self.assertEqual(True, True)
+        self.section1.user_pagevisit(self.user, status="complete")
 
 
 class VersionTest(unittest.TestCase):

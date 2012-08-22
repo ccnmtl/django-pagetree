@@ -489,6 +489,9 @@ class UserLocation(models.Model):
     hierarchy = models.ForeignKey(Hierarchy)
     path = models.CharField(max_length=256, default="/")
 
+    class Meta:
+        unique_together = (('user', 'hierarchy'), )
+
 
 class UserPageVisit(models.Model):
     """ for detailed tracking """
@@ -497,6 +500,9 @@ class UserPageVisit(models.Model):
     status = models.CharField(max_length=256, default="incomplete")
     first_visit = models.DateTimeField(auto_now_add=True)
     last_visit = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('user', 'section'),)
 
 
 class Version(models.Model):
