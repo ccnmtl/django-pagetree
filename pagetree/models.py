@@ -10,7 +10,7 @@ from django.db.models import get_model
 from django.template.defaultfilters import slugify
 from django.utils.simplejson import dumps
 from treebeard.mp_tree import MP_Node
-
+import django.core.exceptions
 
 settings = None
 try:
@@ -344,9 +344,12 @@ class Section(MP_Node):
         self.hierarchy.user_visit(user, self)
 
     def user_pagevisit(self, user, status="incomplete"):
-        (upv, created) = UserPageVisit.objects.get_or_create(
-            section=self,
-            user=user)
+        try:
+            (upv, created) = UserPageVisit.objects.get_or_create(
+                section=self,
+                user=user)
+        except django.core.exceptions.MultipleObjectsReturned:
+            upv = UserPageVisit.objects.filter(section=self, user=user)[0]
         upv.status = status
         upv.save()
 
