@@ -498,6 +498,9 @@ class UserPageVisit(models.Model):
     first_visit = models.DateTimeField(auto_now_add=True)
     last_visit = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = (('user', 'section'),)
+
 
 class Version(models.Model):
     """ very basic versioning """
