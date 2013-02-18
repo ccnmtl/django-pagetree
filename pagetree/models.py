@@ -324,6 +324,8 @@ class Section(MP_Node):
         blocktype = d.get('block_type', '')
         # now we need to figure out which kind of pageblock to create
         for pb_class in self.available_pageblocks():
+            if not pb_class:
+                continue
             if pb_class.display_name == blocktype:
                 # a match
                 if hasattr(pb_class, 'create_from_dict'):
