@@ -94,7 +94,7 @@ def edit_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     section.save_version(request.user, activity="edit section")
     section.label = request.POST.get('label', '')
-    section.slug = request.POST.get('slug', slugify(section.label))
+    section.slug = request.POST.get('slug', slugify(section.label)[:50])
     section.save()
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
@@ -143,7 +143,7 @@ def add_child_section(request, section_id, success_url=None):
         request.user,
         "add child section [%s]" % request.POST.get('label', 'unnamed'))
     section.append_child(request.POST.get('label', 'unnamed'),
-                         request.POST.get('slug', ''))
+                         request.POST.get('slug', '')[:50])
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)
