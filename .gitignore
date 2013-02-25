@@ -1,3 +1,7 @@
 dist/*
 build/*
 .coverage
+._*
+*~
+*.pyc
+ve
