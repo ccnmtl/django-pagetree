@@ -309,7 +309,7 @@ class Section(MP_Node):
             slug=self.slug,
             pageblocks=[b.as_dict() for b in self.pageblock_set.all()],
             children=[s.as_dict() for s in self.get_children()],
-            )
+        )
 
     def from_dict(self, d):
         self.label = d.get('label', '')
@@ -520,7 +520,8 @@ class Version(models.Model):
         ordering = ["-saved_at", ]
 
     def more_recent_versions(self):
-        versions = list(self.section.version_set.filter(
+        versions = list(
+            self.section.version_set.filter(
                 saved_at__gt=self.saved_at))
         for s in self.section.get_descendants():
             for v in s.version_set.filter(saved_at__gt=self.saved_at):

@@ -76,24 +76,27 @@ class OneLevelDeepTest(unittest.TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
-        self.root.add_child_section_from_dict({
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 1',
                 'slug': 'section-1',
                 'pageblocks': [],
                 'children': [],
-                })
-        self.root.add_child_section_from_dict({
+            })
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 2',
                 'slug': 'section-2',
                 'pageblocks': [],
                 'children': [],
-                })
-        self.root.add_child_section_from_dict({
+            })
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 3',
                 'slug': 'section-3',
                 'pageblocks': [],
                 'children': [],
-                })
+            })
         r = self.root.get_children()
         self.section1 = r[0]
         self.section2 = r[1]
@@ -249,7 +252,8 @@ class OneLevelWithBlocksTest(unittest.TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
-        self.root.add_child_section_from_dict({
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 1',
                 'slug': 'section-1',
                 'pageblocks': [
@@ -263,9 +267,9 @@ class OneLevelWithBlocksTest(unittest.TestCase):
                      'block_type': 'Text Block',
                      'body': 'some body text section 1 block 2',
                      }
-                    ],
+                ],
                 'children': [],
-                })
+            })
         r = self.root.get_children()
         self.section1 = r[0]
 
@@ -351,24 +355,27 @@ class UserTrackingTest(unittest.TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
-        self.root.add_child_section_from_dict({
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 1',
                 'slug': 'section-1',
                 'pageblocks': [],
                 'children': [],
-                })
-        self.root.add_child_section_from_dict({
+            })
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 2',
                 'slug': 'section-2',
                 'pageblocks': [],
                 'children': [],
-                })
-        self.root.add_child_section_from_dict({
+            })
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 3',
                 'slug': 'section-3',
                 'pageblocks': [],
                 'children': [],
-                })
+            })
         r = self.root.get_children()
         self.section1 = r[0]
         self.section2 = r[1]
@@ -384,38 +391,38 @@ class UserTrackingTest(unittest.TestCase):
         self.assertEqual(
             self.h.get_user_location(self.user),
             "section-1/"
-            )
+        )
         self.assertEqual(
             self.h.get_user_section(self.user),
             self.section1
-            )
+        )
 
     def test_user_visit_section(self):
         self.section1.user_visit(self.user)
         self.assertEqual(
             self.h.get_user_location(self.user),
             "section-1/"
-            )
+        )
         self.assertEqual(
             self.h.get_user_section(self.user),
             self.section1
-            )
+        )
 
     def test_user_pagevisit(self):
         self.assertEqual(
             self.section1.get_uservisit(self.user),
             None
-            )
+        )
         self.section1.user_pagevisit(self.user, status="incomplete")
         self.assertEqual(
             self.section1.get_uservisit(self.user).status,
             "incomplete"
-            )
+        )
         self.section1.user_pagevisit(self.user, status="complete")
         self.assertEqual(
             self.section1.get_uservisit(self.user).status,
             "complete"
-            )
+        )
 
     def test_user_pagevisit_multiple(self):
         self.section1.user_pagevisit(self.user, status="complete")
@@ -435,7 +442,8 @@ class VersionTest(unittest.TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
-        self.root.add_child_section_from_dict({
+        self.root.add_child_section_from_dict(
+            {
                 'label': 'Section 1',
                 'slug': 'section-1',
                 'pageblocks': [
@@ -449,8 +457,9 @@ class VersionTest(unittest.TestCase):
                      'block_type': 'Text Block',
                      'body': 'some body text section 1 block 2',
                      }
-                    ],
-                'children': [{
+                ],
+                'children': [
+                    {
                         'label': 'Child 1',
                         'slug': 'child-1',
                         'pageblocks': [],
@@ -459,10 +468,10 @@ class VersionTest(unittest.TestCase):
                                 'slug': 'grandchild-1',
                                 'pageblocks': [],
                                 'children': [],
-                                }],
-                        }
-                    ],
-                })
+                        }],
+                    }
+                ],
+            })
         r = self.root.get_children()
         self.section1 = r[0]
         self.user = User.objects.create(username='testuser')
