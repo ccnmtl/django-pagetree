@@ -37,7 +37,6 @@ setup(
         "Django",
         "django-treebeard",
         "Markdown",
-        "PIL",
         "South",
         "nose",
         "coverage",
