@@ -19,6 +19,11 @@ class RenderNode(template.Node):
         self.block = block
 
     def render(self, context):
+        for d in context:
+            for k in d.keys():
+                if k == 'user':
+                    context.user = d[k]
+
         b = context[self.block]
         context_dict = {}
         for d in context.dicts:
@@ -27,6 +32,7 @@ class RenderNode(template.Node):
         for k in context_dict.keys():
             if isinstance(k, str):
                 del context_dict[k]
+        context_dict['request'] = context
         return b.render(**context_dict)
 
 
@@ -41,6 +47,11 @@ class RenderJSNode(template.Node):
         self.block = block
 
     def render(self, context):
+        for d in context:
+            for k in d.keys():
+                if k == 'user':
+                    context.user = d[k]
+
         b = context[self.block]
         context_dict = {}
         for d in context.dicts:
@@ -49,6 +60,7 @@ class RenderJSNode(template.Node):
         for k in context_dict.keys():
             if isinstance(k, str):
                 del context_dict[k]
+        context_dict['request'] = context
         return b.render_js(**context_dict)
 
 
@@ -63,6 +75,11 @@ class RenderCSSNode(template.Node):
         self.block = block
 
     def render(self, context):
+        for d in context:
+            for k in d.keys():
+                if k == 'user':
+                    context.user = d[k]
+
         b = context[self.block]
         context_dict = {}
         for d in context.dicts:
@@ -71,6 +88,7 @@ class RenderCSSNode(template.Node):
         for k in context_dict.keys():
             if isinstance(k, str):
                 del context_dict[k]
+        context_dict['request'] = context
         return b.render_css(**context_dict)
 
 
@@ -85,6 +103,11 @@ class RenderSummaryNode(template.Node):
         self.block = block
 
     def render(self, context):
+        for d in context:
+            for k in d.keys():
+                if k == 'user':
+                    context.user = d[k]
+
         b = context[self.block]
         context_dict = {}
         for d in context.dicts:
@@ -93,6 +116,7 @@ class RenderSummaryNode(template.Node):
         for k in context_dict.keys():
             if isinstance(k, str):
                 del context_dict[k]
+        context_dict['request'] = context
         return b.render_summary(**context_dict)
 
 
