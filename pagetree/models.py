@@ -158,7 +158,7 @@ class Section(MP_Node):
         self.save()
 
     def get_sibling_slugs(self):
-        return [s.slug for s in self.get_siblings()]
+        return [s.slug for s in self.get_siblings() if s != self]
 
     def get_module(self):
         """ get the top level module that the section is in"""
