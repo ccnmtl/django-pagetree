@@ -94,7 +94,9 @@ def edit_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     section.save_version(request.user, activity="edit section")
     section.label = request.POST.get('label', '')
-    section.slug = request.POST.get('slug', slugify(section.label)[:50])
+    section.slug = slugify(request.POST.get('slug', section.label))[:50]
+    section.save()
+    section.enforce_slug()
     section.save()
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
@@ -157,11 +159,13 @@ def add_pageblock(request, section_id, success_url=None):
 
 def add_child_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
+    label = request.POST.get('label', 'unnamed') or 'unnamed'
     section.save_version(
         request.user,
-        "add child section [%s]" % request.POST.get('label', 'unnamed'))
-    section.append_child(request.POST.get('label', 'unnamed'),
-                         request.POST.get('slug', '')[:50])
+        "add child section [%s]" % label)
+    slug = slugify(request.POST.get('slug', label))[:50]
+    section.append_child(label, slug)
+
     if success_url is None:
         success_url = "/edit" + section.get_absolute_url()
     return HttpResponseRedirect(success_url)

@@ -135,6 +135,32 @@ class Section(MP_Node):
     slug = models.SlugField()
     hierarchy = models.ForeignKey(Hierarchy)
 
+    def enforce_slug(self):
+        # root node gets an empty slug
+        if self.is_root():
+            self.slug = ""
+        # but no other section should ever be able to
+        self.slug = slugify(self.slug)[:50]
+        if self.slug == "":
+            self.slug = slugify(self.label)[:50]
+        if self.slug == "":
+            # label is empty too, so we need to fall way back
+            self.slug = "section-%d" % self.id
+        # enforce uniqueness at this section's level in the
+        # tree. ie, don't allow two siblings to have the same slug.
+        # duplicate slugs at different levels of the tree are fine.
+        if not self.is_root():
+            # need to make sure no other siblings have the same slug
+            while self.slug in self.get_sibling_slugs():
+                self.slug = self.slug + "-%d" % self.id
+
+        # TODO: this should maybe go on a save hook to make sure
+        # it is always enforced.
+        self.save()
+
+    def get_sibling_slugs(self):
+        return [s.slug for s in self.get_siblings() if s != self]
+
     def get_module(self):
         """ get the top level module that the section is in"""
         if self.is_root():
@@ -190,7 +216,9 @@ class Section(MP_Node):
         if slug == '':
             slug = slugify(label)
         self.save()
-        return self.add_child(label=label, slug=slug, hierarchy=self.hierarchy)
+        c = self.add_child(label=label, slug=slug, hierarchy=self.hierarchy)
+        c.enforce_slug()
+        return c
 
     def append_pageblock(self, label, css_extra, content_object):
         neword = self.pageblock_set.count() + 1
