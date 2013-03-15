@@ -11,6 +11,7 @@ from django.template.defaultfilters import slugify
 from django.utils.simplejson import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
+from treebeard.forms import MoveNodeForm
 
 settings = None
 try:
@@ -255,6 +256,9 @@ class Section(MP_Node):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
         return EditSectionForm()
+
+    def move_form(self):
+        return MoveNodeForm(instance=self)
 
     def update_children_order(self, children_ids):
         """children_ids is a list of Section ids for the children
@@ -520,7 +524,7 @@ class UserLocation(models.Model):
     path = models.CharField(max_length=256, default="/")
 
     class Meta:
-        unique_together = (('user', 'hierarchy'), )
+        unique_together = (('user', 'hierarchy'),)
 
 
 class UserPageVisit(models.Model):

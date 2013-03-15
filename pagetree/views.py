@@ -120,6 +120,24 @@ def delete_section(request, section_id, success_url=None):
 """)
 
 
+def move_section(request, section_id, success_url=None):
+    if request.method != "POST":
+        return HttpResponse("only use POST for this")
+    section = get_object_or_404(Section, id=section_id)
+    section.save_version(request.user, "move section")
+
+    form = MoveNodeForm(request.POST, instance=section)
+    if form.is_valid():
+        to_section = get_object_or_404(
+            Section,
+            id=form.cleaned_data['_ref_node_id'])
+        position = form.cleaned_data['_position']
+        section.move(to_section, position)
+        if success_url is None:
+            success_url = "/edit" + to_section.get_absolute_url()
+        return HttpResponseRedirect(success_url)
+
+
 def add_pageblock(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     blocktype = request.POST.get('blocktype', '')
@@ -156,27 +174,6 @@ def add_child_section(request, section_id, success_url=None):
 def create_tree_root(request):
     get_section_from_path("")  # creates a root if one doesn't exist
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-
-def move_section(request, section_id):
-    section = get_object_or_404(Section, id=section_id)
-    section.save_version(request.user, "move section")
-
-    if request.method == 'POST':
-        form = MoveNodeForm(request.POST, instance=section)
-        if form.is_valid():
-            to_section = get_object_or_404(
-                Section,
-                id=form.cleaned_data['_ref_node_id'])
-            position = form.cleaned_data['_position']
-            section.move(to_section, position)
-            redirect = '/admin/pagetree/section/%s' % (section.id)
-            return HttpResponseRedirect(redirect)
-    else:
-        form = MoveNodeForm(instance=section)
-    return render_to_response('movenodeform.html',
-                              {'form': form, 'instance': section,
-                               'app_label': 'Pagetree'})
 
 
 def exporter(request):

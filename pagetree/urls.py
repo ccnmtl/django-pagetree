@@ -38,31 +38,3 @@ urlpatterns += patterns(
     (r'^version/(?P<version_id>\d+)/revert/$', 'revert_to_version', {},
      "revert-to-version"),
 )
-
-# Django Admin Console views
-sections = {'queryset': Section.objects.all()}
-blocks = {'queryset': PageBlock.objects.all()}
-
-urlpatterns += patterns(
-    'django.views.generic.list_detail',
-    url(r'^add/section/(?P<object_id>\d+)/$', 'object_detail',
-        dict(sections,
-             template_name='admin/pagetree/section/add_section.html'),
-        'admin-add-section'),
-    url(r'^delete/section/(?P<object_id>\d+)/$', 'object_detail',
-        dict(sections, template_name='admin/pagetree/delete_object.html',
-             extra_context={'object_type': 'section'}),
-        'admin-delete-section'),
-    url(r'^add/pageblock/(?P<object_id>\d+)/$', 'object_detail',
-        dict(sections,
-             template_name='admin/pagetree/pageblock/add_pageblock.html'),
-        'admin-add-pageblock'),
-    url(r'^edit/pageblock/(?P<object_id>\d+)/$', 'object_detail',
-        dict(blocks,
-             template_name='admin/pagetree/pageblock/edit_pageblock.html'),
-        'admin-edit-pageblock'),
-    url(r'^delete/pageblock/(?P<object_id>\d+)/$', 'object_detail',
-        dict(blocks, template_name='admin/pagetree/delete_object.html',
-             extra_context={'object_type': 'pageblock'}),
-        'admin-delete-pageblock'),
-)
