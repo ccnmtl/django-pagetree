@@ -1,0 +1,38 @@
+{% if section.get_children %}
+{% if section.show_toc %}
+<div class="table-of-contents">
+<h3>Table of Contents</h3>
+
+{% if section.deep_toc %}
+<ul class="toc">
+{% for s in section.get_descendants %}
+<li class="menu-{{s.depth}}">
+  <a href="{{s.get_absolute_url}}">{{s.label}}</a>
+  {% if s.get_children %}
+     <ul id="section-ul-{{s.id}}">
+  {% else %}
+     {% if s.is_last_child %}
+       {% for lc in s.closing_children %}
+         </ul>
+       {% endfor %}
+     {% endif %}
+  {% endif %}
+
+  {% if s.get_children %}
+  {% else %}
+    </li>
+  {% endif %}
+{% endfor %}
+</ul>
+
+{% else %}
+<ul class="toc">
+{% for child in section.get_children %}
+   <li><a href="{{child.get_absolute_url}}">{{child.label}}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+</div>
+{% endif %}
+{% endif %}

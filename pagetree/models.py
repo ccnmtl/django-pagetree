@@ -134,6 +134,14 @@ class Section(MP_Node):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
     hierarchy = models.ForeignKey(Hierarchy)
+    show_toc = models.BooleanField(
+        default=False,
+        help_text=("list table of contents of "
+                   "immediate child sections (if applicable)"))
+    deep_toc = models.BooleanField(
+        default=False,
+        help_text=("include children of children in TOC. "
+                   "(this only makes sense if the above is checked)"))
 
     def enforce_slug(self):
         # root node gets an empty slug
@@ -212,11 +220,12 @@ class Section(MP_Node):
         # made it through without finding ourselves? weird.
         return None
 
-    def append_child(self, label, slug=''):
+    def append_child(self, label, slug='', show_toc=False, deep_toc=False):
         if slug == '':
             slug = slugify(label)
         self.save()
-        c = self.add_child(label=label, slug=slug, hierarchy=self.hierarchy)
+        c = self.add_child(label=label, slug=slug, hierarchy=self.hierarchy,
+                           show_toc=show_toc, deep_toc=deep_toc)
         c.enforce_slug()
         return c
 
@@ -255,6 +264,17 @@ class Section(MP_Node):
         class EditSectionForm(forms.Form):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
+            show_toc = forms.BooleanField(
+                initial=self.show_toc,
+                label="Show Table of Contents",
+                help_text=("list table of contents of "
+                           "immediate child sections (if applicable)"))
+            deep_toc = forms.BooleanField(
+                initial=self.deep_toc,
+                label="Show Deep Table of Contents",
+                help_text=(
+                    "include children of children (etc) in TOC. "
+                    "(this only makes sense if the above is enabled)"))
         return EditSectionForm()
 
     def move_form(self):
@@ -339,6 +359,8 @@ class Section(MP_Node):
         return dict(
             label=self.label,
             slug=self.slug,
+            show_toc=self.show_toc,
+            deep_toc=self.deep_toc,
             pageblocks=[b.as_dict() for b in self.pageblock_set.all()],
             children=[s.as_dict() for s in self.get_children()],
         )
@@ -346,6 +368,8 @@ class Section(MP_Node):
     def from_dict(self, d):
         self.label = d.get('label', '')
         self.slug = d.get('slug', '')
+        self.show_toc = d.get('show_toc', False)
+        self.deep_toc = d.get('deep_toc', False)
         self.save()
         for pb in d.get('pageblocks', []):
             self.add_pageblock_from_dict(pb)
@@ -367,7 +391,9 @@ class Section(MP_Node):
                                           content_object=block)
 
     def add_child_section_from_dict(self, d):
-        s = self.append_child(d.get('label', ''), d.get('slug', ''))
+        s = self.append_child(
+            d.get('label', ''), d.get('slug', ''),
+            d.get('show_toc', False), d.get('deep_toc', False))
         s.save()
         for pb in d.get('pageblocks', []):
             s.add_pageblock_from_dict(pb)
