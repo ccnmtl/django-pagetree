@@ -1,3 +1,9 @@
+0.11.9 (2013-03-15)
+===================
+
+* add mock pageblock to reduce the dependencies needed for
+  running unit tests
+
 0.11.8 (2013-03-15)
 ===================
 
