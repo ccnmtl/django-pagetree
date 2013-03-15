@@ -21,7 +21,6 @@ def main():
             'django.contrib.contenttypes',
             'django.contrib.sessions',
             'pagetree',
-            'pageblocks',
             'django_nose',
             'django.contrib.markup',
         ),
@@ -33,15 +32,7 @@ def main():
             ],
 
         ROOT_URLCONF = [],
-        PAGEBLOCKS = ['pageblocks.TextBlock',
-              'pageblocks.HTMLBlock',
-              'pageblocks.PullQuoteBlock',
-              'pageblocks.ImageBlock',
-              'pageblocks.ImagePullQuoteBlock',
-              'quizblock.Quiz',
-              'careermapblock.CareerMap',
-              'fridgeblock.FridgeBlock',
-              ],
+        PAGEBLOCKS = ['pagetree.TestBlock', ],
         SOUTH_TESTS_MIGRATE=False,
 
         # Django replaces this, but it still wants it. *shrugs*

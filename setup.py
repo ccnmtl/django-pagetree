@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="django-pagetree",
-    version="0.11.8",
+    version="0.11.9",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="http://wiki.ccnmtl.columbia.edu/",
@@ -37,7 +37,6 @@ setup(
         "Django",
         "django-treebeard",
         "Markdown",
-        "PIL",
         "South",
         "nose",
         "coverage",
