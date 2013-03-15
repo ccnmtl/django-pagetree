@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{section.label}} (instructor){% endblock %}
+{% block sidenav %}
+	<!-- ###### Secondary Navigation ###### -->
+	<div id="secondary_navigation">
+		<div id="fadetop"></div>
+		<div class="block">
+			<h3>Sections</h3>
+{% with "/instructor" as menu_base %}
+{% include "pagetree/menu.html" %}
+{% endwith %}
+		</div><!-- div id="block" -->
+		<div id="fadebottom"></div>
+	</div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+
+{% block content %}
+<a href="{{section.get_absolute_url}}">student view of page</a>
+<h1>{{ section.label }}</h1>
+
+{% if quizzes %}
+{% for quiz in quizzes %}
+<h3>quiz {{quiz.id}}</h3>
+
+{% if quiz.submission_set.count %}
+<table width="100%">
+{% for submission in quiz.submission_set.all %}
+<tr class="submissionheader">
+<th>{{submission.user.first_name}} {{submission.user.last_name}} ({{submission.user.username}})</th>
+<td>{{submission.submitted}}</td>
+</tr>
+{% for response in submission.response_set.all %}
+<tr class="submissionresponse">
+<td>Question {{response.question.ordinality}}: {{response.question.text}}</td>
+<td class="{% if response.question.answerable %}{% if response.is_correct %}correct{% else %}incorrect{% endif %}{% endif %}">{{response.value}}</td>
+</tr>
+{% endfor %}
+{% endfor %}
+</table>
+{% else %}
+<p>no submissions</p>
+{% endif %}
+
+{% endfor %}
+{% else %}
+<p>no quizzes on this page</p>
+{% endif %}
+
+<br style="clear:both"/>
+{% endblock %}
+
+{% block content-nav %}
+
+{% if section.get_previous %}
+<a href="/instructor{{section.get_previous.get_absolute_url}}" id="previous">« {{section.get_previous.label}}</a>
+{% endif %}
+
+{% if section.get_next %}
+<a href="/instructor{{section.get_next.get_absolute_url}}" id="next">{{section.get_next.label}} »</a>
+{% endif %}
+
+{% endblock %}
