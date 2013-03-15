@@ -259,12 +259,12 @@ class OneLevelWithBlocksTest(unittest.TestCase):
                 'pageblocks': [
                     {'label': '',
                      'css_extra': '',
-                     'block_type': 'Text Block',
+                     'block_type': 'Test Block',
                      'body': 'some body text section 1 block 1',
                      },
                     {'label': '',
                      'css_extra': '',
-                     'block_type': 'Text Block',
+                     'block_type': 'Test Block',
                      'body': 'some body text section 1 block 2',
                      }
                 ],
@@ -285,7 +285,7 @@ class OneLevelWithBlocksTest(unittest.TestCase):
     def test_edit_label(self):
         b = self.section1.pageblock_set.all()[0]
         self.assertEqual(
-            b.edit_label(), 'Text Block')
+            b.edit_label(), 'Test Block')
 
     def test_render(self):
         b = self.section1.pageblock_set.all()[0]
@@ -449,12 +449,12 @@ class VersionTest(unittest.TestCase):
                 'pageblocks': [
                     {'label': '',
                      'css_extra': '',
-                     'block_type': 'Text Block',
+                     'block_type': 'Test Block',
                      'body': 'some body text section 1 block 1',
                      },
                     {'label': '',
                      'css_extra': '',
-                     'block_type': 'Text Block',
+                     'block_type': 'Test Block',
                      'body': 'some body text section 1 block 2',
                      }
                 ],
