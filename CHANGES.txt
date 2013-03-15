@@ -4,6 +4,7 @@
 * new "generic" views for view, edit, and instructor view pages
 * default page.html, edit_page.html, instructor_page.html, and
   menu.html templates included.
+* removed admin views (sdreher)
 
 0.11.7 (2013-03-14)
 ===================
