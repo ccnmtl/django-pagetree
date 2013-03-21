@@ -1,3 +1,16 @@
+0.11.11 (2013-03-21)
+====================
+
+* if your project's base.html has 'bodyid' and 'bodyclass' blocks
+  setup (along the lines of:
+
+    <body id="{% block bodyid %}{% endblock %}"
+    class="{% block bodyclass %}{% endblock %}">
+
+  pagetree's generic views will now fill those in with useful values
+  that will make it easier for a designer to target specific sections
+  or modules in CSS.
+
 0.11.10 (2013-03-15)
 ====================
 

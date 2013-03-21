@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}{{section.label}} (instructor){% endblock %}
+
+{% block bodyclass %}instructor module-{{module.slug}}{% endblock %}
+
+{% block bodyid %}section-{{section.id}}{% endblock %}
+
 {% block sidenav %}
 	<!-- ###### Secondary Navigation ###### -->
 	<div id="secondary_navigation">
