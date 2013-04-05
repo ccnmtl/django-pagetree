@@ -3,6 +3,11 @@
 {% load bootstrap %}
 {% load render %}
 {% block title %}{{section.label}} (edit){% endblock %}
+
+{% block bodyclass %}edit module-{{module.slug}}{% endblock %}
+
+{% block bodyid %}section-{{section.id}}{% endblock %}
+
 {% block js %}
 
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
