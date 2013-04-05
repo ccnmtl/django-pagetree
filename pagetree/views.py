@@ -109,12 +109,16 @@ def delete_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     if request.method == "POST":
         parent = section.get_parent()
-        parent.save_version(
-            request.user,
-            activity="delete child section [%s]" % unicode(section))
+        if parent:
+            parent.save_version(
+                request.user,
+                activity="delete child section [%s]" % unicode(section))
         section.delete()
         if success_url is None:
-            success_url = "/edit" + parent.get_absolute_url()
+            if parent:
+                success_url = "/edit" + parent.get_absolute_url()
+            else:
+                success_url = "/"
         return HttpResponseRedirect(success_url)
     return HttpResponse("""
 <html><body><form action="." method="post">Are you Sure?
