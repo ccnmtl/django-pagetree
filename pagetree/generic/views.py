@@ -68,6 +68,21 @@ def reset_page(section, request):
     return HttpResponseRedirect(section.get_absolute_url())
 
 
+class UserPageVisitor(object):
+    """ simplify/centralize logging visits
+
+    automatically does nothing for an anonymous user
+    """
+    def __new__(self, section, user):
+        self.section = section
+        self.user = user
+
+    def visit(self, status="incomplete"):
+        if self.user.is_anonymous():
+            return
+        self.section.user_pagevisit(self.user, status)
+
+
 def generic_view_page(request, path, hierarchy="main",
                       template="pagetree/page.html",
                       extra_context=None,
@@ -92,10 +107,14 @@ def generic_view_page(request, path, hierarchy="main",
     if section.is_root():
         return visit_root(section, no_root_fallback_url)
 
+    upv = UserPageVisitor(section, request.user)
+    upv.visit()
     if request.method == "POST":
         # user has submitted a form. deal with it
         if request.POST.get('action', '') == 'reset':
+            upv.visit(status="incomplete")
             return reset_page(section, request)
+        upv.visit(status="complete")
         return page_submit(section, request)
     else:
         instructor_link = has_responses(section)
