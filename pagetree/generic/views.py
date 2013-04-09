@@ -25,7 +25,7 @@ def edit_page(request, path):
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from pagetree.helpers import get_module, submitted
+from pagetree.helpers import get_module
 from pagetree.helpers import get_section_from_path
 
 
@@ -126,7 +126,7 @@ def generic_view_page(request, path, hierarchy="main",
             section=section,
             module=module,
             needs_submit=section.needs_submit(),
-            is_submitted=submitted(section, request.user),
+            is_submitted=section.submitted(request.user),
             modules=root.get_children(),
             root=section.hierarchy.get_root(),
             instructor_link=instructor_link,

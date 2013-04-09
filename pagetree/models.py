@@ -363,6 +363,24 @@ class Section(MP_Node):
                     return True
         return False
 
+    def submitted(self, user):
+        """ if all blocks on the page that require submissions
+        have been submitted """
+        for p in self.pageblock_set.all():
+            if hasattr(p.block(), 'needs_submit'):
+                if p.block().needs_submit():
+                    try:
+                        s = p.block().unlocked(user)
+                        if not s:
+                            # there's an unsubmitted block
+                            return False
+                    except:
+                        # most likely: no unlocked() method
+                        pass
+        # made it all the way through without any blocks
+        # reporting that they are unsubmitted
+        return True
+
     def as_dict(self):
         return dict(
             label=self.label,

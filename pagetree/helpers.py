@@ -30,22 +30,11 @@ def needs_submit(section):
 
 
 def submitted(section, user):
-    """ if all blocks on the page that require submissions
-    have been submitted """
-    for p in section.pageblock_set.all():
-        if hasattr(p.block(), 'needs_submit'):
-            if p.block().needs_submit():
-                try:
-                    s = p.block().unlocked(user)
-                    if not s:
-                        # there's an unsubmitted block
-                        return False
-                except:
-                    # most likely: no unlocked() method
-                    pass
-    # made it all the way through without any blocks
-    # reporting that they are unsubmitted
-    return True
+    warnings.warn(
+        (
+            "pagetree.helpers.submitted is deprecated "
+            "in favor of Section.submitted()"))
+    return section.submitted(user)
 
 
 def block_submitted(block, user):
