@@ -73,13 +73,17 @@ class UserPageVisitor(object):
 
     automatically does nothing for an anonymous user
     """
-    def __new__(self, section, user):
+    def __init__(self, section, user):
         self.section = section
         self.user = user
 
-    def visit(self, status="incomplete"):
+    def visit(self, status=None):
         if self.user.is_anonymous():
             return
+        if not status:
+            status = "complete"
+            if needs_submit(self.section):
+                status = "incomplete"
         self.section.user_pagevisit(self.user, status)
 
 
@@ -108,7 +112,6 @@ def generic_view_page(request, path, hierarchy="main",
         return visit_root(section, no_root_fallback_url)
 
     upv = UserPageVisitor(section, request.user)
-    upv.visit()
     if request.method == "POST":
         # user has submitted a form. deal with it
         if request.POST.get('action', '') == 'reset':
@@ -117,6 +120,7 @@ def generic_view_page(request, path, hierarchy="main",
         upv.visit(status="complete")
         return page_submit(section, request)
     else:
+        upv.visit()
         instructor_link = has_responses(section)
         context = dict(
             section=section,
