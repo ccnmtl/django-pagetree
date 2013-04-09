@@ -1,3 +1,10 @@
+0.12.0 (2013-04-09)
+===================
+
+* deprecated some helper functions in favor of methods on Section
+* generic page view now does basic user visit logging
+* https supported for exporter
+
 0.11.12 (2013-04-05)
 ====================
 
