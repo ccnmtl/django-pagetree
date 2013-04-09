@@ -82,7 +82,7 @@ class UserPageVisitor(object):
             return
         if not status:
             status = "complete"
-            if needs_submit(self.section):
+            if self.section.needs_submit():
                 status = "incomplete"
         self.section.user_pagevisit(self.user, status)
 
@@ -125,7 +125,7 @@ def generic_view_page(request, path, hierarchy="main",
         context = dict(
             section=section,
             module=module,
-            needs_submit=needs_submit(section),
+            needs_submit=section.needs_submit(),
             is_submitted=submitted(section, request.user),
             modules=root.get_children(),
             root=section.hierarchy.get_root(),

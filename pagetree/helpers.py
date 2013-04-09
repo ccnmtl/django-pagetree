@@ -21,12 +21,7 @@ def get_module(section):
 
 
 def needs_submit(section):
-    """ if any blocks on the page need to be submitted """
-    for p in section.pageblock_set.all():
-        if hasattr(p.block(), 'needs_submit'):
-            if p.block().needs_submit():
-                return True
-    return False
+    return section.needs_submit()
 
 
 def submitted(section, user):

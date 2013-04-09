@@ -355,6 +355,14 @@ class Section(MP_Node):
                         proceed = not p.block().redirect_to_self_on_submit()
         return proceed
 
+    def needs_submit(self):
+        """ if any blocks on the page need to be submitted """
+        for p in self.pageblock_set.all():
+            if hasattr(p.block(), 'needs_submit'):
+                if p.block().needs_submit():
+                    return True
+        return False
+
     def as_dict(self):
         return dict(
             label=self.label,
