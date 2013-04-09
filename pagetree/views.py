@@ -187,8 +187,10 @@ def exporter(request):
     h = get_object_or_404(Hierarchy, name=hierarchy_name)
     data = h.as_dict()
     resources = []
-    # TODO: will not work on https sites
-    url_base = "http://" + request.get_host()
+    protocol = "http"
+    if request.is_secure():
+        protocol = "https"
+    url_base = protocol + "//" + request.get_host()
     for pb in PageBlock.objects.filter(section__hierarchy=h):
         if hasattr(pb.block(), 'list_resources'):
             for r in pb.block().list_resources():
