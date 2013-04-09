@@ -25,7 +25,7 @@ def edit_page(request, path):
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from pagetree.helpers import get_module, needs_submit, submitted
+from pagetree.helpers import get_module, submitted
 from pagetree.helpers import get_section_from_path
 
 

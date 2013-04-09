@@ -1,4 +1,5 @@
 from models import Hierarchy
+import warnings
 
 
 def get_hierarchy(name="main"):
@@ -21,6 +22,10 @@ def get_module(section):
 
 
 def needs_submit(section):
+    warnings.warn(
+        (
+            "pagetree.helpers.needs_submit is deprecated "
+            "in favor of Section.needs_submit()"))
     return section.needs_submit()
 
 
