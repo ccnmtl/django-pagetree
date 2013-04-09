@@ -25,7 +25,6 @@ def edit_page(request, path):
 """
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from pagetree.helpers import get_module
 from pagetree.helpers import get_section_from_path
 
 
@@ -107,7 +106,7 @@ def generic_view_page(request, path, hierarchy="main",
     """
     section = get_section_from_path(path, hierarchy=hierarchy)
     root = section.hierarchy.get_root()
-    module = get_module(section)
+    module = section.get_module()
     if section.is_root():
         return visit_root(section, no_root_fallback_url)
 
@@ -158,7 +157,7 @@ def generic_instructor_page(request, path, hierarchy="main",
                and p.block().needs_submit()]
     context = dict(section=section,
                    quizzes=quizzes,
-                   module=get_module(section),
+                   module=section.get_module(),
                    modules=root.get_children(),
                    root=section.hierarchy.get_root())
     if extra_context:
@@ -184,7 +183,7 @@ def generic_edit_page(request, path, hierarchy="main",
     root = section.hierarchy.get_root()
     context = dict(
         section=section,
-        module=get_module(section),
+        module=section.get_module(),
         modules=root.get_children(),
         available_pageblocks=section.available_pageblocks(),
         root=section.hierarchy.get_root())

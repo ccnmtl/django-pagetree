@@ -3,8 +3,9 @@ import warnings
 
 
 def get_hierarchy(name="main"):
-    return Hierarchy.objects.get_or_create(name=name,
-                                           defaults=dict(base_url="/"))[0]
+    return Hierarchy.objects.get_or_create(
+        name=name,
+        defaults=dict(base_url="/"))[0]
 
 
 def get_section_from_path(path, hierarchy="main"):
@@ -13,12 +14,11 @@ def get_section_from_path(path, hierarchy="main"):
 
 
 def get_module(section):
-    """ get the top level module that the section is in"""
-    if section.is_root():
-        return None
-    if section.depth == 2:
-        return section
-    return section.get_ancestors()[1]
+    warnings.warn(
+        (
+            "pagetree.helpers.get_module is deprecated "
+            "in favor of Section.get_module()"))
+    return section.get_module()
 
 
 def needs_submit(section):
