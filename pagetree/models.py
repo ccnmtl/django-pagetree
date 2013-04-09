@@ -79,12 +79,12 @@ class Hierarchy(models.Model):
             return []
 
     def get_first_leaf(self, section):
-        if (section.is_leaf()):
+        if section.is_leaf():
             return section
         return self.get_first_leaf(section.get_children()[0])
 
     def get_last_leaf(self, section):
-        if (section.is_leaf()):
+        if section.is_leaf():
             return section
         return self.get_last_leaf(list(section.get_children())[-1])
 
@@ -315,12 +315,12 @@ class Section(MP_Node):
         return EditForm()
 
     def get_first_leaf(self):
-        if (self.is_leaf()):
+        if self.is_leaf():
             return self
         return self.get_children()[0].get_first_leaf()
 
     def get_last_leaf(self):
-        if (self.is_leaf()):
+        if self.is_leaf():
             return self
         return list(self.get_children())[-1].get_last_leaf()
 
