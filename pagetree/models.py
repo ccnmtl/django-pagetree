@@ -460,6 +460,37 @@ class Section(MP_Node):
             comment=comment)
         return v
 
+    def gate_check(self, user):
+        """ return bool, section tuple for whether the user
+        has visited every section previous to this one and
+        which is the first that they need to visit if that's
+        not the case """
+        if not user:
+            # no user: the important thing is just that we deny access
+            return False, self
+        # otherwise, let's start at the beginning and check each
+        depth_first_traversal = self.get_root().get_annotated_list()
+        # prep a list of all the visits for this user
+        upvs = [upv.section.id
+                for upv in list(UserPageVisit.objects.filter(user=user))
+                if upv.status == 'complete']
+        for (i, (s, ai)) in enumerate(depth_first_traversal):
+            # skip the root
+            if s.is_root():
+                continue
+            if s.id == self.id:
+                # we've reached the current section. That
+                # means they're good to go.
+                return True, None
+            else:
+                if s.id not in upvs:
+                    # uh oh. found a page that they haven't visited
+                    # need to send them there first
+                    return False, s
+        # went through the entire list of sections without finding
+        # the current section?!
+        assert False, "current section not found in traversal"
+
 
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)

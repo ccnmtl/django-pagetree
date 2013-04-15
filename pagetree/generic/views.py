@@ -87,6 +87,7 @@ class UserPageVisitor(object):
 
 
 def generic_view_page(request, path, hierarchy="main",
+                      gated=False,
                       template="pagetree/page.html",
                       extra_context=None,
                       no_root_fallback_url="/admin/"
@@ -95,6 +96,8 @@ def generic_view_page(request, path, hierarchy="main",
 
     needs the request and path
     hierarchy -> defaults to "main"
+    gated -> whether to block users from skipping ahead (ie,
+             force sequential access)
     template -> defaults to "pagetree/page.html" so you can either
                 override that, or pass in a different one here (or
                 just use the basic one that pagetree includes)
@@ -110,6 +113,13 @@ def generic_view_page(request, path, hierarchy="main",
     if section.is_root():
         return visit_root(section, no_root_fallback_url)
 
+    if gated:
+        # we need to check that they have visited all previous pages
+        # first
+        allow, first = section.gate_check(request.user)
+        if not allow:
+            # redirect to the first one that they need to visit
+            return HttpResponseRedirect(first.get_absolute_url())
     upv = UserPageVisitor(section, request.user)
     if request.method == "POST":
         # user has submitted a form. deal with it
