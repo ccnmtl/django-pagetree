@@ -1,9 +1,7 @@
 """ run tests for pagetree
 
 $ virtualenv ve
-$ ./ve/bin/pip install -q -e .
-$ ./ve/bin/pip install test_reqs/sorl-3.1.tar.gz
-$ ./ve/bin/pip install test_reqs/django-pageblocks-0.5.9.tar.gz
+$ ./ve/bin/pip install -r test_reqs.txt
 $ ./ve/bin/python runtests.py
 """
 
