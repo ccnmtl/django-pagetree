@@ -1,3 +1,8 @@
+0.12.2 (2013-08-21)
+===================
+
+* bugfix: allow_redo was being ignore when it was False
+
 0.12.1 (2013-04-15)
 ===================
 
