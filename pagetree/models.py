@@ -73,7 +73,7 @@ class Hierarchy(models.Model):
         return s
 
     def available_pageblocks(self):
-        if hasattr(settings, 'PAGEBLOCKS'):
+        if hasattr(settings, 'PAGEBLOCKS') and settings.PAGEBLOCKS is not None:
             return [get_model(*pb.split('.')) for pb in settings.PAGEBLOCKS]
         else:
             return []

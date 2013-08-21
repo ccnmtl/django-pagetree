@@ -1,11 +1,13 @@
+from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import unittest
+from django.http import Http404
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 import django.core.exceptions
 import django.db
 
 
-class EmptyHierarchyTest(unittest.TestCase):
+class EmptyHierarchyTest(TestCase):
     """ a hierarchy with no sections in it
     (one Root gets created by default) """
     def setUp(self):
@@ -31,6 +33,14 @@ class EmptyHierarchyTest(unittest.TestCase):
     def test_valid_path(self):
         self.assertEqual(self.h.find_section_from_path("/"),
                          self.h.get_root())
+
+    def test_get_section_from_path(self):
+        self.assertEqual(self.h.get_section_from_path("/"),
+                         self.h.get_root())
+
+    def test_get_section_from_path_invalid(self):
+        with self.assertRaises(Http404):
+            self.h.get_section_from_path("/foo/bar/baz")
 
     def test_get_first_leaf(self):
         self.assertEqual(
@@ -70,6 +80,23 @@ class EmptyHierarchyTest(unittest.TestCase):
         self.assertEqual(
             len(self.h.get_top_level()),
             0)
+
+    def test_available_pageblocks_empty(self):
+        with self.settings(PAGEBLOCKS=None):
+            self.assertEqual(self.h.available_pageblocks(), [])
+
+    def test_add_section_from_dict(self):
+        s = self.h.add_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        # adding straight to the hierarchy needs to
+        # create a Root section, not a regular one
+        self.assertEqual(s.label, 'Root')
+        self.assertEqual(s.slug, '')
 
 
 class OneLevelDeepTest(unittest.TestCase):
