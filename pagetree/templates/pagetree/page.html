@@ -52,10 +52,12 @@
 {% else %}
 
 {% if is_submitted %}
+{% if allow_redo %}
 <form action="." method="post">
 <input type="hidden" name="action" value="reset" />
 <input type="submit" value="clear your answers and try again" class="btn" />
 </form>
+{% endif %}
 {% else %}
 <input type="submit" value="Submit" class="btn btn-primary" />
 

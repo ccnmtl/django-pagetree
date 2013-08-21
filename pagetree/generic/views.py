@@ -129,12 +129,17 @@ def generic_view_page(request, path, hierarchy="main",
         upv.visit(status="complete")
         return page_submit(section, request)
     else:
+        allow_redo = False
+        needs_submit = section.needs_submit()
+        if needs_submit:
+            allow_redo = section.allow_redo()
         upv.visit()
         instructor_link = has_responses(section)
         context = dict(
             section=section,
             module=module,
-            needs_submit=section.needs_submit(),
+            needs_submit=needs_submit,
+            allow_redo=allow_redo,
             is_submitted=section.submitted(request.user),
             modules=root.get_children(),
             root=section.hierarchy.get_root(),

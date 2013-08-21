@@ -363,6 +363,20 @@ class Section(MP_Node):
                     return True
         return False
 
+    def allow_redo(self, **kwargs):
+        """ if any blocks on the page are allowed to be resubmitted """
+        for p in self.pageblock_set.all():
+            if hasattr(p.block(), 'allow_redo'):
+                if hasattr(p.block().allow_redo, '__call__'):
+                    if p.block().allow_redo(**kwargs):
+                        return True
+                else:
+                    # not callable, so we expect it
+                    # to just be a boolean property
+                    if p.block().allow_redo:
+                        return True
+        return False
+
     def submitted(self, user):
         """ if all blocks on the page that require submissions
         have been submitted """
