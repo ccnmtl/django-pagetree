@@ -21,18 +21,26 @@ def main():
             'pagetree',
             'django_nose',
             'django.contrib.markup',
+            'django_jenkins',
         ),
         TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
 
         NOSE_ARGS = [
             '--with-coverage',
             '--cover-package=pagetree',
-            ],
+        ],
 
         ROOT_URLCONF = [],
         PAGEBLOCKS = ['pagetree.TestBlock', ],
         SOUTH_TESTS_MIGRATE=False,
 
+        JENKINS_TASKS = (
+            'django_jenkins.tasks.with_coverage',
+            'django_jenkins.tasks.django_tests',
+        ),
+        PROJECT_APPS = [
+            'pagetree',
+        ],
         # Django replaces this, but it still wants it. *shrugs*
         DATABASES = {
             'default': {
@@ -42,12 +50,12 @@ def main():
                 'PORT': '',
                 'USER': '',
                 'PASSWORD': '',
-                }
             }
+        },
     )
 
     # Fire off the tests
-    call_command('test', 'pagetree')
+    call_command('jenkins')
 
 if __name__ == '__main__':
     main()
