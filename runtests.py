@@ -29,7 +29,7 @@ def main():
             '--with-coverage',
             '--cover-package=pagetree',
         ],
-
+        COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
         ROOT_URLCONF = [],
         PAGEBLOCKS = ['pagetree.TestBlock', ],
         SOUTH_TESTS_MIGRATE=False,
