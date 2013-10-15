@@ -30,7 +30,7 @@
 {% compress js %}
 <script type="text/javascript">
 var saveOrderOfChildren = function() {
-    var url = "{% url reorder-section-children section.id %}?";
+    var url = "{% url 'reorder-section-children' section.id %}?";
     var worktodo = 0;
     $("#children-order-list li").each(function(index,element) {
        worktodo = 1;
@@ -45,7 +45,7 @@ var saveOrderOfChildren = function() {
 };
 
 var saveOrderOfPageBlocks = function() {
-    var url = "{% url reorder-pageblocks section.id %}?";
+    var url = "{% url 'reorder-pageblocks' section.id %}?";
     var worktodo = 0;
     $("#edit-blocks-tab>div.block-dragger").each(function(index,element) {
       worktodo = 1;
@@ -157,14 +157,14 @@ $(function() {
 			<i class="icon-edit"></i>
 			edit</a>
 
-		<a href="{% url delete-pageblock block.id %}" class="btn
+		<a href="{% url 'delete-pageblock' block.id %}" class="btn
 		btn-danger btn-mini"><i class="icon-trash icon-white"></i> delete</a>
 
 		{% if block.block.exportable %}
 		<a class="btn btn-mini"
 			 rel="tooltip" title="Download JSON dump of this block"
 			 id="export-{{block.id}}"
-			 href="{% url export-pageblock-json block.id %}"><i class="icon-download"></i> export</a>
+			 href="{% url 'export-pageblock-json' block.id %}"><i class="icon-download"></i> export</a>
 
 		{% endif %}
 		</div>
@@ -184,10 +184,10 @@ $(function() {
   <div class="modal-body">
 
 {% if block.block.importable %}
-<a href="{% url import-pageblock-json block.id %}">import json</a>
+<a href="{% url 'import-pageblock-json' block.id %}">import json</a>
 {% endif %}
 
-<form action="{% url edit-pageblock block.id %}" method="post"
+<form action="{% url 'edit-pageblock' block.id %}" method="post"
 class=""
 {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
 
@@ -234,7 +234,7 @@ class=""
 </div>
 
 <h2>Add Child</h2>
-<form action="{% url add-child-section section.id %}" method="post"
+<form action="{% url 'add-child-section' section.id %}" method="post"
 			class="well form-inline" >
 
 {{ section.add_child_section_form|bootstrap }}
@@ -258,7 +258,7 @@ class=""
 {% if blocktype %}
 
 <div class="modal big-modal hide" id="add-block-{{forloop.counter}}">
-<form action="{% url add-pageblock section.id %}"
+<form action="{% url 'add-pageblock' section.id %}"
 
 {% if blocktype.add_form.is_multipart %}
 enctype="multipart/form-data"
@@ -295,7 +295,7 @@ method="post">
 
 <div id="edit-page-tab" class="tab-pane">
 
-<form action="{% url edit-section section.id %}" method="post"
+<form action="{% url 'edit-section' section.id %}" method="post"
 			class="form-horizontal well">
 {% csrf_token %}
 <fieldset><legend>Edit Page</legend>
@@ -307,7 +307,7 @@ method="post">
 </form>
 
 
-<form action="{% url delete-section section.id %}" method="post" class="well">
+<form action="{% url 'delete-section' section.id %}" method="post" class="well">
 <input type="submit" value="delete this page" class="btn btn-danger"/>
 </form>
 
@@ -331,7 +331,7 @@ method="post">
 			<td>{{version.saved_at}}</td>
 			<td>{{version.user}}</td>
 			<td>{{version.activity}}</td>
-			<td><a href="{% url revert-to-version version.id %}" class="btn
+			<td><a href="{% url 'revert-to-version' version.id %}" class="btn
 			btn-mini btn-warning"><i class="icon-repeat"></i> revert</a></td>
 		</tr>
 {% endfor %}
@@ -347,14 +347,14 @@ method="post">
 {% if not section.is_root %}
 {% if section.get_previous %}
   <li class="previous">
-		<a href="{% url edit-page section.get_previous.get_path %}">&larr; {{section.get_previous.label}}</a>
+		<a href="{% url 'edit-page' section.get_previous.get_path %}">&larr; {{section.get_previous.label}}</a>
   </li>
 {% endif %}
 {% endif %}
 
 {% if section.get_next %}
 {% with section.get_next as next_section %}
-<li class="next"><a href="{% url edit-page section.get_next.get_path %}">{{section.get_next.label}} &rarr;</a></li>
+<li class="next"><a href="{% url 'edit-page' section.get_next.get_path %}">{{section.get_next.label}} &rarr;</a></li>
 {% endwith %}
 {% endif %}
 </ul>
