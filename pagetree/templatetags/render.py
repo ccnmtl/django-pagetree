@@ -25,7 +25,7 @@ class RenderNode(template.Node):
             context_dict.update(d)
         # can only take string keys
         for k in context_dict.keys():
-            if not isinstance(k, str):
+            if not isinstance(k, str) and not isinstance(k, unicode):
                 del context_dict[k]
         return b.render(**context_dict)
 
@@ -47,7 +47,7 @@ class RenderJSNode(template.Node):
             context_dict.update(d)
         # can only take string keys
         for k in context_dict.keys():
-            if not isinstance(k, str):
+            if not isinstance(k, str) and not isinstance(k, unicode):
                 del context_dict[k]
         return b.render_js(**context_dict)
 
@@ -69,7 +69,7 @@ class RenderCSSNode(template.Node):
             context_dict.update(d)
         # can only take string keys
         for k in context_dict.keys():
-            if not isinstance(k, str):
+            if not isinstance(k, str) and not isinstance(k, unicode):
                 del context_dict[k]
         return b.render_css(**context_dict)
 
@@ -91,7 +91,7 @@ class RenderSummaryNode(template.Node):
             context_dict.update(d)
         # can only take string keys
         for k in context_dict.keys():
-            if not isinstance(k, str):
+            if not isinstance(k, str) and not isinstance(k, unicode):
                 del context_dict[k]
         return b.render_summary(**context_dict)
 
