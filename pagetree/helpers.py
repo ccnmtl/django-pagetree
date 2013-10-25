@@ -2,10 +2,10 @@ from models import Hierarchy
 import warnings
 
 
-def get_hierarchy(name="main"):
+def get_hierarchy(name="main", base_url="/"):
     return Hierarchy.objects.get_or_create(
         name=name,
-        defaults=dict(base_url="/"))[0]
+        defaults=dict(base_url=base_url))[0]
 
 
 def get_section_from_path(path, hierarchy="main"):
