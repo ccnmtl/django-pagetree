@@ -258,6 +258,16 @@ class OneLevelDeepTest(unittest.TestCase):
             self.section1.get_absolute_url(),
             "section-1/")
 
+    def test_section_get_edit_url(self):
+        self.assertEqual(
+            self.section1.get_edit_url(),
+            "edit/section-1/")
+
+    def test_section_get_instructor_url(self):
+        self.assertEqual(
+            self.section1.get_instructor_url(),
+            "instructor/section-1/")
+
     def test_section_get_first_leaf(self):
         self.assertEqual(
             self.section1.get_first_leaf(),

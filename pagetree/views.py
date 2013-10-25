@@ -50,7 +50,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
         pass
     block.delete()
     if success_url is None:
-        success_url = "/edit" + section.get_absolute_url()
+        success_url = section.get_edit_absolute_url()
     return HttpResponseRedirect(success_url)
 
 
@@ -73,7 +73,7 @@ def import_pageblock_json(request, pageblock_id):
             return HttpResponse("you must upload a json file")
         json = simplejson.loads(request.FILES['file'].read())
         block.block().import_from_dict(json)
-        return HttpResponseRedirect("/edit" + block.section.get_absolute_url())
+        return HttpResponseRedirect(block.section.get_edit_url())
     else:
         return render_to_response("import_json.html", dict())
 
@@ -86,7 +86,7 @@ def edit_pageblock(request, pageblock_id, success_url=None):
         activity="edit pageblock [%s]" % unicode(block))
     block.edit(request.POST, request.FILES)
     if success_url is None:
-        success_url = "/edit" + section.get_absolute_url()
+        success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
 
 
@@ -101,7 +101,7 @@ def edit_section(request, section_id, success_url=None):
     section.enforce_slug()
     section.save()
     if success_url is None:
-        success_url = "/edit" + section.get_absolute_url()
+        success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
 
 
@@ -116,7 +116,7 @@ def delete_section(request, section_id, success_url=None):
         section.delete()
         if success_url is None:
             if parent:
-                success_url = "/edit" + parent.get_absolute_url()
+                success_url = parent.get_edit_url()
             else:
                 success_url = "/"
         return HttpResponseRedirect(success_url)
@@ -140,7 +140,7 @@ def move_section(request, section_id, success_url=None):
         position = form.cleaned_data['_position']
         section.move(to_section, position)
         if success_url is None:
-            success_url = "/edit" + to_section.get_absolute_url()
+            success_url = to_section.get_edit_url()
         return HttpResponseRedirect(success_url)
 
 
@@ -159,7 +159,7 @@ def add_pageblock(request, section_id, success_url=None):
                 css_extra=request.POST.get('css_extra', ''),
                 content_object=block)
     if success_url is None:
-        success_url = "/edit" + section.get_absolute_url()
+        success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
 
 
@@ -173,7 +173,7 @@ def add_child_section(request, section_id, success_url=None):
     section.append_child(label, slug)
 
     if success_url is None:
-        success_url = "/edit" + section.get_absolute_url()
+        success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
 
 
@@ -228,6 +228,6 @@ def revert_to_version(request, version_id):
         v.section.save()
         v.section.from_dict(loads(v.data))
 
-        return HttpResponseRedirect("/edit" + v.section.get_absolute_url())
+        return HttpResponseRedirect(v.section.get_edit_url())
     else:
         return dict(version=v)

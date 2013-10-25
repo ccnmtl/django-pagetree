@@ -243,6 +243,16 @@ class Section(MP_Node):
             return self.hierarchy.get_absolute_url()
         return self.get_parent().get_absolute_url() + self.slug + "/"
 
+    def get_edit_url(self):
+        if self.is_root():
+            return self.hierarchy.get_absolute_url() + "edit/"
+        return self.get_parent().get_edit_url() + self.slug + "/"
+
+    def get_instructor_url(self):
+        if self.is_root():
+            return self.hierarchy.get_absolute_url() + "instructor/"
+        return self.get_parent().get_instructor_url() + self.slug + "/"
+
     def get_path(self):
         """ same as get_absolute_url, without the leading /"""
         return self.get_absolute_url()[len(self.hierarchy.base_url):]
