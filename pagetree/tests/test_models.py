@@ -91,7 +91,13 @@ class EmptyHierarchyTest(TestCase):
                 'label': 'Section 1',
                 'slug': 'section-1',
                 'pageblocks': [],
-                'children': [],
+                'children': [
+                    {
+                        'label': 'Section 2',
+                        'slug': 'section-2',
+                        'pageblocks': [],
+                        'children': [],
+                    }],
             })
         # adding straight to the hierarchy needs to
         # create a Root section, not a regular one
@@ -284,6 +290,16 @@ class OneLevelDeepTest(unittest.TestCase):
             self.root.get_last_leaf(),
             self.section3)
 
+    def test_update_children_order(self):
+        normal_order = [
+            self.section1.id,
+            self.section2.id,
+            self.section3.id]
+        normal_order.reverse()
+        self.root.update_children_order(normal_order)
+        r = self.root.get_children()
+        self.assertEqual([s.id for s in r], normal_order)
+
 
 class OneLevelWithBlocksTest(unittest.TestCase):
     def setUp(self):
@@ -387,6 +403,23 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         block2 = PageBlock.objects.get(id=block2.id)
         self.assertEqual(block2.ordinality, 1)
 
+    def test_closing_children(self):
+        self.assertEqual(
+            list(self.section1.closing_children()),
+            [self.section1])
+
+    def test_move_form(self):
+        f = self.section1.move_form()
+        self.assertTrue(f is not None)
+
+    def test_update_pageblocks_order(self):
+        normal_order = [p.id for p in self.section1.pageblock_set.all()]
+        normal_order.reverse()
+        self.section1.update_pageblocks_order(normal_order)
+        self.assertEqual(
+            [p.id for p in self.section1.pageblock_set.all()],
+            normal_order)
+
 
 class UserTrackingTest(unittest.TestCase):
     def setUp(self):
@@ -473,6 +506,17 @@ class UserTrackingTest(unittest.TestCase):
         except django.db.IntegrityError:
             self.assertEqual(True, True)
         self.section1.user_pagevisit(self.user, status="complete")
+
+    def test_gate_check(self):
+        self.assertEqual(self.section1.gate_check(None),
+                         (False, self.section1))
+        self.assertEqual(self.section1.gate_check(self.user), (True, None))
+        self.assertEqual(self.section2.gate_check(self.user),
+                         (False, self.section1))
+        self.section1.user_pagevisit(self.user, status="complete")
+        self.section2.user_pagevisit(self.user, status="complete")
+        self.section3.user_pagevisit(self.user, status="complete")
+        self.assertEqual(self.section1.gate_check(self.user), (True, None))
 
 
 class VersionTest(unittest.TestCase):
