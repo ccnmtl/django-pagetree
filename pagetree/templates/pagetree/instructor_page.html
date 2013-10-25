@@ -59,11 +59,11 @@
 {% block content-nav %}
 
 {% if section.get_previous %}
-<a href="/instructor{{section.get_previous.get_absolute_url}}" id="previous">« {{section.get_previous.label}}</a>
+<a href="{{section.get_previous.get_instructor_url}}" id="previous">« {{section.get_previous.label}}</a>
 {% endif %}
 
 {% if section.get_next %}
-<a href="/instructor{{section.get_next.get_absolute_url}}" id="next">{{section.get_next.label}} »</a>
+<a href="/instructor{{section.get_next.get_instructor_url}}" id="next">{{section.get_next.label}} »</a>
 {% endif %}
 
 {% endblock %}

@@ -95,7 +95,7 @@ $(function() {
 
 <ul class="nav">
   {% for section in modules %}
-  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="/edit{{section.get_absolute_url}}">{{section.label}}</a></li>
+  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
   {% endfor %}
 </ul>
 
