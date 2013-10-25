@@ -14,13 +14,7 @@ import django.core.exceptions
 from treebeard.forms import MoveNodeForm
 
 settings = None
-try:
-    from django.conf import settings
-except ImportError:
-    # if we can't import settings, it just means
-    # they won't be able to get a list of available
-    # pageblock classes
-    pass
+from django.conf import settings
 
 
 class Hierarchy(models.Model):
