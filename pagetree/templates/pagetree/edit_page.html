@@ -176,7 +176,9 @@ $(function() {
 
 
 {% for block in section.pageblock_set.all %}
-<div class="modal big-modal hide block-edit" id="edit-pageblock-{{block.id}}">
+<div class="modal fade block-edit" id="edit-pageblock-{{block.id}}" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3>Edit {{block.block.display_name}}</h3>
@@ -207,7 +209,7 @@ class=""
   </div>
 
 </form>
-
+</div></div>
 </div>
 {% endfor %}
 
@@ -257,7 +259,9 @@ class=""
 {% for blocktype in available_pageblocks %}
 {% if blocktype %}
 
-<div class="modal big-modal hide" id="add-block-{{forloop.counter}}">
+<div class="modal fade" id="add-block-{{forloop.counter}}" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+      <div class="modal-content">
 <form action="{% url 'add-pageblock' section.id %}"
 
 {% if blocktype.add_form.is_multipart %}
@@ -287,6 +291,7 @@ method="post">
 			 class="btn btn-primary" />
   </div>
 </form>
+</div></div>
 </div>
 
 {% endif %}
