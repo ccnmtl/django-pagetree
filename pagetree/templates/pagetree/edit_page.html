@@ -112,7 +112,7 @@ $(function() {
 {% endblock %}
 
 {% block navrightextra %}
-<li><a href="{{section.get_absolute_url}}" class="btn-success">view page</a></li>
+<li><a href="{{section.get_absolute_url}}" class="btn btn-success">view page</a></li>
 {% endblock %}
 
 {% block content %}
@@ -135,33 +135,33 @@ $(function() {
 <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
 
 {% for block in section.pageblock_set.all %}
-<div class="row-fluid block-dragger" id="pageblock-{{block.id}}">
+<div class="row block-dragger" id="pageblock-{{block.id}}">
 
-	<div class="span1 draghandle">
+	<div class="col-md-1 draghandle">
 		<span class="glyphicon glyphicon-resize-vertical"></span>
 	</div>
 
-	<div class="span2">
+	<div class="col-md-2">
 		<b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
 	</div>
 
-	<div class="span6">
+	<div class="col-md-6">
 		<a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
 {% rendersummary block %}
 	</div>
 
-	<div class="span3">
+	<div class="col-md-3">
 		<div class="btn-group">
-			<a data-toggle="modal" class="btn btn-mini"
+			<a data-toggle="modal" class="btn btn-default btn-sm"
 			 href="#edit-pageblock-{{block.id}}">
 		<span class="glyphicon glyphicon-edit"></span>
 			edit</a>
 
 		<a href="{% url 'delete-pageblock' block.id %}" class="btn
-		btn-danger btn-mini">		<span class="glyphicon glyphicon-trash"></span> delete</a>
+		btn-danger btn-sm">		<span class="glyphicon glyphicon-trash"></span> delete</a>
 
 		{% if block.block.exportable %}
-		<a class="btn btn-mini"
+		<a class="btn btn-sm"
 			 rel="tooltip" title="Download JSON dump of this block"
 			 id="export-{{block.id}}"
 			 href="{% url 'export-pageblock-json' block.id
@@ -338,7 +338,7 @@ method="post">
 			<td>{{version.user}}</td>
 			<td>{{version.activity}}</td>
 			<td><a href="{% url 'revert-to-version' version.id %}" class="btn
-			btn-mini btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
+			btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
 		</tr>
 {% endfor %}
 </tbody>
