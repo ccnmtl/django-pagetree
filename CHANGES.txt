@@ -1,3 +1,9 @@
+0.12.6 (2013-10-29)
+===================
+
+* bootstrap3 and template inheritance improvements
+* fix sidebar links on non-root hierarchies
+
 0.12.5 (2013-10-25)
 ===================
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_pagetree.html" %}
 
 {% block title %}{{section.label}} (instructor){% endblock %}
 
@@ -18,6 +18,20 @@
 		</div><!-- div id="block" -->
 		<div id="fadebottom"></div>
 	</div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+{% block moduletabs %}
+
+<ul class="nav">
+  {% for section in modules %}
+  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block navrightextra %}
+<li><a href="{{section.get_absolute_url}}" class="btn-success">view page</a></li>
 {% endblock %}
 
 

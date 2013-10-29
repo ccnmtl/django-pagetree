@@ -4,7 +4,15 @@
 {% else %}
 <li class="menu-{{s.depth}}">
   {% ifnotequal s.id section.id %}
+{% ifequal menu_base "/edit" %}
+  <a href="{{s.get_edit_url}}">
+{% else %}
+{% ifequal menu_base "/instructor" %}
+  <a href="{{s.get_instructor_url}}">
+{% else %}
   <a href="{{menu_base}}{{s.get_absolute_url}}">
+{% endifequal %}
+{% endifequal %}
   {% else %}
      <b>
   {% endifnotequal %}
