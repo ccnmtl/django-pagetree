@@ -132,13 +132,13 @@ $(function() {
 <div id="edit-blocks-tab" class="tab-pane active"/>
 {% if section.pageblock_set.count %}
 
-<p>Drag the <i class="icon-resize-vertical"></i> arrows to reorder pageblocks:</p>
+<p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
 
 {% for block in section.pageblock_set.all %}
 <div class="row-fluid block-dragger" id="pageblock-{{block.id}}">
 
 	<div class="span1 draghandle">
-		<i class="icon-resize-vertical"></i>
+		<span class="glyphicon glyphicon-resize-vertical"></span>
 	</div>
 
 	<div class="span2">
@@ -154,17 +154,18 @@ $(function() {
 		<div class="btn-group">
 			<a data-toggle="modal" class="btn btn-mini"
 			 href="#edit-pageblock-{{block.id}}">
-			<i class="icon-edit"></i>
+		<span class="glyphicon glyphicon-edit"></span>
 			edit</a>
 
 		<a href="{% url 'delete-pageblock' block.id %}" class="btn
-		btn-danger btn-mini"><i class="icon-trash icon-white"></i> delete</a>
+		btn-danger btn-mini">		<span class="glyphicon glyphicon-trash"></span> delete</a>
 
 		{% if block.block.exportable %}
 		<a class="btn btn-mini"
 			 rel="tooltip" title="Download JSON dump of this block"
 			 id="export-{{block.id}}"
-			 href="{% url 'export-pageblock-json' block.id %}"><i class="icon-download"></i> export</a>
+			 href="{% url 'export-pageblock-json' block.id
+			 %}"><span class="glyphicon glyphicon-download"></span> export</a>
 
 		{% endif %}
 		</div>
@@ -337,7 +338,7 @@ method="post">
 			<td>{{version.user}}</td>
 			<td>{{version.activity}}</td>
 			<td><a href="{% url 'revert-to-version' version.id %}" class="btn
-			btn-mini btn-warning"><i class="icon-repeat"></i> revert</a></td>
+			btn-mini btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
 		</tr>
 {% endfor %}
 </tbody>
