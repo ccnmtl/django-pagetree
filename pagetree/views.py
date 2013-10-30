@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from pagetree.models import Section, PageBlock, Hierarchy, Version
 from django.template.defaultfilters import slugify
-import json
 from pagetree.helpers import get_section_from_path
 from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
@@ -56,7 +55,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
 
 def export_pageblock_json(request, pageblock_id):
     block = get_object_or_404(PageBlock, id=pageblock_id)
-    json = simplejson.dumps(block.block().as_dict())
+    json = dumps(block.block().as_dict())
     r = HttpResponse(json, mimetype="application/json")
     r['Content-Disposition'] = ('attachment; filename=pageblock_%d.json'
                                 % int(pageblock_id))
@@ -71,7 +70,7 @@ def import_pageblock_json(request, pageblock_id):
     if request.method == "POST":
         if 'file' not in request.FILES:
             return HttpResponse("you must upload a json file")
-        json = simplejson.loads(request.FILES['file'].read())
+        json = loads(request.FILES['file'].read())
         block.block().import_from_dict(json)
         return HttpResponseRedirect(block.section.get_edit_url())
     else:
