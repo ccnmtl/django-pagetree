@@ -2,11 +2,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from pagetree.models import Section, PageBlock, Hierarchy, Version
 from django.template.defaultfilters import slugify
-from django.utils import simplejson
+import json
 from pagetree.helpers import get_section_from_path
 from django.shortcuts import render_to_response
 from treebeard.forms import MoveNodeForm
-from django.utils.simplejson import dumps, loads
+from json import dumps, loads
 from annoying.decorators import render_to
 
 

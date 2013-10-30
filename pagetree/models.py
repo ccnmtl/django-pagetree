@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
 from django.template.defaultfilters import slugify
-from django.utils.simplejson import dumps
+from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
 from treebeard.forms import MoveNodeForm
