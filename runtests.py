@@ -20,7 +20,7 @@ def main():
             'django.contrib.sessions',
             'pagetree',
             'django_nose',
-            'django.contrib.markup',
+            'django_markwhat',
             'django_jenkins',
         ),
         TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',

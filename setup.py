@@ -41,6 +41,7 @@ setup(
         "nose",
         "coverage",
         "django_nose",
+        "django-markwhat",
         ],
     scripts = [],
     license = "BSD",
