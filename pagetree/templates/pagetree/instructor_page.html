@@ -22,7 +22,7 @@
 
 {% block moduletabs %}
 
-<ul class="nav">
+<ul class="nav navbar-nav">
   {% for section in modules %}
   <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
   {% endfor %}
