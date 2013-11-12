@@ -49,7 +49,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
         pass
     block.delete()
     if success_url is None:
-        success_url = section.get_edit_absolute_url()
+        success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
 
 
