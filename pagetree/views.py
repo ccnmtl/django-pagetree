@@ -141,6 +141,7 @@ def move_section(request, section_id, success_url=None):
         if success_url is None:
             success_url = to_section.get_edit_url()
         return HttpResponseRedirect(success_url)
+    return HttpResponse("could not move section")
 
 
 def add_pageblock(request, section_id, success_url=None):

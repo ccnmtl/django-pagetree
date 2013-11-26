@@ -50,10 +50,42 @@ class TestEditViews(TestCase):
             "/pagetree/delete_section/%d/" % self.section3.id, dict())
         self.assertEqual(response.status_code, 302)
 
+    def test_delete_section_get(self):
+        response = self.c.get(
+            "/pagetree/delete_section/%d/" % self.section3.id, dict())
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("<form" in response.content)
+
     def test_edit_section(self):
         response = self.c.post(
             "/pagetree/edit_section/%d/" % self.section3.id,
             dict(label="new label"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_add_child_section(self):
+        response = self.c.post(
+            "/pagetree/section/add/%d/" % self.section3.id,
+            dict(label="new label"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_move_section(self):
+        response = self.c.post(
+            "/pagetree/section/move/%d/" % self.section3.id,
+            dict())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, "could not move section")
+
+    def test_move_section_get(self):
+        response = self.c.get(
+            "/pagetree/section/move/%d/" % self.section3.id,
+            dict())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, "only use POST for this")
+
+    def test_add_pageblock(self):
+        response = self.c.post(
+            "/pagetree/pageblock/add/%d/" % self.section3.id,
+            dict(blocktype="Test Block", body="some text"))
         self.assertEqual(response.status_code, 302)
 
     def test_reorder_section_children_empty(self):
@@ -100,4 +132,14 @@ class TestEditViews(TestCase):
         p = PageBlock.objects.all()[0]
         response = self.c.post("/pagetree/pageblock/edit/%d/" % p.id,
                                dict(body="new body text"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_exporter(self):
+        response = self.c.get("/pagetree/export/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], "application/json")
+
+    def test_create_tree_root(self):
+        response = self.c.get("/pagetree/create_tree_root",
+                              {}, HTTP_REFERER='http://foo/bar')
         self.assertEqual(response.status_code, 302)
