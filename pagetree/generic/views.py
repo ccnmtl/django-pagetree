@@ -26,6 +26,7 @@ def edit_page(request, path):
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from pagetree.helpers import get_section_from_path
+from django.views.generic.base import View, TemplateView
 
 
 def has_responses(section):
@@ -150,6 +151,70 @@ def generic_view_page(request, path, hierarchy="main",
         return render(request, template, context)
 
 
+class PageView(View):
+    template_name = "pagetree/page.html"
+    hierarchy = "main"
+    extra_context = dict()
+    gated = False
+    no_root_fallback_url = "/admin/"
+
+    def gate_check(self, user):
+        if not self.gated:
+            return None
+        # we need to check that they have visited all previous pages
+        # first
+        allow, first = self.section.gate_check(user)
+        if not allow:
+            # redirect to the first one that they need to visit
+            return HttpResponseRedirect(first.get_absolute_url())
+
+    def perform_checks(self, request, path):
+        self.section = get_section_from_path(path, hierarchy=self.hierarchy)
+        self.root = self.section.hierarchy.get_root()
+        self.module = self.section.get_module()
+        if self.section.is_root():
+            return visit_root(self.section, self.no_root_fallback_url)
+        r = self.gate_check(request.user)
+        if r is not None:
+            return r
+        self.upv = UserPageVisitor(self.section, request.user)
+        return None
+
+    def dispatch(self, request, path, *args, **kwargs):
+        rv = self.perform_checks(request, path)
+        if rv is not None:
+            return rv
+        return super(PageView, self).dispatch(request, path, *args, **kwargs)
+
+    def post(self, request, path):
+        # user has submitted a form. deal with it
+        if request.POST.get('action', '') == 'reset':
+            self.upv.visit(status="incomplete")
+            return reset_page(self.section, request)
+        self.upv.visit(status="complete")
+        return page_submit(self.section, request)
+
+    def get(self, request, path):
+        allow_redo = False
+        needs_submit = self.section.needs_submit()
+        if needs_submit:
+            allow_redo = self.section.allow_redo()
+        self.upv.visit()
+        instructor_link = has_responses(self.section)
+        context = dict(
+            section=self.section,
+            module=self.module,
+            needs_submit=needs_submit,
+            allow_redo=allow_redo,
+            is_submitted=self.section.submitted(request.user),
+            modules=self.root.get_children(),
+            root=self.section.hierarchy.get_root(),
+            instructor_link=instructor_link,
+        )
+        context.update(self.extra_context)
+        return render(request, self.template_name, context)
+
+
 def generic_instructor_page(request, path, hierarchy="main",
                             template="pagetree/instructor_page.html",
                             extra_context=None,
@@ -180,6 +245,27 @@ def generic_instructor_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
+class InstructorView(TemplateView):
+    template_name = "pagetree/instructor_page.html"
+    hierarchy = "main"
+    extra_context = dict()
+
+    def get_context_data(self, path):
+        section = get_section_from_path(path, hierarchy=self.hierarchy)
+        root = section.hierarchy.get_root()
+
+        quizzes = [p.block() for p in section.pageblock_set.all()
+                   if hasattr(p.block(), 'needs_submit')
+                   and p.block().needs_submit()]
+        context = dict(section=section,
+                       quizzes=quizzes,
+                       module=section.get_module(),
+                       modules=root.get_children(),
+                       root=section.hierarchy.get_root())
+        context.update(self.extra_context)
+        return context
+
+
 def generic_edit_page(request, path, hierarchy="main",
                       template="pagetree/edit_page.html",
                       extra_context=None,
@@ -205,3 +291,21 @@ def generic_edit_page(request, path, hierarchy="main",
     if extra_context:
         context.update(extra_context)
     return render(request, template, context)
+
+
+class EditView(TemplateView):
+    template_name = "pagetree/edit_page.html"
+    hierarchy = "main"
+    extra_context = dict()
+
+    def get_context_data(self, path):
+        section = get_section_from_path(path, hierarchy=self.hierarchy)
+        root = section.hierarchy.get_root()
+        context = dict(
+            section=section,
+            module=section.get_module(),
+            modules=root.get_children(),
+            available_pageblocks=section.available_pageblocks(),
+            root=section.hierarchy.get_root())
+        context.update(self.extra_context)
+        return context

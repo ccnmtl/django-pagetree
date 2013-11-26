@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.test.client import Client
 from django.http import Http404
 from django.contrib.auth.models import User
 import unittest
@@ -255,4 +256,58 @@ class GenericPageViewTest(TestCase):
             request, "section-1/",
             extra_context=dict(foo="bar"),
             template="pagetree/test_page.html")
+        self.assertEqual(response.status_code, 200)
+
+
+class GenericPageViewURLConfTest(TestCase):
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name="main", base_url="")
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 2',
+                'slug': 'section-2',
+                'pageblocks': [
+                    {'label': 'Welcome to your new Forest Site',
+                     'css_extra': '',
+                     'block_type': 'Test Block',
+                     'body': 'You should now use the edit link to add content',
+                     },
+                ],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 3',
+                'slug': 'section-3',
+                'pageblocks': [],
+                'children': [],
+            })
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.section2 = r[1]
+        self.section3 = r[2]
+        self.u = User.objects.create(username="test")
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username="test", password="test")
+
+    def test_edit_section1(self):
+        response = self.c.get("/pages/edit/section-1/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_instructor_section1(self):
+        response = self.c.get("/pages/instructor/section-1/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_section1(self):
+        response = self.c.get("/pages/section-1/")
         self.assertEqual(response.status_code, 200)
