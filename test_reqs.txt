@@ -10,3 +10,4 @@ django-jenkins==0.14.1
 pep8==1.4.6
 pyflakes==0.7.3
 django-markwhat==1.0
+django-annoying==0.7.6
