@@ -8,14 +8,14 @@ from pagetree.models import Hierarchy
 class TestGetHierarchy(TestCase):
     def test_empty(self):
         self.assertEqual(Hierarchy.objects.count(), 0)
-        h = get_hierarchy()
+        get_hierarchy()
         self.assertEqual(Hierarchy.objects.count(), 1)
 
     def test_idempotent(self):
         self.assertEqual(Hierarchy.objects.count(), 0)
-        h = get_hierarchy()
+        get_hierarchy()
         self.assertEqual(Hierarchy.objects.count(), 1)
-        h2 = get_hierarchy()
+        get_hierarchy()
         self.assertEqual(Hierarchy.objects.count(), 1)
 
     def test_default_args(self):
@@ -70,4 +70,3 @@ class TestBlockSubmitted(TestCase):
         u = User.objects.create(username="test")
         b = StubBlockSubmit(submit_value=True, unlocked_value=False)
         self.assertFalse(block_submitted(b, u))
-

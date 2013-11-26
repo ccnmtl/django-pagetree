@@ -30,7 +30,7 @@ def main():
             '--cover-package=pagetree',
         ],
         COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
-        ROOT_URLCONF = [],
+        ROOT_URLCONF = 'pagetree.tests.urls',
         PAGEBLOCKS = ['pagetree.TestBlock', ],
         SOUTH_TESTS_MIGRATE=False,
 
