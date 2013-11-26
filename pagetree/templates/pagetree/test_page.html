@@ -1,0 +1,104 @@
+{% load render %}
+
+{% block js %}
+{% for block in section.pageblock_set.all %}
+{% renderjs block %}
+{% endfor %}
+{% endblock %}
+
+{% block css %}
+{% for block in section.pageblock_set.all %}
+{% rendercss block %}
+{% endfor %}
+{% endblock %}
+
+{% block bodyclass %}module-{{module.slug}}{% endblock %}
+
+{% block bodyid %}section-{{section.id}}{% endblock %}
+
+{% block title %}{{section.label}}{% endblock %}
+
+{% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
+
+{% block moduletabs %}
+
+<ul class="nav navbar-nav">
+  {% for section in modules %}
+  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_absolute_url}}">{{section.label}}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block navrightextra %}
+{% if not request.user.is_anonymous %}
+<li><a href="{{section.get_edit_url}}" class="btn-success">edit page</a></li>
+{% endif %}
+{% endblock %}
+
+
+{% block sidenav %}
+        <!-- ###### Secondary Navigation ###### -->
+        {% if module.get_children %}
+        <h3>Sections</h3>
+        {% include "pagetree/menu.html" %}
+        {% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="content">
+{% if needs_submit %}
+{% if is_submitted %}
+{% else %}
+<form action="." method="post">
+{% endif %}
+{% endif %}
+
+
+{% for block in section.pageblock_set.all %}
+<div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{% render block %}
+</div>
+{% endfor %}
+
+
+{% if needs_submit %}
+{% if request.user.is_anonymous %}
+{% else %}
+
+{% if is_submitted %}
+{% if allow_redo %}
+<form action="." method="post">
+<input type="hidden" name="action" value="reset" />
+<input type="submit" value="clear your answers and try again" class="btn" />
+</form>
+{% endif %}
+{% else %}
+<input type="submit" value="Submit" class="btn btn-primary" />
+
+</form>
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% include "pagetree/toc.html" %}
+
+</div>
+{% endblock %}
+
+{% block content-nav %}
+<ul class="pager">
+{% if section.get_previous %}
+  <li class="previous">
+		<a href="{{section.get_previous.get_absolute_url}}">&larr; {{section.get_previous.label}}</a>
+  </li>
+{% endif %}
+
+{% if section.get_next %}
+{% with section.get_next as next_section %}
+<li class="next"><a href="{{section.get_next.get_absolute_url}}">{{section.get_next.label}} &rarr;</a></li>
+{% endwith %}
+{% endif %}
+</ul>
+{% endblock %}
