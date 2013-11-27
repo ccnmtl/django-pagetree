@@ -1,3 +1,9 @@
+0.13.2 (2013-11-27)
+===================
+
+* support a couple more methods on the generic CBVs for more advanced
+  use-cases (ie, Forest)
+
 0.13.1 (2013-11-27)
 ===================
 
