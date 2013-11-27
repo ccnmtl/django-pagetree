@@ -3,6 +3,12 @@ import warnings
 
 
 def get_hierarchy(name="main", base_url="/"):
+    if isinstance(name, Hierarchy):
+        # sometimes it makes things simpler in other areas
+        # when the 'h' object being passed around may be
+        # a string or may already be a Hierarchy.
+        # so let's be cool about that
+        return name
     return Hierarchy.objects.get_or_create(
         name=name,
         defaults=dict(base_url=base_url))[0]

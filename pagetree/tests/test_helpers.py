@@ -23,6 +23,11 @@ class TestGetHierarchy(TestCase):
         self.assertEqual(h.name, "main")
         self.assertEqual(h.base_url, "/")
 
+    def test_dont_care_about_type(self):
+        h = get_hierarchy()
+        h2 = get_hierarchy(h)
+        self.assertEqual(h.id, h2.id)
+
 
 class TestGetSectionFromPath(TestCase):
     def test_empty(self):
