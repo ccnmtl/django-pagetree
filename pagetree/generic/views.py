@@ -151,19 +151,21 @@ def generic_view_page(request, path, hierarchy="main",
         return render(request, template, context)
 
 
-class PageView(View):
+class SectionMixin(object):
+    def get_section(self, path):
+        return get_section_from_path(
+            path,
+            hierarchy_name=self.hierarchy_name,
+            hierarchy_base=self.hierarchy_base)
+
+
+class PageView(View, SectionMixin):
     template_name = "pagetree/page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
     extra_context = dict()
     gated = False
     no_root_fallback_url = "/admin/"
-
-    def get_section(self, path):
-        return get_section_from_path(
-            path,
-            hierarchy_name=self.hierarchy_name,
-            hierarchy_base=self.hierarchy_base)
 
     def gate_check(self, user):
         if not self.gated:
@@ -252,17 +254,11 @@ def generic_instructor_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class InstructorView(TemplateView):
+class InstructorView(TemplateView, SectionMixin):
     template_name = "pagetree/instructor_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
     extra_context = dict()
-
-    def get_section(self, path):
-        return get_section_from_path(
-            path,
-            hierarchy_name=self.hierarchy_name,
-            hierarchy_base=self.hierarchy_base)
 
     def get_context_data(self, path):
         section = self.get_section(path)
@@ -307,20 +303,14 @@ def generic_edit_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class EditView(TemplateView):
+class EditView(TemplateView, SectionMixin):
     template_name = "pagetree/edit_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
     extra_context = dict()
 
-    def get_section(self, path):
-        return get_section_from_path(
-            path,
-            hierarchy_name=self.hierarchy_name,
-            hierarchy_base=self.hierarchy_base)
-
     def get_context_data(self, path):
-        section = self.get_section(path) 
+        section = self.get_section(path)
         root = section.hierarchy.get_root()
         context = dict(
             section=section,
