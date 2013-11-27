@@ -158,6 +158,12 @@ class SectionMixin(object):
             hierarchy_name=self.hierarchy_name,
             hierarchy_base=self.hierarchy_base)
 
+    def get_extra_context(self):
+        return self.extra_context
+
+    def perform_checks(self, request, path):
+        return None
+
 
 class PageView(View, SectionMixin):
     template_name = "pagetree/page.html"
@@ -167,8 +173,11 @@ class PageView(View, SectionMixin):
     gated = False
     no_root_fallback_url = "/admin/"
 
+    def get_gated(self):
+        return self.gated
+
     def gate_check(self, user):
-        if not self.gated:
+        if not self.get_gated():
             return None
         # we need to check that they have visited all previous pages
         # first
@@ -189,11 +198,12 @@ class PageView(View, SectionMixin):
         self.upv = UserPageVisitor(self.section, request.user)
         return None
 
-    def dispatch(self, request, path, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        path = kwargs['path']
         rv = self.perform_checks(request, path)
         if rv is not None:
             return rv
-        return super(PageView, self).dispatch(request, path, *args, **kwargs)
+        return super(PageView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, path):
         # user has submitted a form. deal with it
@@ -220,7 +230,7 @@ class PageView(View, SectionMixin):
             root=self.section.hierarchy.get_root(),
             instructor_link=instructor_link,
         )
-        context.update(self.extra_context)
+        context.update(self.get_extra_context())
         return render(request, self.template_name, context)
 
 
@@ -260,7 +270,15 @@ class InstructorView(TemplateView, SectionMixin):
     hierarchy_base = "/"
     extra_context = dict()
 
-    def get_context_data(self, path):
+    def dispatch(self, request, *args, **kwargs):
+        path = kwargs['path']
+        rv = self.perform_checks(request, path)
+        if rv is not None:
+            return rv
+        return super(InstructorView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        path = kwargs['path']
         section = self.get_section(path)
         root = section.hierarchy.get_root()
 
@@ -272,7 +290,7 @@ class InstructorView(TemplateView, SectionMixin):
                        module=section.get_module(),
                        modules=root.get_children(),
                        root=section.hierarchy.get_root())
-        context.update(self.extra_context)
+        context.update(self.get_extra_context())
         return context
 
 
@@ -309,6 +327,13 @@ class EditView(TemplateView, SectionMixin):
     hierarchy_base = "/"
     extra_context = dict()
 
+    def dispatch(self, request, *args, **kwargs):
+        path = kwargs['path']
+        rv = self.perform_checks(request, path)
+        if rv is not None:
+            return rv
+        return super(EditView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, path):
         section = self.get_section(path)
         root = section.hierarchy.get_root()
@@ -318,5 +343,5 @@ class EditView(TemplateView, SectionMixin):
             modules=root.get_children(),
             available_pageblocks=section.available_pageblocks(),
             root=section.hierarchy.get_root())
-        context.update(self.extra_context)
+        context.update(self.get_extra_context())
         return context
