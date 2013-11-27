@@ -159,6 +159,12 @@ class PageView(View):
     gated = False
     no_root_fallback_url = "/admin/"
 
+    def get_section(self, path):
+        return get_section_from_path(
+            path,
+            hierarchy_name=self.hierarchy_name,
+            hierarchy_base=self.hierarchy_base)
+
     def gate_check(self, user):
         if not self.gated:
             return None
@@ -170,9 +176,7 @@ class PageView(View):
             return HttpResponseRedirect(first.get_absolute_url())
 
     def perform_checks(self, request, path):
-        self.section = get_section_from_path(
-            path,
-            hierarchy=self.hierarchy_name)
+        self.section = self.get_section(path)
         self.root = self.section.hierarchy.get_root()
         self.module = self.section.get_module()
         if self.section.is_root():
@@ -254,8 +258,14 @@ class InstructorView(TemplateView):
     hierarchy_base = "/"
     extra_context = dict()
 
+    def get_section(self, path):
+        return get_section_from_path(
+            path,
+            hierarchy_name=self.hierarchy_name,
+            hierarchy_base=self.hierarchy_base)
+
     def get_context_data(self, path):
-        section = get_section_from_path(path, hierarchy=self.hierarchy_name)
+        section = self.get_section(path)
         root = section.hierarchy.get_root()
 
         quizzes = [p.block() for p in section.pageblock_set.all()
@@ -303,8 +313,14 @@ class EditView(TemplateView):
     hierarchy_base = "/"
     extra_context = dict()
 
+    def get_section(self, path):
+        return get_section_from_path(
+            path,
+            hierarchy_name=self.hierarchy_name,
+            hierarchy_base=self.hierarchy_base)
+
     def get_context_data(self, path):
-        section = get_section_from_path(path, hierarchy=self.hierarchy_name)
+        section = self.get_section(path) 
         root = section.hierarchy.get_root()
         context = dict(
             section=section,

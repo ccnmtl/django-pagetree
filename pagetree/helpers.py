@@ -14,8 +14,16 @@ def get_hierarchy(name="main", base_url="/"):
         defaults=dict(base_url=base_url))[0]
 
 
-def get_section_from_path(path, hierarchy="main"):
-    h = get_hierarchy(hierarchy)
+def get_section_from_path(path, hierarchy="main",
+                          hierarchy_name=None, hierarchy_base="/"):
+    # 'hierarchy_name' and 'hierarchy_base' pair are preferred
+    # interface, but 'hierarchy' is the more common old version
+    # so we have to support that as well. If name/base are set
+    # we treat that as a signal that the caller is using the
+    # new interface, so we ignore 'hierarchy'
+    if hierarchy_name is None:
+        hierarchy_name = hierarchy
+    h = get_hierarchy(name=hierarchy_name, base_url=hierarchy_base)
     return h.get_section_from_path(path)
 
 
