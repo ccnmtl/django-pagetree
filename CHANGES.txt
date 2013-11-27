@@ -1,3 +1,8 @@
+0.13.1 (2013-11-27)
+===================
+
+* improvement for smoother handling of multiple hierarchies
+
 0.13.0 (2013-11-27)
 ===================
 
