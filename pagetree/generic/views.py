@@ -153,7 +153,8 @@ def generic_view_page(request, path, hierarchy="main",
 
 class PageView(View):
     template_name = "pagetree/page.html"
-    hierarchy = "main"
+    hierarchy_name = "main"
+    hierarchy_base = "/"
     extra_context = dict()
     gated = False
     no_root_fallback_url = "/admin/"
@@ -169,7 +170,9 @@ class PageView(View):
             return HttpResponseRedirect(first.get_absolute_url())
 
     def perform_checks(self, request, path):
-        self.section = get_section_from_path(path, hierarchy=self.hierarchy)
+        self.section = get_section_from_path(
+            path,
+            hierarchy=self.hierarchy_name)
         self.root = self.section.hierarchy.get_root()
         self.module = self.section.get_module()
         if self.section.is_root():
@@ -247,11 +250,12 @@ def generic_instructor_page(request, path, hierarchy="main",
 
 class InstructorView(TemplateView):
     template_name = "pagetree/instructor_page.html"
-    hierarchy = "main"
+    hierarchy_name = "main"
+    hierarchy_base = "/"
     extra_context = dict()
 
     def get_context_data(self, path):
-        section = get_section_from_path(path, hierarchy=self.hierarchy)
+        section = get_section_from_path(path, hierarchy=self.hierarchy_name)
         root = section.hierarchy.get_root()
 
         quizzes = [p.block() for p in section.pageblock_set.all()
@@ -295,11 +299,12 @@ def generic_edit_page(request, path, hierarchy="main",
 
 class EditView(TemplateView):
     template_name = "pagetree/edit_page.html"
-    hierarchy = "main"
+    hierarchy_name = "main"
+    hierarchy_base = "/"
     extra_context = dict()
 
     def get_context_data(self, path):
-        section = get_section_from_path(path, hierarchy=self.hierarchy)
+        section = get_section_from_path(path, hierarchy=self.hierarchy_name)
         root = section.hierarchy.get_root()
         context = dict(
             section=section,

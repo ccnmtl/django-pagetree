@@ -311,3 +311,58 @@ class GenericPageViewURLConfTest(TestCase):
     def test_section1(self):
         response = self.c.get("/pages/section-1/")
         self.assertEqual(response.status_code, 200)
+
+
+class GenericPageViewURLConfTestSecond(TestCase):
+    """ make sure non default hierarchies also work """
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name="two", base_url="/pages2")
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'sec-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 2',
+                'slug': 'sec-2',
+                'pageblocks': [
+                    {'label': 'Welcome to your new Forest Site',
+                     'css_extra': '',
+                     'block_type': 'Test Block',
+                     'body': 'You should now use the edit link to add content',
+                     },
+                ],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 3',
+                'slug': 'sec-3',
+                'pageblocks': [],
+                'children': [],
+            })
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.section2 = r[1]
+        self.section3 = r[2]
+        self.u = User.objects.create(username="test")
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username="test", password="test")
+
+    def test_edit_section1(self):
+        response = self.c.get("/pages2/edit/sec-1/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_instructor_section1(self):
+        response = self.c.get("/pages2/instructor/sec-1/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_section1(self):
+        response = self.c.get("/pages2/sec-1/")
+        self.assertEqual(response.status_code, 200)

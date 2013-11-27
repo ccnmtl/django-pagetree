@@ -1,15 +1,3 @@
-recursive-include pagetree/ *
-recursive-include test_reqs/ *
-
-include pagetree/templates/revert_confirm.html
-include pagetree/templates/pagetree/testblock.html
-include pagetree/templates/pagetree/page.html
-include pagetree/templates/pagetree/instructor_page.html
-include pagetree/templates/pagetree/edit_page.html
-include pagetree/templates/pagetree/menu.html
-include pagetree/templates/pagetree/toc.html
-include pagetree/templates/pagetree/base_pagetree.html
-include pagetree/templates/import_json.html
-include pagetree/templates/movenodeform.html
+recursive-include pagetree *
 
 
