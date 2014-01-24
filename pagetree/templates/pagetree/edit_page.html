@@ -104,11 +104,10 @@ $(function() {
 
 {% block sidenav %}
 	<!-- ###### Secondary Navigation ###### -->
-			<h3>Sections</h3>
-{% with "/edit" as menu_base %}
-{% include "pagetree/menu.html" %}
-{% endwith %}
-
+    <h3>Sections</h3>
+    {% with "/edit" as menu_base %}
+        {% include "pagetree/menu.html" %}
+    {% endwith %}
 {% endblock %}
 
 {% block navrightextra %}
@@ -116,20 +115,47 @@ $(function() {
 {% endblock %}
 
 {% block content %}
+{% with section.is_root as is_root %}
+
 <h1>{{ section.label }}</h1>
 
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a></li>
+    <li {% if is_root %}class="active"{% endif%}>
+        <a href="#content-tree" data-toggle="tab">Hierarchy</a>
+    </li>
+    <li {% if not is_root %}class="active"{% endif%}>
+        <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
+    </li>
   <li><a href="#children-tab" data-toggle="tab">Children</a></li>
   <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
   <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
   <li><a href="#history-tab" data-toggle="tab">History</a></li>
+  <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>  
 </ul>
 
 <div class="tab-content">
+    <div id="content-tree" class="tab-pane {% if is_root %}active{% endif%}">
+        <div style="margin-left: 5px;">
+            <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{hierarchy.name}}</a></h3>             
+            <ul>
+                {% for s in root.get_descendants %}                 
+                    <li class="menu" style="list-style: none; line-height: 150%">
+                        <a href="{{s.get_absolute_url}}">{{s.label}}</a>{% ifequal s section %} <span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
+                        {% if s.get_children %}
+                            <ul>
+                        {% else %}{% if s.is_last_child %}
+                            {% for lc in s.closing_children %}
+                                </ul>
+                            {% endfor %}
+                        {% endif %}{% endif %}     
+                     </li>
+                {% endfor %}
+             </ul>
+         </div>
+    </div>
 
 
-<div id="edit-blocks-tab" class="tab-pane active"/>
+<div id="edit-blocks-tab" class="tab-pane {% if not is_root %}active{% endif%}"/>
 {% if section.pageblock_set.count %}
 
 <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
@@ -230,7 +256,7 @@ class=""
 {% for child in section.get_children %}
 <li class="draggable"
     id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
-  {{child.label}}
+  <a href="{{child.get_edit_url}}">{{child.label}}</a>
 </li>
 {% endfor %}
 </ul>
@@ -319,6 +345,18 @@ method="post">
 
 </div>
 
+<div id="move-section-tab" class="tab-pane">
+    <form action="{% url 'move-section' section.id %}" method="post">{% csrf_token %}        
+        <fieldset>
+            <legend>Move "{{section.label}}" Section To...</legend>
+            <p>
+                {{ section.move_form.as_p }}
+                <input value="Move" class="default" name="_move" type="submit">
+            </p>
+        </fieldset>
+    </form>
+</div>
+
 <div id="history-tab" class="tab-pane">
 
 {% if section.version_set.count %}
@@ -346,6 +384,7 @@ method="post">
 {% endif %}
 </div>
 </div>
+{% endwith %}
 {% endblock %}
 
 {% block content-nav %}
