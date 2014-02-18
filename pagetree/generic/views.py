@@ -81,9 +81,13 @@ class UserPageVisitor(object):
         if self.user.is_anonymous():
             return
         if not status:
-            status = "complete"
-            if self.section.needs_submit():
-                status = "incomplete"
+            prev = self.section.get_uservisit(self.user)
+            if prev is None:
+                status = "complete"
+                if self.section.needs_submit():
+                    status = "incomplete"
+            else:
+                status = prev.status
         self.section.user_pagevisit(self.user, status)
 
 

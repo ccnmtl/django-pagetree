@@ -37,6 +37,9 @@ class MockSection(object):
         self.user = user
         self.status = status
 
+    def get_uservisit(self, user):
+        return None
+
 
 class UserPageVisitorTest(unittest.TestCase):
     def test_visit_anonymous(self):
