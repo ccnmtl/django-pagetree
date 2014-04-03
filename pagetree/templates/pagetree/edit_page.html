@@ -339,9 +339,9 @@ method="post">
 </form>
 
 
-<form action="{% url 'delete-section' section.id %}" method="post" class="well">
-<input type="submit" value="delete this page" class="btn btn-danger"/>
-</form>
+<div class="well">
+<a class="btn btn-danger" href="{% url 'delete-section' section.id %}">delete this page</a>
+</div>
 
 </div>
 
