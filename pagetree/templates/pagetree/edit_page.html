@@ -389,8 +389,8 @@ method="post">
 
 {% block content-nav %}
 <ul class="pager">
-{% if not section.is_root %}
 {% with previous=section.get_previous next_section=section.get_next %}
+{% if not section.is_root %}
 
 {% if previous %}
   <li class="previous">
