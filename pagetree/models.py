@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.db import models
 from django import forms
 from django.template import Context
@@ -12,6 +13,7 @@ from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
 from treebeard.forms import MoveNodeForm
+
 
 settings = None
 from django.conf import settings
@@ -160,6 +162,16 @@ class Section(MP_Node):
         # it is always enforced.
         self.save()
 
+    def clear_caches(self):
+        cache.delete("pagetree.%d.get_absolute_url" % self.id)
+        cache.delete("pagetree.%d.is_last_child" % self.id)
+        cache.delete("pagetree.%d.get_edit_url" % self.id)
+
+    def clear_tree_cache(self):
+        depth_first_traversal = self.get_root().get_annotated_list()
+        for (s, ai) in depth_first_traversal:
+            s.clear_caches()
+
     def get_sibling_slugs(self):
         return [s.slug for s in self.get_siblings() if s != self]
 
@@ -175,6 +187,15 @@ class Section(MP_Node):
         return self.get_first_sibling().id == self.id
 
     def is_last_child(self):
+        key = "pagetree.%d.is_last_child" % self.id
+        v = cache.get(key)
+        if v:
+            return v
+        v = self._is_last_child()
+        cache.set(key, v)
+        return v
+
+    def _is_last_child(self):
         return self.get_last_sibling().id == self.id
 
     def closing_children(self):
@@ -233,11 +254,29 @@ class Section(MP_Node):
         return self.label
 
     def get_absolute_url(self):
+        key = "pagetree.%d.get_absolute_url" % self.id
+        v = cache.get(key)
+        if v:
+            return v
+        v = self._get_absolute_url()
+        cache.set(key, v)
+        return v
+
+    def _get_absolute_url(self):
         if self.is_root():
             return self.hierarchy.get_absolute_url()
         return self.get_parent().get_absolute_url() + self.slug + "/"
 
     def get_edit_url(self):
+        key = "pagetree.%d.get_edit_url" % self.id
+        v = cache.get(key)
+        if v:
+            return v
+        v = self._get_edit_url()
+        cache.set(key, v)
+        return v
+
+    def _get_edit_url(self):
         if self.is_root():
             return self.hierarchy.get_absolute_url() + "edit/"
         return self.get_parent().get_edit_url() + self.slug + "/"
@@ -295,6 +334,7 @@ class Section(MP_Node):
             s = Section.objects.get(id=section_id)
             p = s.get_parent()
             s.move(p, pos="last-child")
+        self.clear_tree_cache()
         return
 
     def update_pageblocks_order(self, pageblock_ids):
@@ -443,6 +483,7 @@ class Section(MP_Node):
             s.add_pageblock_from_dict(pb)
         for c in d.get('children', []):
             s.add_child_section_from_dict(c)
+        self.clear_tree_cache()
 
     def user_visit(self, user):
         self.hierarchy.user_visit(user, self)
@@ -477,6 +518,7 @@ class Section(MP_Node):
             activity=activity,
             comment=comment)
         return v
+        self.clear_tree_cache()
 
     def gate_check(self, user):
         """ return bool, section tuple for whether the user
