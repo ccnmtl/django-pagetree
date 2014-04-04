@@ -263,9 +263,13 @@ class Section(MP_Node):
         return v
 
     def _get_absolute_url(self):
-        if self.is_root():
-            return self.hierarchy.get_absolute_url()
-        return self.get_parent().get_absolute_url() + self.slug + "/"
+        ancestors = self.get_ancestors()
+        slugs = [a.slug for a in ancestors[1:]]
+        if len(slugs) == 0:
+            return self.hierarchy.get_absolute_url() + self.slug + "/"
+        url = (self.hierarchy.get_absolute_url() + "/".join(slugs)
+               + "/" + self.slug + "/")
+        return url
 
     def get_edit_url(self):
         key = "pagetree.%d.get_edit_url" % self.id
@@ -277,9 +281,13 @@ class Section(MP_Node):
         return v
 
     def _get_edit_url(self):
-        if self.is_root():
-            return self.hierarchy.get_absolute_url() + "edit/"
-        return self.get_parent().get_edit_url() + self.slug + "/"
+        ancestors = self.get_ancestors()
+        slugs = [a.slug for a in ancestors[1:]]
+        if len(slugs) == 0:
+            return self.hierarchy.get_absolute_url() + "edit/" + self.slug + "/"
+        url = (self.hierarchy.get_absolute_url() + "/edit/".join(slugs)
+               + "/" + self.slug + "/")
+        return url
 
     def get_instructor_url(self):
         if self.is_root():
