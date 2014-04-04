@@ -1,3 +1,11 @@
+0.14.0 (2014-04-04)
+===================
+
+* support for caching on a couple of frequently called methods
+  you will want to enable Django's cache backend to take advantage
+	of it. simple statsd integration is also included so cache
+  hit/miss rates can be logged for more accurate tuning.
+
 0.13.5 (2014-04-02)
 ===================
 
