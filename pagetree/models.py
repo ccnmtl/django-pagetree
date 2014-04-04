@@ -15,6 +15,17 @@ import django.core.exceptions
 from treebeard.forms import MoveNodeForm
 
 
+# dummy it out
+class dummystatsd(object):
+    def incr(self, metric):
+        pass
+statsd = dummystatsd()
+
+try:
+    from django_statsd.clients import statsd
+except ImportError:
+    pass
+
 settings = None
 from django.conf import settings
 
@@ -171,6 +182,7 @@ class Section(MP_Node):
         depth_first_traversal = self.get_root().get_annotated_list()
         for (s, ai) in depth_first_traversal:
             s.clear_caches()
+        statsd.incr("pagetree.cache_cleared")
 
     def get_sibling_slugs(self):
         return [s.slug for s in self.get_siblings() if s != self]
@@ -190,7 +202,9 @@ class Section(MP_Node):
         key = "pagetree.%d.is_last_child" % self.id
         v = cache.get(key)
         if v:
+            statsd.incr("pagetree.is_last_child.cache_hit")
             return v
+        statsd.incr("pagetree.is_last_child.cache_miss")
         v = self._is_last_child()
         cache.set(key, v)
         return v
@@ -257,7 +271,9 @@ class Section(MP_Node):
         key = "pagetree.%d.get_absolute_url" % self.id
         v = cache.get(key)
         if v:
+            statsd.incr("pagetree.get_absolute_url.cache_hit")
             return v
+        statsd.incr("pagetree.get_absolute_url.cache_miss")
         v = self._get_absolute_url()
         cache.set(key, v)
         return v
@@ -275,7 +291,9 @@ class Section(MP_Node):
         key = "pagetree.%d.get_edit_url" % self.id
         v = cache.get(key)
         if v:
+            statsd.incr("pagetree.get_edit_url.cache_hit")
             return v
+        statsd.incr("pagetree.get_edit_url.cache_miss")
         v = self._get_edit_url()
         cache.set(key, v)
         return v
@@ -284,7 +302,8 @@ class Section(MP_Node):
         ancestors = self.get_ancestors()
         slugs = [a.slug for a in ancestors[1:]]
         if len(slugs) == 0:
-            return self.hierarchy.get_absolute_url() + "edit/" + self.slug + "/"
+            return (
+                self.hierarchy.get_absolute_url() + "edit/" + self.slug + "/")
         url = (self.hierarchy.get_absolute_url() + "/edit/".join(slugs)
                + "/" + self.slug + "/")
         return url
