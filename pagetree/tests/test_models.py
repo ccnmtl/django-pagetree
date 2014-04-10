@@ -618,3 +618,69 @@ class VersionTest(unittest.TestCase):
         self.assertEqual(
             len(v.more_recent_versions()),
             1)
+
+
+class MultipleLevelsTest(unittest.TestCase):
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name="main", base_url="")
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 2',
+                'slug': 'section-2',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 3',
+                'slug': 'section-3',
+                'pageblocks': [],
+                'children': [],
+            })
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.section2 = r[1]
+        self.section3 = r[2]
+        self.section3.add_child_section_from_dict(
+            {
+                'label': 'Section 4',
+                'slug': 'section-4',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.section4 = self.section3.get_children()[0]
+        self.section4.add_child_section_from_dict(
+            {
+                'label': 'Section 5',
+                'slug': 'section-5',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.section5 = self.section4.get_children()[0]
+
+    def tearDown(self):
+        self.h.delete()
+
+    def test_get_absolute_url(self):
+        self.assertEqual(self.section4.get_absolute_url(),
+                         "section-3/section-4/")
+
+    def test_get_edit_url(self):
+        self.assertEqual(self.section4.get_edit_url(),
+                         "edit/section-3/section-4/")
+
+    def test_get_absolute_url_two_down(self):
+        self.assertEqual(self.section5.get_absolute_url(),
+                         "section-3/section-4/section-5/")
+
+    def test_get_edit_url_two_down(self):
+        self.assertEqual(self.section5.get_edit_url(),
+                         "edit/section-3/section-4/section-5/")

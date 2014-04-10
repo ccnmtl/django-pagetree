@@ -304,7 +304,7 @@ class Section(MP_Node):
         if len(slugs) == 0:
             return (
                 self.hierarchy.get_absolute_url() + "edit/" + self.slug + "/")
-        url = (self.hierarchy.get_absolute_url() + "/edit/".join(slugs)
+        url = (self.hierarchy.get_absolute_url() + "edit/" + "/".join(slugs)
                + "/" + self.slug + "/")
         return url
 
