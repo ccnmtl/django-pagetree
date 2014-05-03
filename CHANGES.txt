@@ -1,3 +1,9 @@
+0.14.3 (2014-05-01)
+===================
+
+* Section.gate_check was enforcing user visits across Hierarchies. e.g. a user must traverse Hierarchy1 before traversing Hierarchy2. Modified to remove locking across Hierarchies.
+
+
 0.14.2 (2014-04-10)
 ===================
 

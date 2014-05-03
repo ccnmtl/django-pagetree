@@ -555,8 +555,10 @@ class Section(MP_Node):
         if not user:
             # no user: the important thing is just that we deny access
             return False, self
+
         # otherwise, let's start at the beginning and check each
-        depth_first_traversal = self.get_root().get_annotated_list()
+        depth_first_traversal = self.get_annotated_list(parent=self.get_root())
+
         # prep a list of all the visits for this user
         upvs = [upv.section.id
                 for upv in list(UserPageVisit.objects.filter(user=user))

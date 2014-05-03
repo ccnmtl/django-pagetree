@@ -6,3 +6,5 @@ build/*
 *.pyc
 ve
 reports/
+.project
+.pydevproject
