@@ -1,12 +1,12 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from pagetree.models import Section, PageBlock, Hierarchy, Version
-from django.template.defaultfilters import slugify
-from pagetree.helpers import get_section_from_path
-from django.shortcuts import render_to_response
-from treebeard.forms import MoveNodeForm
-from json import dumps, loads
 from annoying.decorators import render_to
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template.context import RequestContext
+from django.template.defaultfilters import slugify
+from json import dumps, loads
+from pagetree.helpers import get_section_from_path
+from pagetree.models import Section, PageBlock, Hierarchy, Version
+from treebeard.forms import MoveNodeForm
 
 
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
@@ -74,7 +74,8 @@ def import_pageblock_json(request, pageblock_id):
         block.block().import_from_dict(json)
         return HttpResponseRedirect(block.section.get_edit_url())
     else:
-        return render_to_response("import_json.html", dict())
+        return render_to_response("import_json.html", dict(),
+                                  context_instance=RequestContext(request))
 
 
 def edit_pageblock(request, pageblock_id, success_url=None):
