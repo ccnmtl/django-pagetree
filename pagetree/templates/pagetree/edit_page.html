@@ -190,8 +190,7 @@ $(function() {
 		<a class="btn btn-sm"
 			 rel="tooltip" title="Download JSON dump of this block"
 			 id="export-{{block.id}}"
-			 href="{% url 'export-pageblock-json' block.id
-			 %}"><span class="glyphicon glyphicon-download"></span> export</a>
+			 href="{% url 'export-pageblock-json' block.id %}"><span class="glyphicon glyphicon-download"></span> export</a>
 
 		{% endif %}
 		</div>
