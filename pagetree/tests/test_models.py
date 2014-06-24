@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import unittest
 from django.http import Http404
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
-import django.core.exceptions
 import django.db
 
 

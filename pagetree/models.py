@@ -13,6 +13,7 @@ from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
 from treebeard.forms import MoveNodeForm
+from pagetree.reports import ReportableInterface, ReportColumnInterface
 
 
 # dummy it out
@@ -734,6 +735,19 @@ class Version(models.Model):
         return versions
 
 
+class TestReportColumn(ReportColumnInterface):
+
+    def identifier(self):
+        return "Test Report Column"
+
+    def metadata(self):
+        return ['', self.identifier(), "generic",
+                "string", "this is a test"]
+
+    def user_value(self, user):
+        return user.username
+
+
 class TestBlock(models.Model):
     """ this is a pageblock that is exclusively for pagetree's
     internal tests so we have some kind of block to test with
@@ -787,3 +801,11 @@ class TestBlock(models.Model):
             return self.body
         else:
             return self.body[:61] + "..."
+
+    def report_metadata(self):
+        return [TestReportColumn()]
+
+    def report_values(self):
+        return [TestReportColumn()]
+
+ReportableInterface.register(TestBlock)
