@@ -1,7 +1,17 @@
+0.14.5 (2014-06-26)
+===================
+
+* introducing reportable interface
+
 0.14.4 (2014-05-28)
 ===================
 
 * views.py - import_pageblock_json needed a RequestContext for its render_to_response
+
+0.14.3 (2014-05-29)
+===================
+
+* fixed bad URL for json download
 
 
 0.14.3 (2014-05-01)
