@@ -1,7 +1,24 @@
+0.14.5 (2014-06-26)
+===================
+
+* introducing reportable interface
+
+0.14.4 (2014-05-28)
+===================
+
+* views.py - import_pageblock_json needed a RequestContext for its render_to_response
+
 0.14.3 (2014-05-29)
 ===================
 
 * fixed bad URL for json download
+
+
+0.14.3 (2014-05-01)
+===================
+
+* Section.gate_check was enforcing user visits across Hierarchies. e.g. a user must traverse Hierarchy1 before traversing Hierarchy2. Modified to remove locking across Hierarchies.
+
 
 0.14.2 (2014-04-10)
 ===================

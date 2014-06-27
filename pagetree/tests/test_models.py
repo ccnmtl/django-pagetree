@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import unittest
 from django.http import Http404
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
-import django.core.exceptions
 import django.db
 
 
@@ -450,10 +449,28 @@ class UserTrackingTest(unittest.TestCase):
         self.section1 = r[0]
         self.section2 = r[1]
         self.section3 = r[2]
+
+        self.h2 = Hierarchy.objects.create(name="other", base_url="")
+        self.h2.get_root().add_child_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.h2.get_root().add_child_section_from_dict(
+            {
+                'label': 'Section 2',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+
         self.user = User.objects.create(username='testuser')
 
     def tearDown(self):
         self.h.delete()
+        self.h2.delete()
         self.user.delete()
 
     def test_user_visit(self):
@@ -517,6 +534,15 @@ class UserTrackingTest(unittest.TestCase):
         self.section2.user_pagevisit(self.user, status="complete")
         self.section3.user_pagevisit(self.user, status="complete")
         self.assertEqual(self.section1.gate_check(self.user), (True, None))
+
+    def test_gate_check_multiple_hierarchies(self):
+        children = self.h2.get_root().get_children()
+
+        # first section of any hierarchu returns "True" from gate_check
+        self.assertEqual(
+            children[0].gate_check(self.user), (True, None))
+        self.assertEqual(
+            children[1].gate_check(self.user), (False, children[0]))
 
 
 class VersionTest(unittest.TestCase):

@@ -23,17 +23,17 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="django-pagetree",
-    version="0.14.3",
+    version="0.14.5",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="http://wiki.ccnmtl.columbia.edu/",
     description="Tree of Pages helper application",
     long_description="Application for managing trees of pages",
-    install_requires = [
+    install_requires=[
         "Django",
         "django-treebeard",
         "Markdown",
@@ -43,9 +43,9 @@ setup(
         "django_nose",
         "django-markwhat",
         ],
-    scripts = [],
-    license = "BSD",
-    platforms = ["any"],
+    scripts=[],
+    license="BSD",
+    platforms=["any"],
     zip_safe=False,
     packages=['pagetree'],
     test_suite='nose.collector',

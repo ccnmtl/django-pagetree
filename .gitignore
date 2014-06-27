@@ -6,3 +6,6 @@ build/*
 *.pyc
 ve
 reports/
+.project
+.pydevproject
+django_pagetree.egg-info
