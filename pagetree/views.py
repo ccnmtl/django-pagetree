@@ -56,7 +56,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
 def export_pageblock_json(request, pageblock_id):
     block = get_object_or_404(PageBlock, id=pageblock_id)
     json = dumps(block.block().as_dict())
-    r = HttpResponse(json, mimetype="application/json")
+    r = HttpResponse(json, content_type="application/json")
     r['Content-Disposition'] = ('attachment; filename=pageblock_%d.json'
                                 % int(pageblock_id))
     return r
