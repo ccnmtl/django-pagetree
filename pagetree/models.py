@@ -263,6 +263,7 @@ class Section(MP_Node):
         neword = self.pageblock_set.count() + 1
         return PageBlock.objects.create(section=self, label=label,
                                         ordinality=neword,
+                                        css_extra=css_extra,
                                         content_object=content_object)
 
     def __unicode__(self):
