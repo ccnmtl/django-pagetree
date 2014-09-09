@@ -1,3 +1,9 @@
+1.0.0 (2014-09-09)
+==================
+
+* Django 1.7 migrations support (maintaining support for South 1.0 as
+  well for now)
+
 0.14.6 (2014-07-28)
 ===================
 
