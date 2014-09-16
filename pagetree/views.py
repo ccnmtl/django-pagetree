@@ -30,6 +30,7 @@ def reorder_section_children(request, section_id, id_prefix="section_id_"):
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     children = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
     section.update_children_order(children)
+    section.clear_tree_cache()
     return HttpResponse("ok")
 
 
@@ -100,6 +101,7 @@ def edit_section(request, section_id, success_url=None):
     section.save()
     section.enforce_slug()
     section.save()
+    section.clear_caches()
     if success_url is None:
         success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
@@ -116,6 +118,7 @@ def delete_section(request, section_id, success_url=None):
         section.delete()
         if success_url is None:
             if parent:
+                parent.clear_tree_cache()
                 success_url = parent.get_edit_url()
             else:
                 success_url = "/"
@@ -139,6 +142,10 @@ def move_section(request, section_id, success_url=None):
             id=form.cleaned_data['_ref_node_id'])
         position = form.cleaned_data['_position']
         section.move(to_section, position)
+        parent = section.get_parent()
+        if parent:
+            section.clear_tree_cache()
+        to_section.clear_tree_cache()
         if success_url is None:
             success_url = to_section.get_edit_url()
         return HttpResponseRedirect(success_url)
@@ -172,7 +179,7 @@ def add_child_section(request, section_id, success_url=None):
         "add child section [%s]" % label)
     slug = slugify(request.POST.get('slug', label))[:50]
     section.append_child(label, slug)
-
+    section.clear_tree_cache()
     if success_url is None:
         success_url = section.get_edit_url()
     return HttpResponseRedirect(success_url)
@@ -228,7 +235,7 @@ def revert_to_version(request, version_id):
         v.section.numchild = 0
         v.section.save()
         v.section.from_dict(loads(v.data))
-
+        v.section.clear_tree_cache()
         return HttpResponseRedirect(v.section.get_edit_url())
     else:
         return dict(version=v)
