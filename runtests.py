@@ -6,6 +6,7 @@ $ ./ve/bin/python runtests.py
 """
 
 
+import django
 from django.conf import settings
 from django.core.management import call_command
 
@@ -52,6 +53,12 @@ def main():
             }
         },
     )
+
+    try:
+        # required by Django 1.7 and later
+        django.setup()
+    except:
+        pass
 
     # Fire off the tests
     call_command('test')
