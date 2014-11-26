@@ -1,10 +1,11 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_modify adminmedia %}
+{% load i18n admin_modify admin_static %}
 
 {% block extrastyle %}
     {{ block.super }}
     <link rel="stylesheet" href="/admin/pagetree/media/css/pagetree.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'css/forms.css' %}" />
 {% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
