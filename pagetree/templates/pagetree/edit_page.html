@@ -1,5 +1,4 @@
 {% extends "pagetree/base_pagetree.html" %}
-{% load compress %}
 {% load bootstrap %}
 {% load render %}
 {% block title %}{{section.label}} (edit){% endblock %}
@@ -12,7 +11,6 @@
 
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
 
-{% compress css %}
 <style type="text/css">
 	.draghandle {float: left;}
 	#children-order-list {list-style-type: none; margin: 0; padding: 0;}
@@ -22,13 +20,11 @@
 	}
 	#children li span { position: absolute; margin-left: -1.3em; }
 	.dragging {background-color: #fee;}
-	</style>
-{% endcompress %}
+</style>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
 
-{% compress js %}
 <script type="text/javascript">
 var saveOrderOfChildren = function() {
     var url = "{% url 'reorder-section-children' section.id %}?";
@@ -89,7 +85,6 @@ $(function() {
 });
 </script>
 
-{% endcompress %}
 {% endblock %}
 
 {% block moduletabs %}
