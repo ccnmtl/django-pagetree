@@ -33,4 +33,7 @@
     width: 300px;
 }
 
-.draghandle { float: left; }
+.draghandle {
+    cursor: move;
+    float: left;
+}
