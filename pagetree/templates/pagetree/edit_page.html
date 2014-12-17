@@ -1,6 +1,8 @@
 {% extends "pagetree/base_pagetree.html" %}
 {% load bootstrap %}
 {% load render %}
+{% load static from staticfiles %}
+
 {% block title %}{{section.label}} (edit){% endblock %}
 
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}
@@ -34,71 +36,42 @@
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="{% static 'pagetree/js/jquery.cookie.js' %}"></script>
 <script>
     var pagetree = { $: jQuery.noConflict(true) };
     window.define = _pagetree_define_backup;
 </script>
 
-<script type="text/javascript">
-var saveOrderOfChildren = function() {
-    var url = "{% url 'reorder-section-children' section.id %}?";
-    var worktodo = 0;
-    pagetree.$("#children-order-list li").each(function(index, element) {
-       worktodo = 1;
-       var id = $(element).attr('id').split("-")[1];
-       url += "section_id_" + index + "=" + id + ";";
-    });
-    if (worktodo == 1) {
-        var req = new XMLHttpRequest();
-        req.open("POST",url,true);
-        req.send(null);
-    }
-};
-
-var saveOrderOfPageBlocks = function() {
-    var url = "{% url 'reorder-pageblocks' section.id %}?";
-    var worktodo = 0;
-    pagetree.$("#edit-blocks-tab>div.block-dragger").each(
-        function(index, element
-    ) {
-      worktodo = 1;
-      var id = $(element).attr('id').split("-")[1];
-      url += "pageblock_id_" + index + "=" + id + ";";
-    });
-    if (worktodo == 1) {
-        /* only bother submitting if there are elements to be sorted */
-        var req = new XMLHttpRequest();
-        req.open("POST",url,true);
-        req.send(null);
-    }
-
-}
-
-</script>
-
-<script type="text/javascript">
-pagetree.$(function() {
-  pagetree.$("#children-order-list").sortable({
+<script src="{% static 'pagetree/js/pagetree-admin.js' %}"></script>
+<script>
+(function($) {
+  $("#children-order-list").sortable({
     containment : 'parent'
     ,axis : 'y'
     ,tolerance: 'pointer'
     ,activeClass: 'dragging'
     ,handle: '.draghandle'
-    ,stop: function (event,ui) { saveOrderOfChildren();}
+    ,stop: function (event,ui) {
+        pagetree.saveOrderOfChildren(
+            "{% url 'reorder-section-children' section.id %}?");
+    }
   });
-  pagetree.$("#children-order-list").disableSelection();
+  $("#children-order-list").disableSelection();
 
-  pagetree.$("#edit-blocks-tab").sortable({
+  $("#edit-blocks-tab").sortable({
     items : 'div.block-dragger'
     ,axis: 'y'
     ,containment: 'parent'
     ,handle: '.draghandle'
     ,activeClass: 'dragging'
     ,tolerance: 'pointer'
-    ,stop: function (event,ui) { saveOrderOfPageBlocks();}
+    ,stop: function (event,ui) {
+        pagetree.saveOrderOfPageBlocks(
+            "{% url 'reorder-pageblocks' section.id %}?");
+    }
   });
-  pagetree.$("#edit-blocks-tab").disableSelection();
-});
+  $("#edit-blocks-tab").disableSelection();
+})(pagetree.$);
 </script>
 
 {% endblock %}
