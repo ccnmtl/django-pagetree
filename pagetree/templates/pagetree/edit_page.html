@@ -9,7 +9,8 @@
 
 {% block js %}
 
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet"
+      href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
 
 <style type="text/css">
     .draghandle {
@@ -25,14 +26,24 @@
 	.dragging {background-color: #fee;}
 </style>
 
+<!-- Prevent pagetree's jQuery and jQueryUI from interfering with the
+     main application's copy. -->
+<script>
+    var _pagetree_define_backup = window.define;
+    window.define = undefined;
+</script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script>
+    var pagetree = { $: jQuery.noConflict(true) };
+    window.define = _pagetree_define_backup;
+</script>
 
 <script type="text/javascript">
 var saveOrderOfChildren = function() {
     var url = "{% url 'reorder-section-children' section.id %}?";
     var worktodo = 0;
-    $("#children-order-list li").each(function(index,element) {
+    pagetree.$("#children-order-list li").each(function(index, element) {
        worktodo = 1;
        var id = $(element).attr('id').split("-")[1];
        url += "section_id_" + index + "=" + id + ";";
@@ -47,7 +58,9 @@ var saveOrderOfChildren = function() {
 var saveOrderOfPageBlocks = function() {
     var url = "{% url 'reorder-pageblocks' section.id %}?";
     var worktodo = 0;
-    $("#edit-blocks-tab>div.block-dragger").each(function(index,element) {
+    pagetree.$("#edit-blocks-tab>div.block-dragger").each(
+        function(index, element
+    ) {
       worktodo = 1;
       var id = $(element).attr('id').split("-")[1];
       url += "pageblock_id_" + index + "=" + id + ";";
@@ -64,8 +77,8 @@ var saveOrderOfPageBlocks = function() {
 </script>
 
 <script type="text/javascript">
-$(function() {
-  $("#children-order-list").sortable({
+pagetree.$(function() {
+  pagetree.$("#children-order-list").sortable({
     containment : 'parent'
     ,axis : 'y'
     ,tolerance: 'pointer'
@@ -73,8 +86,9 @@ $(function() {
     ,handle: '.draghandle'
     ,stop: function (event,ui) { saveOrderOfChildren();}
   });
-  $("#children-order-list").disableSelection();
-  $("#edit-blocks-tab").sortable({
+  pagetree.$("#children-order-list").disableSelection();
+
+  pagetree.$("#edit-blocks-tab").sortable({
     items : 'div.block-dragger'
     ,axis: 'y'
     ,containment: 'parent'
@@ -83,8 +97,7 @@ $(function() {
     ,tolerance: 'pointer'
     ,stop: function (event,ui) { saveOrderOfPageBlocks();}
   });
-
-  $("#edit-blocks-tab").disableSelection();
+  pagetree.$("#edit-blocks-tab").disableSelection();
 });
 </script>
 
