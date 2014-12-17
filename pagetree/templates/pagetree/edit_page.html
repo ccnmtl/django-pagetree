@@ -229,7 +229,8 @@ pagetree.$(function() {
 
 <form action="{% url 'edit-pageblock' block.id %}" method="post"
 class=""
-{% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+      {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+    {% csrf_token %}
 
 {{ block.default_edit_form|bootstrap }}
 {% with block.edit_form as ef %}
@@ -275,7 +276,8 @@ class=""
 
 <h2>Add Child</h2>
 <form action="{% url 'add-child-section' section.id %}" method="post"
-			class="well form-inline" >
+	  class="well form-inline">
+    {% csrf_token %}
 
 {{ section.add_child_section_form|bootstrap }}
 
@@ -305,7 +307,8 @@ class=""
 {% if blocktype.add_form.is_multipart %}
 enctype="multipart/form-data"
 {% endif %}
-method="post">
+      method="post">
+    {% csrf_token %}
 
 
   <div class="modal-header">
@@ -357,7 +360,8 @@ method="post">
 </div>
 
 <div id="move-section-tab" class="tab-pane">
-    <form action="{% url 'move-section' section.id %}" method="post">{% csrf_token %}        
+    <form action="{% url 'move-section' section.id %}" method="post">
+        {% csrf_token %}
         <fieldset>
             <legend>Move "{{section.label}}" Section To...</legend>
             <p>
