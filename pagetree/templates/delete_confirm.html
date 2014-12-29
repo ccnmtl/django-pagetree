@@ -1,0 +1,9 @@
+<html>
+<body>
+<form action="." method="post">
+    <p>Are you sure?</p>
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete it" />
+</form>
+</body>
+</html>

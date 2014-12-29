@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template.context import RequestContext
 from django.template.defaultfilters import slugify
+from django.template.response import TemplateResponse
 from json import dumps, loads
 from pagetree.helpers import get_section_from_path
 from pagetree.models import Section, PageBlock, Hierarchy, Version
@@ -123,10 +124,7 @@ def delete_section(request, section_id, success_url=None):
             else:
                 success_url = "/"
         return HttpResponseRedirect(success_url)
-    return HttpResponse("""
-<html><body><form action="." method="post">Are you Sure?
-<input type="submit" value="Yes, delete it" /></form></body></html>
-""")
+    return TemplateResponse(request, 'delete_confirm.html')
 
 
 def move_section(request, section_id, success_url=None):
