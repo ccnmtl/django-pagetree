@@ -23,6 +23,7 @@ def edit_page(request, path):
     return pageedit(request, path)
 
 """
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from pagetree.helpers import get_section_from_path
@@ -181,6 +182,9 @@ class PageView(View, SectionMixin):
         return self.gated
 
     def gate_check(self, user):
+        if (not user) or user.is_anonymous():
+            raise PermissionDenied()
+
         if not self.get_gated():
             return None
         # we need to check that they have visited all previous pages
