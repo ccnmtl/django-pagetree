@@ -27,10 +27,10 @@ from setuptools import setup
 
 setup(
     name="django-pagetree",
-    version="1.0.1",
+    version="1.0.3",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
-    url="http://wiki.ccnmtl.columbia.edu/",
+    url="https://github.com/ccnmtl/django-pagetree",
     description="Tree of Pages helper application",
     long_description="Application for managing trees of pages",
     install_requires=[
