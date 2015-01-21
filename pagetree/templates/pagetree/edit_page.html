@@ -201,8 +201,10 @@
 {% endif %}
 
 <form action="{% url 'edit-pageblock' block.id %}" method="post"
-class=""
-      {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+      class=""
+      {% if block.edit_form.is_multipart %}
+      enctype="multipart/form-data"
+      {% endif %}>
     {% csrf_token %}
 
 {{ block.default_edit_form|bootstrap }}
@@ -276,12 +278,10 @@ class=""
 <div class="modal-dialog">
       <div class="modal-content">
 <form action="{% url 'add-pageblock' section.id %}"
-
-{% if blocktype.add_form.is_multipart %}
-enctype="multipart/form-data"
-{% endif %}
-      method="post">
-    {% csrf_token %}
+      {% if blocktype.add_form.is_multipart %}
+      enctype="multipart/form-data"
+      {% endif %}
+      method="post">{% csrf_token %}
 
 
   <div class="modal-header">
@@ -315,8 +315,7 @@ enctype="multipart/form-data"
 <div id="edit-page-tab" class="tab-pane">
 
 <form action="{% url 'edit-section' section.id %}" method="post"
-			class="form-horizontal well">
-{% csrf_token %}
+	  class="form-horizontal well">{% csrf_token %}
 <fieldset><legend>Edit Page</legend>
 
 {{ section.edit_form|bootstrap }}
