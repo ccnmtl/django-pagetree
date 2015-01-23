@@ -9,18 +9,29 @@ overriding behavior where needed.
 
 Ie, you would do something like:
 
-from pagetree.generic.views import pageview, pageedit
+from pagetree.generic.views import PageView, EditView
 
-def page(request, path):
-    # do auth on the request if you need the user to be logged in
-    # or only want some particular users to be able to get here
-    return pageview(request, path, template="main/page.html",
-        extra_context=dict(some_other="pass this through to the template"))
 
-@login_required
-def edit_page(request, path):
-    # do any additional auth here
-    return pageedit(request, path)
+class MyPageView(PageView):
+    def get_extra_context(self, request, path):
+        ctx = super(MyPageView, self).get_extra_context(request, path)
+        # Add extra context data
+        return ctx
+
+    def dispatch(self, request, *args, **kwargs):
+        # Example of a redirect based on user state
+        if not request.user.profile.avatar:
+            return redirect(reverse('avatar-selector'))
+
+        return super(MyPageView, self).dispatch(request, *args, **kwargs)
+
+
+class MyEditView(EditView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        # Do any additional auth here
+        return super(MyEditView, self).dispatch(
+            request, *args, **kwargs)
 
 """
 from django.core.exceptions import PermissionDenied
