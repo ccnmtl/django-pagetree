@@ -193,11 +193,14 @@ class PageView(View, SectionMixin):
         return self.gated
 
     def gate_check(self, user):
+        if not self.get_gated():
+            return None
+
+        # If this view is gated, and we have no user or an anonymous
+        # user, then just deny access.
         if (not user) or user.is_anonymous():
             raise PermissionDenied()
 
-        if not self.get_gated():
-            return None
         # we need to check that they have visited all previous pages
         # first
         allow, first = self.section.gate_check(user)
