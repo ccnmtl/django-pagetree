@@ -161,25 +161,27 @@
 {% rendersummary block %}
 	</div>
 
-	<div class="col-md-3">
-		<div class="btn-group">
-			<a data-toggle="modal" class="btn btn-default btn-sm"
-			 href="#edit-pageblock-{{block.id}}">
-		<span class="glyphicon glyphicon-edit"></span>
-			edit</a>
+    <div class="col-md-3">
+        <div class="btn-group">
+            <a data-toggle="modal" class="btn btn-default btn-sm"
+               href="#edit-pageblock-{{block.id}}" title="Edit">
+                <span class="glyphicon glyphicon-edit"></span> edit</a>
 
-		<a href="{% url 'delete-pageblock' block.id %}" class="btn
-		btn-danger btn-sm">		<span class="glyphicon glyphicon-trash"></span> delete</a>
+            <a href="{% url 'delete-pageblock' block.id %}"
+               class="btn btn-danger btn-sm" title="Delete">
+                <span class="glyphicon glyphicon-trash"></span></a>
+        </div>
 
-		{% if block.block.exportable %}
-		<a class="btn btn-sm"
-			 rel="tooltip" title="Download JSON dump of this block"
-			 id="export-{{block.id}}"
-			 href="{% url 'export-pageblock-json' block.id %}"><span class="glyphicon glyphicon-download"></span> export</a>
-
-		{% endif %}
-		</div>
-	</div>
+        <div class="btn-group">
+            {% if block.block.exportable %}
+            <a class="btn btn-sm"
+               rel="tooltip" title="Download JSON dump of this block"
+               id="export-{{block.id}}"
+               href="{% url 'export-pageblock-json' block.id %}">
+                <span class="glyphicon glyphicon-download"></span> export</a>
+            {% endif %}
+        </div>
+    </div>
 
 
 </div>
