@@ -19,13 +19,13 @@
         cursor: move;
         float: left;
     }
-	#children-order-list {list-style-type: none; margin: 0; padding: 0;}
-	#children li { margin: 0 3px 3px 3px; padding: 0.4em;
-	padding-left: 1.5em; 
+    #children-order-list {list-style-type: none; margin: 0; padding: 0;}
+    #children li { margin: 0 3px 3px 3px; padding: 0.4em;
+    padding-left: 1.5em;
           background-color: #ddd;
-	}
-	#children li span { position: absolute; margin-left: -1.3em; }
-	.dragging {background-color: #fee;}
+    }
+    #children li span { position: absolute; margin-left: -1.3em; }
+    .dragging {background-color: #fee;}
 </style>
 
 <!-- Prevent pagetree's jQuery and jQueryUI from interfering with the
@@ -79,20 +79,20 @@
 {% block moduletabs %}
 
 <ul class="nav navbar-nav">
-  {% for section in modules %}
-  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
-  {% endfor %}
+    {% for section in modules %}
+    <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
+    {% endfor %}
 </ul>
 
 {% endblock %}
 
 
 {% block sidenav %}
-	<!-- ###### Secondary Navigation ###### -->
-    <h3>Sections</h3>
-    {% with "/edit" as menu_base %}
-        {% include "pagetree/menu.html" %}
-    {% endwith %}
+<!-- ###### Secondary Navigation ###### -->
+<h3>Sections</h3>
+{% with "/edit" as menu_base %}
+{% include "pagetree/menu.html" %}
+{% endwith %}
 {% endblock %}
 
 {% block navrightextra %}
@@ -111,225 +111,225 @@
     <li {% if not is_root %}class="active"{% endif%}>
         <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
     </li>
-  <li><a href="#children-tab" data-toggle="tab">Children</a></li>
-  <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
-  <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
-  <li><a href="#history-tab" data-toggle="tab">History</a></li>
-  <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>  
+    <li><a href="#children-tab" data-toggle="tab">Children</a></li>
+    <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
+    <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
+    <li><a href="#history-tab" data-toggle="tab">History</a></li>
+    <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
 </ul>
 
 <div class="tab-content">
     <div id="content-tree" class="tab-pane {% if is_root %}active{% endif%}">
         <div style="margin-left: 5px;">
-            <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{hierarchy.name}}</a></h3>             
+            <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{hierarchy.name}}</a></h3>
             <ul>
-                {% for s in root.get_descendants %}                 
-                    <li class="menu" style="list-style: none; line-height: 150%">
-                        <a href="{{s.get_absolute_url}}">{{s.label}}</a>{% ifequal s section %} <span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
-                        {% if s.get_children %}
-                            <ul>
+                {% for s in root.get_descendants %}
+                <li class="menu" style="list-style: none; line-height: 150%">
+                    <a href="{{s.get_absolute_url}}">{{s.label}}</a>{% ifequal s section %} <span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
+                    {% if s.get_children %}
+                    <ul>
                         {% else %}{% if s.is_last_child %}
-                            {% for lc in s.closing_children %}
-                                </ul>
-                            {% endfor %}
-                        {% endif %}{% endif %}     
-                     </li>
+                        {% for lc in s.closing_children %}
+                    </ul>
+                    {% endfor %}
+                    {% endif %}{% endif %}
+                </li>
                 {% endfor %}
-             </ul>
-         </div>
-    </div>
-
-
-<div id="edit-blocks-tab" class="tab-pane {% if not is_root %}active{% endif%}"/>
-{% if section.pageblock_set.count %}
-
-<p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
-
-{% for block in section.pageblock_set.all %}
-<div class="row block-dragger" id="pageblock-{{block.id}}">
-
-	<div class="col-md-1 draghandle">
-		<span class="glyphicon glyphicon-resize-vertical"></span>
-	</div>
-
-	<div class="col-md-2">
-		<b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
-	</div>
-
-	<div class="col-md-6">
-		<a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
-{% rendersummary block %}
-	</div>
-
-    <div class="col-md-3">
-        <div class="btn-group">
-            <a data-toggle="modal" class="btn btn-default btn-sm"
-               href="#edit-pageblock-{{block.id}}" title="Edit">
-                <span class="glyphicon glyphicon-edit"></span> edit</a>
-
-            <a href="{% url 'delete-pageblock' block.id %}"
-               class="btn btn-danger btn-sm" title="Delete">
-                <span class="glyphicon glyphicon-trash"></span></a>
-        </div>
-
-        <div class="btn-group">
-            {% if block.block.exportable %}
-            <a class="btn btn-sm"
-               rel="tooltip" title="Download JSON dump of this block"
-               id="export-{{block.id}}"
-               href="{% url 'export-pageblock-json' block.id %}">
-                <span class="glyphicon glyphicon-download"></span> export</a>
-            {% endif %}
+            </ul>
         </div>
     </div>
 
 
-</div>
-{% endfor %}
+    <div id="edit-blocks-tab" class="tab-pane {% if not is_root %}active{% endif%}"/>
+    {% if section.pageblock_set.count %}
+
+    <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
+
+    {% for block in section.pageblock_set.all %}
+    <div class="row block-dragger" id="pageblock-{{block.id}}">
+
+        <div class="col-md-1 draghandle">
+            <span class="glyphicon glyphicon-resize-vertical"></span>
+        </div>
+
+        <div class="col-md-2">
+            <b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
+        </div>
+
+        <div class="col-md-6">
+            <a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
+            {% rendersummary block %}
+        </div>
+
+        <div class="col-md-3">
+            <div class="btn-group">
+                <a data-toggle="modal" class="btn btn-default btn-sm"
+                   href="#edit-pageblock-{{block.id}}" title="Edit">
+                    <span class="glyphicon glyphicon-edit"></span> edit</a>
+
+                <a href="{% url 'delete-pageblock' block.id %}"
+                   class="btn btn-danger btn-sm" title="Delete">
+                    <span class="glyphicon glyphicon-trash"></span></a>
+            </div>
+
+            <div class="btn-group">
+                {% if block.block.exportable %}
+                <a class="btn btn-sm"
+                   rel="tooltip" title="Download JSON dump of this block"
+                   id="export-{{block.id}}"
+                   href="{% url 'export-pageblock-json' block.id %}">
+                    <span class="glyphicon glyphicon-download"></span> export</a>
+                {% endif %}
+            </div>
+        </div>
 
 
-{% for block in section.pageblock_set.all %}
-<div class="modal fade block-edit" id="edit-pageblock-{{block.id}}" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Edit {{block.block.display_name}}</h3>
-  </div>
-  <div class="modal-body">
+    </div>
+    {% endfor %}
 
-{% if block.block.importable %}
-<a href="{% url 'import-pageblock-json' block.id %}">import json</a>
-{% endif %}
 
-<form action="{% url 'edit-pageblock' block.id %}" method="post"
-      class=""
-      {% if block.edit_form.is_multipart %}
-      enctype="multipart/form-data"
-      {% endif %}>
-    {% csrf_token %}
+    {% for block in section.pageblock_set.all %}
+    <div class="modal fade block-edit" id="edit-pageblock-{{block.id}}" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>Edit {{block.block.display_name}}</h3>
+                </div>
+                <div class="modal-body">
 
-{{ block.default_edit_form|bootstrap }}
-{% with block.edit_form as ef %}
-{{ ef|bootstrap }}
-{% if ef.alt_text %}
-<div>{{ ef.alt_text|safe }}</div>
-{% endif %}
-{% endwith %}
-</div>
+                    {% if block.block.importable %}
+                    <a href="{% url 'import-pageblock-json' block.id %}">import json</a>
+                    {% endif %}
 
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<input type="submit" value="Save" 
-			 class="btn btn-primary" />
-  </div>
+                    <form action="{% url 'edit-pageblock' block.id %}" method="post"
+                          class=""
+                          {% if block.edit_form.is_multipart %}
+                          enctype="multipart/form-data"
+                          {% endif %}>
+                        {% csrf_token %}
 
-</form>
-</div></div>
-</div>
-{% endfor %}
+                        {{ block.default_edit_form|bootstrap }}
+                        {% with block.edit_form as ef %}
+                        {{ ef|bootstrap }}
+                        {% if ef.alt_text %}
+                        <div>{{ ef.alt_text|safe }}</div>
+                        {% endif %}
+                        {% endwith %}
+                </div>
 
-{% else %}
-<div class="alert">
-  <strong>Warning!</strong> There are no pageblocks on this page. You should add some.
-</div>
-{% endif %}
+                <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Save"
+                           class="btn btn-primary" />
+                </div>
+
+                </form>
+        </div></div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <div class="alert">
+        <strong>Warning!</strong> There are no pageblocks on this page. You should add some.
+    </div>
+    {% endif %}
 
 </div>
 
 <div id="children-tab" class="tab-pane">
-<h2>Reorder Children</h2>
-<div class="well">
-<p>Drag and drop arrows to reorder children</p>
-<ul id="children-order-list">
-{% for child in section.get_children %}
-<li class="draggable"
-    id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
-  <a href="{{child.get_edit_url}}">{{child.label}}</a>
-</li>
-{% endfor %}
-</ul>
-</div>
+    <h2>Reorder Children</h2>
+    <div class="well">
+        <p>Drag and drop arrows to reorder children</p>
+        <ul id="children-order-list">
+            {% for child in section.get_children %}
+            <li class="draggable"
+                id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
+                <a href="{{child.get_edit_url}}">{{child.label}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<h2>Add Child</h2>
-<form action="{% url 'add-child-section' section.id %}" method="post"
-	  class="well form-inline">
-    {% csrf_token %}
+    <h2>Add Child</h2>
+    <form action="{% url 'add-child-section' section.id %}" method="post"
+          class="well form-inline">
+        {% csrf_token %}
 
-{{ section.add_child_section_form|bootstrap }}
+        {{ section.add_child_section_form|bootstrap }}
 
-<input type="submit" value="add child section" class="btn btn-primary"
-			 />
-</form>
+        <input type="submit" value="add child section" class="btn btn-primary"
+               />
+    </form>
 </div>
 
 
 <div id="add-pageblock-tab" class="tab-pane">
 
-<ul>
-{% for blocktype in available_pageblocks %}
-<li><a data-toggle="modal"
-			 href="#add-block-{{forloop.counter}}">Add {{blocktype.display_name}}</a></li>
-{% endfor %}
-</ul>
+    <ul>
+        {% for blocktype in available_pageblocks %}
+        <li><a data-toggle="modal"
+               href="#add-block-{{forloop.counter}}">Add {{blocktype.display_name}}</a></li>
+        {% endfor %}
+    </ul>
 
-{% for blocktype in available_pageblocks %}
-{% if blocktype %}
+    {% for blocktype in available_pageblocks %}
+    {% if blocktype %}
 
-<div class="modal fade" id="add-block-{{forloop.counter}}" role="dialog" aria-hidden="true">
-<div class="modal-dialog">
-      <div class="modal-content">
-<form action="{% url 'add-pageblock' section.id %}"
-      {% if blocktype.add_form.is_multipart %}
-      enctype="multipart/form-data"
-      {% endif %}
-      method="post">{% csrf_token %}
-
-
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3>Add {{blocktype.display_name}}</h3>
-  </div>
-  <div class="modal-body">
-<fieldset>
-<input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
-
-{{section.add_pageblock_form|bootstrap}}
-{{blocktype.add_form|bootstrap}}
-
-</fieldset>
+    <div class="modal fade" id="add-block-{{forloop.counter}}" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'add-pageblock' section.id %}"
+                      {% if blocktype.add_form.is_multipart %}
+                      enctype="multipart/form-data"
+                      {% endif %}
+                      method="post">{% csrf_token %}
 
 
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-		<input type="submit" value="add {{blocktype.display_name}}" 
-			 class="btn btn-primary" />
-  </div>
-</form>
-</div></div>
-</div>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h3>Add {{blocktype.display_name}}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <fieldset>
+                            <input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
 
-{% endif %}
-{% endfor %}
+                            {{section.add_pageblock_form|bootstrap}}
+                            {{blocktype.add_form|bootstrap}}
+
+                        </fieldset>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        <input type="submit" value="add {{blocktype.display_name}}"
+                               class="btn btn-primary" />
+                    </div>
+                </form>
+        </div></div>
+    </div>
+
+    {% endif %}
+    {% endfor %}
 </div>
 
 <div id="edit-page-tab" class="tab-pane">
 
-<form action="{% url 'edit-section' section.id %}" method="post"
-	  class="form-horizontal well">{% csrf_token %}
-<fieldset><legend>Edit Page</legend>
+    <form action="{% url 'edit-section' section.id %}" method="post"
+          class="form-horizontal well">{% csrf_token %}
+        <fieldset><legend>Edit Page</legend>
 
-{{ section.edit_form|bootstrap }}
+            {{ section.edit_form|bootstrap }}
 
-<input type="submit" value="save" class="btn btn-primary" />
-</fieldset>
-</form>
+            <input type="submit" value="save" class="btn btn-primary" />
+        </fieldset>
+    </form>
 
 
-<div class="well">
-<a class="btn btn-danger" href="{% url 'delete-section' section.id %}">delete this page</a>
-</div>
+    <div class="well">
+        <a class="btn btn-danger" href="{% url 'delete-section' section.id %}">delete this page</a>
+    </div>
 
 </div>
 
@@ -348,29 +348,29 @@
 
 <div id="history-tab" class="tab-pane">
 
-{% if section.version_set.count %}
-<table class="table table-bordered table-striped table-condensed">
-	<thead>
-		<tr>
-			<th>Saved At</th>
-			<th>User</th>
-			<th>Activity</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-{% for version in section.version_set.all %}
-    <tr>
-			<td>{{version.saved_at}}</td>
-			<td>{{version.user}}</td>
-			<td>{{version.activity}}</td>
-			<td><a href="{% url 'revert-to-version' version.id %}" class="btn
-			btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
-		</tr>
-{% endfor %}
-</tbody>
-</table>
-{% endif %}
+    {% if section.version_set.count %}
+    <table class="table table-bordered table-striped table-condensed">
+        <thead>
+            <tr>
+                <th>Saved At</th>
+                <th>User</th>
+                <th>Activity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for version in section.version_set.all %}
+            <tr>
+                <td>{{version.saved_at}}</td>
+                <td>{{version.user}}</td>
+                <td>{{version.activity}}</td>
+                <td><a href="{% url 'revert-to-version' version.id %}" class="btn
+                                                                              btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 </div>
 </div>
 {% endwith %}
@@ -378,19 +378,19 @@
 
 {% block content-nav %}
 <ul class="pager">
-{% with previous=section.get_previous next_section=section.get_next %}
-{% if not section.is_root %}
+    {% with previous=section.get_previous next_section=section.get_next %}
+    {% if not section.is_root %}
 
-{% if previous %}
-  <li class="previous">
-		<a href="{% url 'edit-page' previous.get_path %}">&larr; {{previous.label}}</a>
-  </li>
-{% endif %}
-{% endif %}
+    {% if previous %}
+    <li class="previous">
+        <a href="{% url 'edit-page' previous.get_path %}">&larr; {{previous.label}}</a>
+    </li>
+    {% endif %}
+    {% endif %}
 
-{% if next_section %}
-<li class="next"><a href="{% url 'edit-page' next_section.get_path %}">{{next_section.label}} &rarr;</a></li>
-{% endif %}
+    {% if next_section %}
+    <li class="next"><a href="{% url 'edit-page' next_section.get_path %}">{{next_section.label}} &rarr;</a></li>
+    {% endif %}
 </ul>
 {% endwith %}
 

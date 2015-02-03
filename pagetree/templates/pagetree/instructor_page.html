@@ -7,25 +7,25 @@
 {% block bodyid %}section-{{section.id}}{% endblock %}
 
 {% block sidenav %}
-	<!-- ###### Secondary Navigation ###### -->
-	<div id="secondary_navigation">
-		<div id="fadetop"></div>
-		<div class="block">
-			<h3>Sections</h3>
-{% with "/instructor" as menu_base %}
-{% include "pagetree/menu.html" %}
-{% endwith %}
-		</div><!-- div id="block" -->
-		<div id="fadebottom"></div>
-	</div><!-- div id="secondary_navigation" -->
+<!-- ###### Secondary Navigation ###### -->
+<div id="secondary_navigation">
+    <div id="fadetop"></div>
+    <div class="block">
+        <h3>Sections</h3>
+        {% with "/instructor" as menu_base %}
+        {% include "pagetree/menu.html" %}
+        {% endwith %}
+    </div><!-- div id="block" -->
+    <div id="fadebottom"></div>
+</div><!-- div id="secondary_navigation" -->
 {% endblock %}
 
 {% block moduletabs %}
 
 <ul class="nav navbar-nav">
-  {% for section in modules %}
-  <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
-  {% endfor %}
+    {% for section in modules %}
+    <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
+    {% endfor %}
 </ul>
 
 {% endblock %}
@@ -45,18 +45,18 @@
 
 {% if quiz.submission_set.count %}
 <table width="100%">
-{% for submission in quiz.submission_set.all %}
-<tr class="submissionheader">
-<th>{{submission.user.first_name}} {{submission.user.last_name}} ({{submission.user.username}})</th>
-<td>{{submission.submitted}}</td>
-</tr>
-{% for response in submission.response_set.all %}
-<tr class="submissionresponse">
-<td>Question {{response.question.ordinality}}: {{response.question.text}}</td>
-<td class="{% if response.question.answerable %}{% if response.is_correct %}correct{% else %}incorrect{% endif %}{% endif %}">{{response.value}}</td>
-</tr>
-{% endfor %}
-{% endfor %}
+    {% for submission in quiz.submission_set.all %}
+    <tr class="submissionheader">
+        <th>{{submission.user.first_name}} {{submission.user.last_name}} ({{submission.user.username}})</th>
+        <td>{{submission.submitted}}</td>
+    </tr>
+    {% for response in submission.response_set.all %}
+    <tr class="submissionresponse">
+        <td>Question {{response.question.ordinality}}: {{response.question.text}}</td>
+        <td class="{% if response.question.answerable %}{% if response.is_correct %}correct{% else %}incorrect{% endif %}{% endif %}">{{response.value}}</td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
 </table>
 {% else %}
 <p>no submissions</p>
