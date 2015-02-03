@@ -523,16 +523,14 @@ class Section(MP_Node):
                 section=self,
                 user=user)
         except django.core.exceptions.MultipleObjectsReturned:
-            upv = UserPageVisit.objects.filter(section=self, user=user)[0]
+            upv = UserPageVisit.objects.filter(
+                section=self, user=user).first()
         upv.status = status
         upv.save()
 
     def get_uservisit(self, user):
-        r = self.userpagevisit_set.filter(user=user)
-        if r.count() > 0:
-            return r[0]
-        else:
-            return None
+        # returns None if the userpagevisit doesn't exist
+        return self.userpagevisit_set.filter(user=user).first()
 
     def save_version(self, user, activity=None, comment=None):
         if not activity:
@@ -767,7 +765,7 @@ class TestBlock(models.Model):
         return unicode(self.pageblock())
 
     def pageblock(self):
-        return self.pageblocks.all()[0]
+        return self.pageblocks.first()
 
     @classmethod
     def add_form(self):
