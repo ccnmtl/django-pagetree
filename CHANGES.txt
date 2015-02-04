@@ -1,3 +1,9 @@
+1.0.5 (2015-02-03)
+==================
+
+* Fixed a regression that caused anonymous users to be denied access
+  to pages
+
 1.0.4 (2015-01-23)
 ==================
 
