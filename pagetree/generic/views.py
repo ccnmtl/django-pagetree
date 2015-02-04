@@ -181,7 +181,7 @@ class SectionMixin(object):
         return None
 
 
-class PageView(View, SectionMixin):
+class PageView(SectionMixin, View):
     template_name = "pagetree/page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
@@ -286,7 +286,7 @@ def generic_instructor_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class InstructorView(TemplateView, SectionMixin):
+class InstructorView(SectionMixin, TemplateView):
     template_name = "pagetree/instructor_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
@@ -343,7 +343,7 @@ def generic_edit_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class EditView(TemplateView, SectionMixin):
+class EditView(SectionMixin, TemplateView):
     template_name = "pagetree/edit_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
