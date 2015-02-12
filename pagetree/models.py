@@ -688,6 +688,10 @@ class PageBlock(models.Model):
         d['block_type'] = self.content_object.display_name
         return d
 
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create()
+
 
 class UserLocation(models.Model):
     """ last path a given user visited (for a particular hierarchy) """
