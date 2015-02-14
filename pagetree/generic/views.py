@@ -13,8 +13,8 @@ from pagetree.generic.views import PageView, EditView
 
 
 class MyPageView(PageView):
-    def get_extra_context(self, request, path):
-        ctx = super(MyPageView, self).get_extra_context(request, path)
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(MyPageView, self).get_context_data(*args, **kwargs)
         # Add extra context data
         return ctx
 
