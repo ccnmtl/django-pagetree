@@ -9,3 +9,4 @@ reports/
 .project
 .pydevproject
 django_pagetree.egg-info
+docs/_build/
