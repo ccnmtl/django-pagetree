@@ -14,11 +14,11 @@ from django import template
 register = template.Library()
 
 
-class RenderNode(template.Node):
+class BaseNode(template.Node):
     def __init__(self, block):
         self.block = block
 
-    def render(self, context):
+    def prepare_context_data(self, context):
         b = context[self.block]
         context_dict = {}
         for d in context.dicts:
@@ -27,6 +27,12 @@ class RenderNode(template.Node):
         for k in context_dict.keys():
             if not isinstance(k, str) and not isinstance(k, unicode):
                 del context_dict[k]
+        return b, context_dict
+
+
+class RenderNode(BaseNode):
+    def render(self, context):
+        b, context_dict = super(RenderNode, self).prepare_context_data(context)
         return b.render(**context_dict)
 
 
@@ -36,19 +42,10 @@ def render(parser, token):
     return RenderNode(block)
 
 
-class RenderJSNode(template.Node):
-    def __init__(self, block):
-        self.block = block
-
+class RenderJSNode(BaseNode):
     def render(self, context):
-        b = context[self.block]
-        context_dict = {}
-        for d in context.dicts:
-            context_dict.update(d)
-        # can only take string keys
-        for k in context_dict.keys():
-            if not isinstance(k, str) and not isinstance(k, unicode):
-                del context_dict[k]
+        b, context_dict = super(
+            RenderJSNode, self).prepare_context_data(context)
         return b.render_js(**context_dict)
 
 
@@ -58,19 +55,10 @@ def renderjs(parser, token):
     return RenderJSNode(block)
 
 
-class RenderCSSNode(template.Node):
-    def __init__(self, block):
-        self.block = block
-
+class RenderCSSNode(BaseNode):
     def render(self, context):
-        b = context[self.block]
-        context_dict = {}
-        for d in context.dicts:
-            context_dict.update(d)
-        # can only take string keys
-        for k in context_dict.keys():
-            if not isinstance(k, str) and not isinstance(k, unicode):
-                del context_dict[k]
+        b, context_dict = super(
+            RenderCSSNode, self).prepare_context_data(context)
         return b.render_css(**context_dict)
 
 
@@ -80,19 +68,10 @@ def rendercss(parser, token):
     return RenderCSSNode(block)
 
 
-class RenderSummaryNode(template.Node):
-    def __init__(self, block):
-        self.block = block
-
+class RenderSummaryNode(BaseNode):
     def render(self, context):
-        b = context[self.block]
-        context_dict = {}
-        for d in context.dicts:
-            context_dict.update(d)
-        # can only take string keys
-        for k in context_dict.keys():
-            if not isinstance(k, str) and not isinstance(k, unicode):
-                del context_dict[k]
+        b, context_dict = super(
+            RenderSummaryNode, self).prepare_context_data(context)
         return b.render_summary(**context_dict)
 
 
