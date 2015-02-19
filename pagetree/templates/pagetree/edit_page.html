@@ -125,7 +125,11 @@
             <ul>
                 {% for s in root.get_descendants %}
                 <li class="menu" style="list-style: none; line-height: 150%">
-                    <a href="{{s.get_absolute_url}}">{{s.label}}</a>{% ifequal s section %} <span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
+                    <a href="{{s.get_edit_url}}"
+                       >{{s.label}}</a>
+                    {% ifequal s section %}
+                    <span class="glyphicon glyphicon-hand-left"></span>
+                    {% endifequal %}
                     {% if s.get_children %}
                     <ul>
                         {% else %}{% if s.is_last_child %}
