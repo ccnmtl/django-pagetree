@@ -69,7 +69,7 @@
 {% else %}
 
 {% if is_submitted %}
-{% if allow_redo %}
+{% if allow_redo or request.user.is_superuser %}
 <form action="." method="post">{% csrf_token %}
 <input type="hidden" name="action" value="reset" />
 <input type="submit" value="clear your answers and try again" class="btn" />
