@@ -2,8 +2,12 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import unittest
 from django.http import Http404
-from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 import django.db
+
+from pagetree.models import Hierarchy, PageBlock, UserPageVisit
+from pagetree.tests.factories import (
+    RootSectionFactory, TestBlockFactory, UserFactory
+)
 
 
 class EmptyHierarchyTest(TestCase):
@@ -710,3 +714,26 @@ class MultipleLevelsTest(unittest.TestCase):
     def test_get_edit_url_two_down(self):
         self.assertEqual(self.section5.get_edit_url(),
                          "edit/section-3/section-4/section-5/")
+
+
+class SectionTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.section = RootSectionFactory()
+
+    def test_empty_section_is_unlocked(self):
+        self.assertTrue(self.section.unlocked(self.user))
+
+    def test_section_with_test_block_is_unlocked(self):
+        self.section.add_pageblock_from_dict({'block_type': 'Test Block'})
+        self.assertEqual(self.section.pageblock_set.count(), 1)
+
+        # TestBlock doesn't have an "unlocked" method defined, so this
+        # tests that Section.unlocked() handles that case.
+        self.assertTrue(self.section.unlocked(self.user))
+
+
+class TestBlockTest(TestCase):
+    def is_valid_from_factory(self):
+        block = TestBlockFactory()
+        block.full_clean()

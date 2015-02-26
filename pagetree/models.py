@@ -468,6 +468,17 @@ class Section(MP_Node):
         # reporting that they are unsubmitted
         return True
 
+    def unlocked(self, user):
+        """Returns True if all the blocks on this page are unlocked."""
+
+        for p in self.pageblock_set.all():
+            block = p.block()
+            if hasattr(block, 'unlocked'):
+                if not block.unlocked(user):
+                    return False
+
+        return True
+
     def as_dict(self):
         return dict(
             label=self.label,

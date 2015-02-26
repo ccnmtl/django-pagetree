@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test.testcases import TestCase
-from pagetree.models import Hierarchy, Section
+from pagetree.models import Hierarchy, Section, TestBlock
 import factory
 
 
@@ -21,6 +21,12 @@ class RootSectionFactory(factory.DjangoModelFactory):
     hierarchy = factory.SubFactory(HierarchyFactory)
     label = "Root"
     slug = ""
+    depth = 0
+
+
+class TestBlockFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = TestBlock
+    body = "Test block body"
 
 
 class ModuleFactory(object):
