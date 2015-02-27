@@ -37,5 +37,5 @@ def is_section_unlocked(section, user):
     else:
         is_unlocked = True
 
-    # Convert to 1 or 0 to parse it parse it easily in the tamplate.
+    # Convert to 1 or 0 to parse it easily in the template.
     return unicode(int(is_unlocked))
