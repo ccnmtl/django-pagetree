@@ -28,3 +28,14 @@ def get_user_section_status(parser, token):
         # handle "as some_var"
         var_name = token.split_contents()[1:][3]
     return GetUserSectionStatus(user, section, var_name)
+
+
+@register.simple_tag
+def is_section_unlocked(section, user):
+    if hasattr(section, 'unlocked'):
+        is_unlocked = section.unlocked(user)
+    else:
+        is_unlocked = True
+
+    # Convert to 1 or 0 to parse it parse it easily in the tamplate.
+    return unicode(int(is_unlocked))

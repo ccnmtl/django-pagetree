@@ -1,4 +1,4 @@
-Django==1.6.8
+Django==1.6.10
 django-treebeard==2.0
 Markdown==2.5.2
 South==1.0.1
