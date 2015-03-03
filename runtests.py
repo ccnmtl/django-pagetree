@@ -1,6 +1,7 @@
 """ run tests for pagetree
 
 $ virtualenv ve
+$ ./ve/bin/pip install Django==1.7.5
 $ ./ve/bin/pip install -r test_reqs.txt
 $ ./ve/bin/python runtests.py
 """
@@ -15,6 +16,12 @@ def main():
     # Dynamically configure the Django settings with the minimum necessary to
     # get Django running tests
     settings.configure(
+        MIDDLEWARE_CLASSES=(
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+        ),
+
         INSTALLED_APPS=(
             'django.contrib.auth',
             'django.contrib.contenttypes',
