@@ -1,3 +1,4 @@
+import random
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db import models
@@ -382,10 +383,22 @@ class Section(MP_Node):
         return self.hierarchy.available_pageblocks()
 
     def add_pageblock_form(self):
-        class EditForm(forms.Form):
-            label = forms.CharField()
-            css_extra = forms.CharField(label="extra CSS classes")
-        return EditForm()
+        # This unique id should instead be derived from the block type's
+        # ID, but that requires a new templatetag. This works for now.
+        unique_id = random.randint(0, 10000)
+
+        class AddPageBlockForm(forms.Form):
+            label = forms.CharField(
+                widget=forms.TextInput(
+                    attrs={'id': 'id_label_%d' % unique_id}
+                ))
+            css_extra = forms.CharField(
+                label='extra CSS classes',
+                widget=forms.TextInput(
+                    attrs={'id': 'id_css_extra_%d' % unique_id}
+                ))
+
+        return AddPageBlockForm()
 
     def get_first_leaf(self):
         if self.is_leaf():
