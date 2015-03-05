@@ -514,18 +514,32 @@ class Section(MP_Node):
             self.add_child_section_from_dict(c)
 
     def add_pageblock_from_dict(self, d):
-        blocktype = d.get('block_type', '')
+        target_type = d.get('block_type', '')
+
         # now we need to figure out which kind of pageblock to create
+        found_pbclass = None
         for pb_class in self.available_pageblocks():
             if not pb_class:
                 continue
-            if pb_class.display_name == blocktype:
+            if pb_class.display_name == target_type:
                 # a match
-                if hasattr(pb_class, 'create_from_dict'):
-                    block = pb_class.create_from_dict(d)
-                    self.append_pageblock(label=d.get('label', ''),
-                                          css_extra=d.get('css_extra', ''),
-                                          content_object=block)
+                found_pbclass = pb_class
+                break
+
+        if found_pbclass:
+            if hasattr(found_pbclass, 'create_from_dict'):
+                # Prepare a dictionary for the custom pageblock's
+                # create_from_dict method by removing the data that's
+                # only used elsewhere.
+                block_dict = d.copy()
+                block_dict.pop('block_type', None)
+                block_dict.pop('label', None)
+                block_dict.pop('css_extra', None)
+                block = found_pbclass.create_from_dict(block_dict)
+
+                self.append_pageblock(label=d.get('label', ''),
+                                      css_extra=d.get('css_extra', ''),
+                                      content_object=block)
 
     def add_child_section_from_dict(self, d):
         s = self.append_child(
@@ -796,19 +810,19 @@ class TestBlock(models.Model):
         return self.pageblocks.first()
 
     @classmethod
-    def add_form(self):
+    def add_form(cls):
         class AddForm(forms.Form):
             body = forms.CharField(
                 widget=forms.widgets.Textarea(attrs={'cols': 80}))
         return AddForm()
 
     @classmethod
-    def create(self, request):
+    def create(cls, request):
         return TestBlock.objects.create(body=request.POST.get('body', ''))
 
     @classmethod
-    def create_from_dict(self, d):
-        return TestBlock.objects.create(body=d.get('body', ''))
+    def create_from_dict(cls, d):
+        return cls.objects.create(**d)
 
     def edit_form(self):
         class EditForm(forms.Form):
