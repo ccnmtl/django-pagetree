@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.test.client import Client
 from pagetree.models import Hierarchy, PageBlock
+from json import loads
 
 
 class TestEditViews(TestCase):
@@ -21,7 +22,7 @@ class TestEditViews(TestCase):
                 'slug': 'section-2',
                 'pageblocks': [
                     {'label': 'Welcome to your new Forest Site',
-                     'css_extra': '',
+                     'css_extra': 'the-css-class',
                      'block_type': 'Test Block',
                      'body': 'You should now use the edit link to add content',
                      },
@@ -121,12 +122,17 @@ class TestEditViews(TestCase):
 
     def test_pageblock_json_export(self):
         p = PageBlock.objects.all()[0]
+
         response = self.c.get("/pagetree/pageblock/jsonexport/%d/" % p.id,
                               dict())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.content,
-            '{"body": "You should now use the edit link to add content"}')
+
+        the_json = loads(response.content)
+        self.assertEqual(the_json["body"],
+                         "You should now use the edit link to add content")
+        self.assertEquals(the_json["css_extra"], "the-css-class")
+        self.assertEquals(the_json["block_type"], "Test Block")
+        self.assertEquals(the_json["label"], "Welcome to your new Forest Site")
 
     def test_edit_pageblock(self):
         p = PageBlock.objects.all()[0]

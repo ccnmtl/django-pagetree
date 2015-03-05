@@ -423,6 +423,18 @@ class OneLevelWithBlocksTest(unittest.TestCase):
             [p.id for p in self.section1.pageblock_set.all()],
             normal_order)
 
+    def test_import_from_dict(self):
+        b = self.section1.pageblock_set.all()[0]
+        d = {'label': 'new label',
+             'css_extra': 'new css_extra',
+             'body': 'new body'}
+        b.import_from_dict(d)
+        self.assertEquals(b.label, 'new label')
+        self.assertEquals(b.css_extra, 'new css_extra')
+
+        sub = b.block()
+        self.assertEquals(sub.body, 'new body')
+
 
 class UserTrackingTest(unittest.TestCase):
     def setUp(self):
