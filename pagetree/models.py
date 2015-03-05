@@ -13,7 +13,7 @@ from django.template.defaultfilters import slugify
 from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
-from treebeard.forms import MoveNodeForm
+from treebeard.forms import movenodeform_factory
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
 
@@ -351,7 +351,10 @@ class Section(MP_Node):
         return EditSectionForm()
 
     def move_form(self):
-        return MoveNodeForm(instance=self)
+        MoveSectionForm = movenodeform_factory(
+            type(self),
+            exclude=('label', 'slug', 'hierarchy', 'show_toc', 'deep_toc'))
+        return MoveSectionForm(instance=self)
 
     def update_children_order(self, children_ids):
         """children_ids is a list of Section ids for the children

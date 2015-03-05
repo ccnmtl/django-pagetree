@@ -6,8 +6,8 @@ from django.template.defaultfilters import slugify
 from django.template.response import TemplateResponse
 from json import dumps, loads
 from pagetree.helpers import get_section_from_path
+from pagetree.forms import MoveSectionForm
 from pagetree.models import Section, PageBlock, Hierarchy, Version
-from treebeard.forms import MoveNodeForm
 
 
 def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
@@ -133,7 +133,7 @@ def move_section(request, section_id, success_url=None):
     section = get_object_or_404(Section, id=section_id)
     section.save_version(request.user, "move section")
 
-    form = MoveNodeForm(request.POST, instance=section)
+    form = MoveSectionForm(request.POST, instance=section)
     if form.is_valid():
         to_section = get_object_or_404(
             Section,
