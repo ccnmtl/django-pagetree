@@ -721,6 +721,15 @@ class SectionTest(TestCase):
         self.user = UserFactory()
         self.section = RootSectionFactory()
 
+    def test_add_pageblock_from_dict(self):
+        self.section.add_pageblock_from_dict({
+            'block_type': 'Test Block',
+            'body': 'test body',
+        })
+        block = self.section.pageblock_set.first()
+        assert(block is not None)
+        self.assertEqual(block.block().body, 'test body')
+
     def test_empty_section_is_unlocked(self):
         self.assertTrue(self.section.unlocked(self.user))
 
