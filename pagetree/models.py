@@ -726,6 +726,14 @@ class PageBlock(models.Model):
         d['block_type'] = self.content_object.display_name
         return d
 
+    def import_from_dict(self, d):
+        self.label = d.get('label', '')
+        self.css_extra = d.get('css_extra', '')
+        self.save()
+
+        if hasattr(self.content_object, 'import_from_dict'):
+            self.content_object.import_from_dict(d)
+
     @classmethod
     def create_from_dict(cls, d):
         return cls.objects.create()
@@ -836,6 +844,10 @@ class TestBlock(models.Model):
 
     def as_dict(self):
         return dict(body=self.body)
+
+    def import_from_dict(self, d):
+        self.body = d.get('body', '')
+        self.save()
 
     def summary_render(self):
         if len(self.body) < 61:
