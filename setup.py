@@ -41,6 +41,7 @@ setup(
         "coverage",
         "django_nose",
         "django-markwhat",
+        "django-bootstrap3",
         ],
     scripts=[],
     license="BSD",
