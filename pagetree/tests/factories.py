@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test.testcases import TestCase
-from pagetree.models import Hierarchy, Section, TestBlock
+from pagetree.models import Hierarchy, Section
+from pagetree.test_models import TestBlock
 import factory
 
 
