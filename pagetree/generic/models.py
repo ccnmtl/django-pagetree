@@ -15,21 +15,23 @@ class BasePageBlock(models.Model):
     class Meta:
         abstract = True
 
-    display_name = 'Unimplemented BasePageBlock'
     pageblocks = GenericRelation(PageBlock)
+
+    display_name = None
+    """The name for this block that's used in pagetree's menus."""
 
     def needs_submit(self):
         """Determines whether this pageblock needs form controls rendered.
 
-        If needs_submit is True, then pagetree will create a <form>
+        If ``needs_submit`` is True, then pagetree will create a <form>
         on this pageblock's surrounding page, and a Submit button for
         that form. It may also render a "Clear results" button, under
         the right circumstances. The surrounding <form> allows pagetree
         to handle form submissions for multiple blocks on the same page.
 
-        Also, when needs_submit is True, the POST data on the Section's
-        submit() step gets processed, but when needs_submit is False,
-        nothing is sent to the server.
+        Also, when ``needs_submit`` is True, the POST data on the
+        Section's ``submit()`` step gets processed, but when needs_submit
+        is False, nothing is sent to the server.
 
         :returns: a boolean
         """
@@ -50,7 +52,7 @@ class BasePageBlock(models.Model):
         return True
 
     def submit(self, user, request_data):
-        """Handle this pageblock's form submission.
+        """This is a hook for handling this pageblock's form submission.
 
         :returns: None
         """
@@ -60,9 +62,9 @@ class BasePageBlock(models.Model):
     def redirect_to_self_on_submit(self):
         """Determines where the user is redirected to on page submission.
 
-        If submit returns True, then the user will be redirected to the
-        next page in the hierarchy. Otherwise, they be redirected to the
-        current page.
+        If ``redirect_to_self_on_submit`` returns True, then the user will
+        be redirected to the next page in the hierarchy. Otherwise, they'll
+        be redirected to the current page.
 
         :returns: a boolean
         """

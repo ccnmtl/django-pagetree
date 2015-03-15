@@ -25,5 +25,6 @@ as possible.
    :maxdepth: 2
 
    installation
+   custom_pageblocks
    API
    glossary
