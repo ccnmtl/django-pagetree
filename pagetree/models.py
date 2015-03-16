@@ -699,9 +699,17 @@ class PageBlock(models.Model):
 
     def default_edit_form(self):
         class EditForm(forms.Form):
-            label = forms.CharField(initial=self.label)
-            css_extra = forms.CharField(initial=self.css_extra,
-                                        label="extra CSS classes")
+            label = forms.CharField(
+                initial=self.label,
+                widget=forms.TextInput(
+                    attrs={'id': 'id_label_%d' % self.pk}
+                ))
+            css_extra = forms.CharField(
+                initial=self.css_extra,
+                label='extra CSS classes',
+                widget=forms.TextInput(
+                    attrs={'id': 'id_css_extra_%d' % self.pk}
+                ))
         return EditForm()
 
     def edit_form(self):
