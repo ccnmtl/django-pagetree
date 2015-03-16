@@ -363,8 +363,9 @@
                 <td>{{version.saved_at}}</td>
                 <td>{{version.user}}</td>
                 <td>{{version.activity}}</td>
-                <td><a href="{% url 'revert-to-version' version.id %}" class="btn
-                                                                              btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a></td>
+                <td><a href="{% url 'revert-to-version' version.id %}"
+                       class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
