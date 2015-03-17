@@ -1,3 +1,7 @@
+1.1.0
+==================
+* Pagetree is now compatible with django-treebeard 3.0.
+
 1.0.9 (2015-03-05)
 ==================
 * enable block level import/export that cascades to the content object import/export
