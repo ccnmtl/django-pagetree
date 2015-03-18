@@ -7,8 +7,8 @@ Sometimes you might want to define a custom pageblock type specific to
 your application.
 
 It's possible to define a custom pageblock from scratch by defining a
-model with all the necessary hooks and a ``GenericRelation`` to Pagetree's
-``PageBlock`` class. For convenience, Pagetree provides ``BasePageBlock``
+model with all the necessary hooks and a ``GenericRelation`` to django-pagetree's
+``PageBlock`` class. For convenience, django-pagetree provides ``BasePageBlock``
 that contains the basics you'll need for making a custom pageblock.
 
 Here's an example of a custom pageblock::
