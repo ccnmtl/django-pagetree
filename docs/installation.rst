@@ -22,7 +22,7 @@ pageblocks will be available on your site::
 To use these pageblocks, you'll need to put ``django-pageblocks`` in your
 ``requirements.txt``, and add ``'pageblocks'`` to your ``INSTALLED_APPS``.
 
-Pagetree provides a set of generic views that you can use to build a
+django-pagetree provides a set of generic views that you can use to build a
 barebones site out of the box. In your ``urls.py``, you will need to import
 the generic views::
 
