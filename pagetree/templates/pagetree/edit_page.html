@@ -1,5 +1,5 @@
 {% extends "pagetree/base_pagetree.html" %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load render %}
 {% load static from staticfiles %}
 
@@ -208,9 +208,9 @@
                           {% endif %}>
                         {% csrf_token %}
 
-                        {{ block.default_edit_form|bootstrap }}
+                        {% bootstrap_form block.default_edit_form %}
                         {% with block.edit_form as ef %}
-                        {{ ef|bootstrap }}
+                        {% bootstrap_form ef %}
                         {% if ef.alt_text %}
                         <div>{{ ef.alt_text|safe }}</div>
                         {% endif %}
@@ -255,7 +255,7 @@
           class="well form-inline">
         {% csrf_token %}
 
-        {{ section.add_child_section_form|bootstrap }}
+        {% bootstrap_form section.add_child_section_form layout='inline' %}
 
         <input type="submit" value="add child section" class="btn btn-primary"
                />
@@ -293,8 +293,8 @@
                         <fieldset>
                             <input type="hidden" name="blocktype" value="{{blocktype.display_name}}"/>
 
-                            {{section.add_pageblock_form|bootstrap}}
-                            {{blocktype.add_form|bootstrap}}
+                            {% bootstrap_form section.add_pageblock_form %}
+                            {% bootstrap_form blocktype.add_form %}
 
                         </fieldset>
 
@@ -319,7 +319,7 @@
           class="form-horizontal well">{% csrf_token %}
         <fieldset><legend>Edit Page</legend>
 
-            {{ section.edit_form|bootstrap }}
+            {% bootstrap_form section.edit_form layout='horizontal' %}
 
             <input type="submit" value="save" class="btn btn-primary" />
         </fieldset>
