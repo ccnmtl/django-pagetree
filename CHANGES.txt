@@ -1,6 +1,9 @@
-1.1.0
+1.1.0  (2015-03-17)
 ==================
 * Pagetree is now compatible with django-treebeard 3.0.
+* Minor UI bugfixes.
+* Added some documentation in the docs/ directory.
+* Added BasePageBlock for making custom pageblocks.
 
 1.0.9 (2015-03-05)
 ==================
