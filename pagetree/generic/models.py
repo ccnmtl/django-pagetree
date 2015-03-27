@@ -76,8 +76,9 @@ class BasePageBlock(models.Model):
         """Determines where the user is redirected to on page submission.
 
         If ``redirect_to_self_on_submit`` returns True, then the user will
-        be redirected to the next page in the hierarchy. Otherwise, they'll
-        be redirected to the current page.
+        be redirected to the current page when the page's form is
+        submitted. Otherwise, they'll be redirected to the next page in
+        the hierarchy.
 
         :returns: a boolean
         """
