@@ -20,6 +20,19 @@ class BasePageBlock(models.Model):
     display_name = None
     """The name for this block that's used in pagetree's menus."""
 
+    def allow_redo(self):
+        """Determines whether this block allows users to resubmit answers.
+
+        This method is only used if ``needs_submit`` is True. If
+        ``allow_redo`` is also True, pagetree will render a button
+        with the text "I want to change my answers." when the block
+        has been submitted.
+
+        :returns: a boolean
+        """
+
+        return False
+
     def needs_submit(self):
         """Determines whether this pageblock needs form controls rendered.
 
