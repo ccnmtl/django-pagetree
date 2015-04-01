@@ -6,7 +6,7 @@ except ImportError:
     # Old location for django 1.6
     from django.contrib.contenttypes.generic import GenericRelation
 
-from pagetree.models import Hierarchy, UserPageVisit, PageBlock
+from pagetree.models import PageBlock
 
 
 class BasePageBlock(models.Model):

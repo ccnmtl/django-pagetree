@@ -1,5 +1,8 @@
-from django.contrib.auth.models import User
 import abc
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.contrib.contenttypes.models import ContentType
 
 
 class ReportableInterface(object):
@@ -79,6 +82,18 @@ class StandaloneReportColumn(ReportColumnInterface):
 
 class PagetreeReport(object):
 
+    def get_reportable_content_types(self):
+        types = []
+        hierarchy = models.get_model('pagetree', 'hierarchy')
+        for block in hierarchy.available_pageblocks():
+            if issubclass(block, ReportableInterface):
+                types.append(ContentType.objects.get_for_model(block))
+
+        return types
+
+    def __init__(self):
+        self.types = self.get_reportable_content_types()
+
     def users(self):
         return User.objects.all()
 
@@ -98,9 +113,9 @@ class PagetreeReport(object):
         columns = self.standalone_columns()
         for hierarchy in hierarchies:
             for section in hierarchy.get_root().get_descendants():
-                for p in section.pageblock_set.all():
-                    if isinstance(p.block(), ReportableInterface):
-                        columns += p.block().report_metadata()
+                for p in section.pageblock_set.filter(
+                        content_type__in=self.types):
+                    columns += p.block().report_metadata()
         return columns
 
     def value_columns(self, hierarchies):
@@ -108,9 +123,9 @@ class PagetreeReport(object):
         columns = self.standalone_columns()
         for hierarchy in hierarchies:
             for section in hierarchy.get_root().get_descendants():
-                for p in section.pageblock_set.all():
-                    if isinstance(p.block(), ReportableInterface):
-                        columns += p.block().report_values()
+                for p in section.pageblock_set.filter(
+                        content_type__in=self.types):
+                    columns += p.block().report_values()
         return columns
 
     def value_headers(self, columns):

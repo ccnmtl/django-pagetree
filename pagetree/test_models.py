@@ -1,9 +1,7 @@
 from django import forms
 from django.db import models
-from django.contrib.contenttypes import generic
 
 from pagetree.generic.models import BasePageBlock
-from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
 
