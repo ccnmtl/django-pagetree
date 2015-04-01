@@ -81,7 +81,8 @@ class Hierarchy(models.Model):
             raise Http404()
         return s
 
-    def available_pageblocks(self):
+    @classmethod
+    def available_pageblocks(cls):
         if hasattr(settings, 'PAGEBLOCKS') and settings.PAGEBLOCKS is not None:
             return [get_model(*pb.split('.')) for pb in settings.PAGEBLOCKS]
         else:
