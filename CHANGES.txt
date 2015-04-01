@@ -1,3 +1,7 @@
+1.1.1 (2015-04-01)
+==================
+Report optimization
+
 1.1.0  (2015-03-17)
 ==================
 * Pagetree is now compatible with django-treebeard 3.0.

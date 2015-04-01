@@ -14,7 +14,6 @@ from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
 from treebeard.forms import movenodeform_factory
-from pagetree.reports import ReportableInterface, ReportColumnInterface
 
 
 # dummy it out
