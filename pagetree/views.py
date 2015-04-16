@@ -37,22 +37,24 @@ def reorder_section_children(request, section_id, id_prefix="section_id_"):
 
 def delete_pageblock(request, pageblock_id, success_url=None):
     block = get_object_or_404(PageBlock, id=pageblock_id)
-    section = block.section
-    section.save_version(request.user,
-                         activity="delete block [%s]" % unicode(block))
-    try:
-        block.block().delete()
-    except AttributeError:
-        # if the model has been refactored, we sometimes
-        # end up with 'stub' pageblocks floating around
-        # that no longer have a block object associated
-        # it's nice to still be able to delete them
-        # without having to scrap the whole db and start over
-        pass
-    block.delete()
-    if success_url is None:
-        success_url = section.get_edit_url()
-    return HttpResponseRedirect(success_url)
+    if request.method == "POST":
+        section = block.section
+        section.save_version(request.user,
+                             activity="delete block [%s]" % unicode(block))
+        try:
+            block.block().delete()
+        except AttributeError:
+            # if the model has been refactored, we sometimes
+            # end up with 'stub' pageblocks floating around
+            # that no longer have a block object associated
+            # it's nice to still be able to delete them
+            # without having to scrap the whole db and start over
+            pass
+        block.delete()
+        if success_url is None:
+            success_url = section.get_edit_url()
+        return HttpResponseRedirect(success_url)
+    return TemplateResponse(request, 'delete_confirm.html')
 
 
 def export_pageblock_json(request, pageblock_id):
