@@ -1,4 +1,9 @@
 import random
+try:
+    from django.apps import apps
+except ImportError:
+    # Django <= 1.6
+    from django.db.models import get_model
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db import models
@@ -8,7 +13,6 @@ from django.template.loader import get_template
 from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.db.models import get_model
 from django.template.defaultfilters import slugify
 from json import dumps
 from treebeard.mp_tree import MP_Node
@@ -82,8 +86,18 @@ class Hierarchy(models.Model):
 
     @classmethod
     def available_pageblocks(cls):
-        if hasattr(settings, 'PAGEBLOCKS') and settings.PAGEBLOCKS is not None:
-            return [get_model(*pb.split('.')) for pb in settings.PAGEBLOCKS]
+        if hasattr(settings, 'PAGEBLOCKS') and \
+           settings.PAGEBLOCKS is not None:
+            try:
+                models = [
+                    apps.get_model(*pb.split('.'))
+                    for pb in settings.PAGEBLOCKS]
+            except NameError:
+                # Django <= 1.6
+                models = [
+                    get_model(*pb.split('.'))
+                    for pb in settings.PAGEBLOCKS]
+            return models
         else:
             return []
 

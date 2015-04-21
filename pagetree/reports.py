@@ -1,7 +1,11 @@
 import abc
 
 from django.contrib.auth.models import User
-from django.db import models
+try:
+    from django.apps import apps
+except ImportError:
+    # Django <= 1.6
+    from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -84,7 +88,11 @@ class PagetreeReport(object):
 
     def get_reportable_content_types(self):
         types = []
-        hierarchy = models.get_model('pagetree', 'hierarchy')
+        try:
+            hierarchy = apps.get_model('pagetree', 'hierarchy')
+        except NameError:
+            # Django <= 1.6
+            hierarchy = models.get_model('pagetree', 'hierarchy')
         for block in hierarchy.available_pageblocks():
             if issubclass(block, ReportableInterface):
                 types.append(ContentType.objects.get_for_model(block))
