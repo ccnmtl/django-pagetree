@@ -37,9 +37,7 @@ setup(
         "Django",
         "django-treebeard",
         "Markdown",
-        "nose",
         "coverage",
-        "django_nose",
         "django-markwhat",
         "django-bootstrap-form",
         ],
@@ -48,6 +46,5 @@ setup(
     platforms=["any"],
     zip_safe=False,
     packages=['pagetree'],
-    test_suite='nose.collector',
     include_package_data=True,
     )
