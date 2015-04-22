@@ -48,6 +48,7 @@ Here's an example of a custom pageblock::
   class MyBlockForm(forms.ModelForm):
       class Meta:
           model = MyBlock
+          fields = '__all__'
 
 Here's a list of methods and properties you can override in your
 ``BasePageBlock`` subclass:
