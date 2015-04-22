@@ -6,19 +6,25 @@ import factory
 
 
 class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
+    class Meta:
+        model  = User
+
     username = factory.Sequence(lambda n: "user%03d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
 class HierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
+    class Meta:
+        model = Hierarchy
+
     name = "main"
     base_url = ""
 
 
 class RootSectionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Section
+    class Meta:
+        model = Section
+
     hierarchy = factory.SubFactory(HierarchyFactory)
     label = "Root"
     slug = ""
@@ -26,7 +32,9 @@ class RootSectionFactory(factory.DjangoModelFactory):
 
 
 class TestBlockFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = TestBlock
+    class Meta:
+        model = TestBlock
+
     body = "Test block body"
 
 

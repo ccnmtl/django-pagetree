@@ -130,3 +130,4 @@ class BasePageBlockForm(forms.ModelForm):
 
     class Meta:
         model = BasePageBlock
+        fields = '__all__'

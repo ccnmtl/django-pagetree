@@ -1,7 +1,7 @@
 """ run tests for pagetree
 
 $ virtualenv ve
-$ ./ve/bin/pip install Django==1.7.5
+$ ./ve/bin/pip install Django==1.8
 $ ./ve/bin/pip install -r test_reqs.txt
 $ ./ve/bin/python runtests.py
 """
@@ -27,16 +27,11 @@ def main():
             'django.contrib.contenttypes',
             'django.contrib.sessions',
             'pagetree',
-            'django_nose',
             'django_markwhat',
             'django_jenkins',
         ),
-        TEST_RUNNER = 'django_nose.NoseTestSuiteRunner',
+        TEST_RUNNER = 'django.test.runner.DiscoverRunner',
 
-        NOSE_ARGS = [
-            '--with-coverage',
-            '--cover-package=pagetree',
-        ],
         COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
         ROOT_URLCONF = 'pagetree.tests.urls',
         PAGEBLOCKS = ['pagetree.TestBlock', ],
@@ -64,7 +59,7 @@ def main():
     try:
         # required by Django 1.7 and later
         django.setup()
-    except:
+    except AttributeError:
         pass
 
     # Fire off the tests

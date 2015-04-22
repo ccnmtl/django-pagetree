@@ -1,6 +1,6 @@
+import unittest
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.utils import unittest
 from django.http import Http404
 import django.db
 
