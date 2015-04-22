@@ -1,3 +1,8 @@
+1.1.2 (2015-04-22)
+==================
+* Add confirmation page when deleting a pageblock.
+* Add support for Django 1.8.
+
 1.1.1 (2015-04-01)
 ==================
 Report optimization
