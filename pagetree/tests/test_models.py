@@ -6,7 +6,7 @@ import django.db
 
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 from pagetree.tests.factories import (
-    RootSectionFactory, TestBlockFactory, UserFactory
+    RootSectionFactory, TestBlockFactory, UserFactory, UserPageVisitFactory
 )
 
 
@@ -755,6 +755,12 @@ class SectionTest(TestCase):
 
 
 class TestBlockTest(TestCase):
-    def is_valid_from_factory(self):
+    def test_is_valid_from_factory(self):
         block = TestBlockFactory()
         block.full_clean()
+
+
+class UserPageVisitTest(TestCase):
+    def test_is_valid_from_factory(self):
+        upv = UserPageVisitFactory()
+        upv.full_clean()
