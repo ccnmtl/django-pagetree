@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test.testcases import TestCase
-from pagetree.models import Hierarchy, Section
+from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.test_models import TestBlock
 import factory
 
@@ -66,3 +66,11 @@ class PagetreeTestCase(TestCase):
 
         self.hierarchy_one = Hierarchy.objects.get(name='one')
         self.hierarchy_two = Hierarchy.objects.get(name='two')
+
+
+class UserPageVisitFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = UserPageVisit
+
+    user = factory.SubFactory(UserFactory)
+    section = factory.SubFactory(RootSectionFactory)
