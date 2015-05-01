@@ -39,7 +39,7 @@ class TestBlockFactory(factory.DjangoModelFactory):
 
 
 class ModuleFactory(object):
-    def __init__(self, hname, base_url):
+    def __init__(self, hname='main', base_url='/pages/'):
         hierarchy = HierarchyFactory(name=hname, base_url=base_url)
         root = hierarchy.get_root()
         root.add_child_section_from_dict(
