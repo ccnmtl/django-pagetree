@@ -96,6 +96,9 @@ class BasePageBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.first()
 
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
     # TODO: I'd like to have all the following methods be inherited
     # somehow. For now these need to be copy and pasted for each custom
     # pageblock.
