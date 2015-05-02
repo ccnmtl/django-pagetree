@@ -217,7 +217,7 @@ class Section(MP_Node):
     def is_last_child(self):
         key = "pagetree.%d.is_last_child" % self.id
         v = cache.get(key)
-        if v:
+        if v is not None:
             statsd.incr("pagetree.is_last_child.cache_hit")
             return v
         statsd.incr("pagetree.is_last_child.cache_miss")
@@ -287,7 +287,7 @@ class Section(MP_Node):
     def get_absolute_url(self):
         key = "pagetree.%d.get_absolute_url" % self.id
         v = cache.get(key)
-        if v:
+        if v is not None:
             statsd.incr("pagetree.get_absolute_url.cache_hit")
             return v
         statsd.incr("pagetree.get_absolute_url.cache_miss")
@@ -307,7 +307,7 @@ class Section(MP_Node):
     def get_edit_url(self):
         key = "pagetree.%d.get_edit_url" % self.id
         v = cache.get(key)
-        if v:
+        if v is not None:
             statsd.incr("pagetree.get_edit_url.cache_hit")
             return v
         statsd.incr("pagetree.get_edit_url.cache_miss")
