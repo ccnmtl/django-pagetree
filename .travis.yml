@@ -14,3 +14,5 @@ install:
 # command to run tests
 script:
   - python runtests.py
+notifications:
+  slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
