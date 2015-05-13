@@ -1,6 +1,6 @@
-from annoying.decorators import render_to
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import (
+    get_object_or_404, render_to_response, render)
 from django.template.context import RequestContext
 from django.template.defaultfilters import slugify
 from django.template.response import TemplateResponse
@@ -209,7 +209,6 @@ def exporter(request):
     return resp
 
 
-@render_to("revert_confirm.html")
 def revert_to_version(request, version_id):
     v = get_object_or_404(Version, pk=version_id)
     if request.method == "POST":
@@ -238,4 +237,4 @@ def revert_to_version(request, version_id):
         v.section.clear_tree_cache()
         return HttpResponseRedirect(v.section.get_edit_url())
     else:
-        return dict(version=v)
+        return render(request, "revert_confirm.html", dict(version=v))
