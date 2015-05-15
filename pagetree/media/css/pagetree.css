@@ -1,5 +1,4 @@
-.admin_block_column
-{
+.admin_block_column {
    width: 870px;
    margin: 5px 0 0 15px;
    padding: 5px 0 0 25px;
@@ -13,27 +12,27 @@
    border-bottom-color: #eeeeee;
 }
 
-.admin_tools_column
-{
+.admin_tools_column {
    text-align: left;
 }
 
-.admin_block_view_row1
-{
+.admin_block_view_row1 {
    background-color: #eee;
 }
 
-.admin_block_view_row2
-{
+.admin_block_view_row2 {
    background-color: #fff;
 }
 
-#id_label, #id_slug, #id_template
-{
+#id_label, #id_slug, #id_template {
     width: 300px;
 }
 
 .draghandle {
     cursor: move;
     float: left;
+}
+
+.pagetree-pageblock-section-count {
+    font-size: smaller;
 }
