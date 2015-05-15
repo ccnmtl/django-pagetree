@@ -124,8 +124,14 @@
                     <span class="glyphicon glyphicon-hand-right"></span>
                     <strong>
                     {% endifequal %}
-                    <a href="{{s.get_edit_url}}"
-                       >{{s.label|default:"Empty Label"}}{% if s.label|length < 1 %} ({{s.slug}}){% endif %}</a>
+                        <span title="The number of pageblocks in this section"
+                              class="pagetree-pageblock-section-count">
+                            {{s.pageblock_set.count}}
+                        </span>
+                        <a href="{{s.get_edit_url}}"
+                           >{{s.label|default:"Empty Label"}}
+                            {% if s.label|length < 1 %} ({{s.slug}}) {% endif %}
+                        </a>
                     {% ifequal s section %}
                     </strong>
                     <span class="glyphicon glyphicon-hand-left"></span>

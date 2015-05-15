@@ -1,3 +1,7 @@
+1.1.5 (2015-05-15)
+==================
+* Add pageblock count to sections in the edit page
+
 1.1.4 (2015-05-13)
 ==================
 * Show sections with empty labels in the edit_page hierarchy
