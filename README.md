@@ -1,6 +1,5 @@
 [![Latest Version](https://pypip.in/version/django-pagetree/badge.svg)](https://pypi.python.org/pypi/django-pagetree/)
 [![Build Status](https://travis-ci.org/ccnmtl/django-pagetree.svg?branch=master)](https://travis-ci.org/ccnmtl/django-pagetree)
-[![Documentation Status](https://readthedocs.org/projects/django-pagetree/badge/?version=latest)](https://readthedocs.org/projects/django-pagetree/?badge=latest)
 
 pagetree is a helper for building sites that are organized
 as a hierarchy of pages which the user/visitor goes through
@@ -15,6 +14,11 @@ pagetree is designed to allow this kind of site to be built by
 an editor through the web. it aims to provide the minimum amount
 of functionality possible and stay out of the way as much
 as possible.
+
+# Documentation
+
+Documentation for pagetree is on
+[readthedocs](https://django-pagetree.readthedocs.org).
 
 ## Note on South and Django 1.7
 
