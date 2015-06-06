@@ -709,7 +709,7 @@ class MultipleLevelsTest(unittest.TestCase):
         self.section5 = self.section4.get_children()[0]
 
     def tearDown(self):
-        self.h.delete()
+        Hierarchy.objects.all().delete()
 
     def test_get_absolute_url(self):
         self.assertEqual(self.section4.get_absolute_url(),
