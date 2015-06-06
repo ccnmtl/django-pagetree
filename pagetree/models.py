@@ -153,10 +153,10 @@ class Hierarchy(models.Model):
         ul.save()
 
     @classmethod
-    def clone_hierarchy(cls, original, name, base_url):
+    def clone(cls, original, name, base_url):
         hierarchy = Hierarchy.objects.create(name=name, base_url=base_url)
         root = Section.add_root(label="Root", slug="", hierarchy=hierarchy)
-        Section.clone_section(original.get_root(), root)
+        Section.clone(original.get_root(), root)
         return hierarchy
 
 
@@ -643,7 +643,7 @@ class Section(MP_Node):
         assert False, "current section not found in traversal"
 
     @classmethod
-    def clone_section(cls, original, section):
+    def clone(cls, original, section):
         for b in original.pageblock_set.all():
             section.add_pageblock_from_dict(b.as_dict())
         section.save()
@@ -655,7 +655,7 @@ class Section(MP_Node):
                                          show_toc=old_child.show_toc,
                                          deep_toc=old_child.deep_toc)
 
-            Section.clone_section(old_child, child)
+            Section.clone(old_child, child)
 
         return section
 

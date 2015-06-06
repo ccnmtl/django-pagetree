@@ -732,7 +732,7 @@ class MultipleLevelsTest(unittest.TestCase):
             'block_type': 'Test Block',
             'body': 'test body',
         })
-        duplicate = Hierarchy.clone_hierarchy(self.h, 'foo', '/foo/')
+        duplicate = Hierarchy.clone(self.h, 'foo', '/foo/')
 
         descendants = duplicate.get_root().get_descendants()
         self.assertTrue(descendants[0].label, 'Section 1')

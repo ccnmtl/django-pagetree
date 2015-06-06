@@ -116,7 +116,20 @@
 <div class="tab-content">
     <div id="content-tree" class="tab-pane {% if is_root %}active{% endif%}">
         <div style="margin-left: 5px;">
-            <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{hierarchy.name}}</a></h3>
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Action
+                <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'clone-hierarchy' section.hierarchy.id %}">
+                            Clone Hierarchy
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{section.hierarchy.name}}</a></h3>
             <ul>
                 {% for s in root.get_descendants %}
                 <li class="menu" style="list-style: none; line-height: 150%">

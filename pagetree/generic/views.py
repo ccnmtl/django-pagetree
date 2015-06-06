@@ -393,5 +393,5 @@ class CloneHierarchyView(FormView):
 
         clone = Hierarchy.clone(original, name, base_url)
 
-        self.success_url = clone.get_root().get_absolute_url()
+        self.success_url = clone.get_root().get_edit_url()
         return super(CloneHierarchyView, self).form_valid(form)
