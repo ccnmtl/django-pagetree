@@ -1,5 +1,10 @@
-from django.conf.urls import patterns
 import os.path
+
+from django.conf.urls import patterns, url
+
+from pagetree.generic.views import CloneHierarchyView
+
+
 media_root = os.path.join(os.path.dirname(__file__), "media")
 
 urlpatterns = patterns(
@@ -36,4 +41,6 @@ urlpatterns += patterns(
     (r'^export/$', 'exporter', {}, 'export-hierarchy'),
     (r'^version/(?P<version_id>\d+)/revert/$', 'revert_to_version', {},
      "revert-to-version"),
+    url(r'^clone_hierarchy/(?P<hierarchy_id>\d+)/$',
+        CloneHierarchyView.as_view(), name="clone-hierarchy"),
 )

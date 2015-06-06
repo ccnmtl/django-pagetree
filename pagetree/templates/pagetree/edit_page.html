@@ -125,9 +125,10 @@
                     <strong>
                     {% endifequal %}
                         <span title="The number of pageblocks in this section"
-                              class="pagetree-pageblock-section-count">
+                              class="pagetree-pageblock-section-count label">
                             {{s.pageblock_set.count}}
                         </span>
+                        &nbsp;&nbsp;
                         <a href="{{s.get_edit_url}}"
                            >{{s.label|default:"Empty Label"}}
                             {% if s.label|length < 1 %} ({{s.slug}}) {% endif %}

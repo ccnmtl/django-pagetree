@@ -35,16 +35,19 @@ class MyEditView(EditView):
 
 """
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from pagetree.helpers import get_section_from_path
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View, TemplateView
+from django.views.generic.edit import FormView
+
+from pagetree.helpers import get_section_from_path
+from pagetree.models import CloneHierarchyForm, Hierarchy
 
 
 def has_responses(section):
     quizzes = [p.block() for p in section.pageblock_set.all()
-               if hasattr(p.block(), 'needs_submit')
-               and p.block().needs_submit()]
+               if hasattr(p.block(), 'needs_submit') and
+               p.block().needs_submit()]
     return quizzes != []
 
 
@@ -274,8 +277,8 @@ def generic_instructor_page(request, path, hierarchy="main",
     root = section.hierarchy.get_root()
 
     quizzes = [p.block() for p in section.pageblock_set.all()
-               if hasattr(p.block(), 'needs_submit')
-               and p.block().needs_submit()]
+               if hasattr(p.block(), 'needs_submit') and
+               p.block().needs_submit()]
     context = dict(section=section,
                    quizzes=quizzes,
                    module=section.get_module(),
@@ -305,8 +308,8 @@ class InstructorView(SectionMixin, TemplateView):
         root = section.hierarchy.get_root()
 
         quizzes = [p.block() for p in section.pageblock_set.all()
-                   if hasattr(p.block(), 'needs_submit')
-                   and p.block().needs_submit()]
+                   if hasattr(p.block(), 'needs_submit') and
+                   p.block().needs_submit()]
         context = dict(section=section,
                        quizzes=quizzes,
                        module=section.get_module(),
@@ -367,3 +370,28 @@ class EditView(SectionMixin, TemplateView):
             root=section.hierarchy.get_root())
         context.update(self.get_extra_context())
         return context
+
+
+class CloneHierarchyView(FormView):
+    template_name = "pagetree/clone_hierarchy.html"
+    form_class = CloneHierarchyForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CloneHierarchyView, self).get_context_data(**kwargs)
+
+        hierarchy_id = self.kwargs.get('hierarchy_id')
+        context['hierarchy'] = get_object_or_404(Hierarchy, id=hierarchy_id)
+
+        return context
+
+    def form_valid(self, form):
+        hierarchy_id = self.kwargs.get('hierarchy_id')
+        original = get_object_or_404(Hierarchy, id=hierarchy_id)
+
+        name = form.cleaned_data['name']
+        base_url = form.cleaned_data['base_url']
+
+        clone = Hierarchy.clone(original, name, base_url)
+
+        self.success_url = clone.get_root().get_absolute_url()
+        return super(CloneHierarchyView, self).form_valid(form)
