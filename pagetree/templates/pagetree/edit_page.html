@@ -45,6 +45,16 @@
 <script src="{% static 'pagetree/js/pagetree-admin.js' %}"></script>
 <script>
 (function($) {
+    // handle hash tag navigation
+    var hash = window.location.hash;
+    hash && $('.edit-page-nav a[href="' + hash + '"]').tab('show');
+    
+    // when the nav item is selected update the page hash
+    $('.edit-page-nav a').on('shown', function (e) {
+        window.location.hash = e.target.hash;
+        scrollTo(0,0);
+    });
+    
   $("#children-order-list").sortable({
     containment : 'parent'
     ,axis : 'y'
@@ -99,7 +109,7 @@
 
 <h1>{{ section.label }}</h1>
 
-<ul class="nav nav-tabs">
+<ul class="edit-page-nav nav nav-tabs">
     <li {% if is_root %}class="active"{% endif%}>
         <a href="#content-tree" data-toggle="tab">Hierarchy</a>
     </li>
@@ -383,6 +393,7 @@
     </table>
     {% endif %}
 </div>
+
 </div>
 {% endwith %}
 {% endblock %}
@@ -394,13 +405,17 @@
 
     {% if previous %}
     <li class="previous">
-        <a href="{% url 'edit-page' previous.get_path %}">&larr; {{previous.label}}</a>
+        <a href="{% url 'edit-page' previous.get_path %}">
+            &larr; {{previous.label}}</a>
     </li>
     {% endif %}
     {% endif %}
 
     {% if next_section %}
-    <li class="next"><a href="{% url 'edit-page' next_section.get_path %}">{{next_section.label}} &rarr;</a></li>
+    <li class="next">
+        <a href="{% url 'edit-page' next_section.get_path %}">
+            {{next_section.label}} &rarr;</a>
+    </li>
     {% endif %}
 </ul>
 {% endwith %}
