@@ -42,6 +42,8 @@ Here's an example of a factory that you can put alongside
               ]
           })
 
+          self.root = root
+
 To instantiate a custom pageblock in this way, you set ``block_type``
 to the custom pageblock's ``display_name`` property.
 
