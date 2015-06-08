@@ -1,3 +1,7 @@
+1.1.6 (2015-06-06)
+==================
+* Add hierarchy clone functionality - copy sections and pageblocks
+
 1.1.5 (2015-05-15)
 ==================
 * Add pageblock count to sections in the edit page

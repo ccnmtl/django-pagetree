@@ -709,7 +709,7 @@ class MultipleLevelsTest(unittest.TestCase):
         self.section5 = self.section4.get_children()[0]
 
     def tearDown(self):
-        self.h.delete()
+        Hierarchy.objects.all().delete()
 
     def test_get_absolute_url(self):
         self.assertEqual(self.section4.get_absolute_url(),
@@ -726,6 +726,30 @@ class MultipleLevelsTest(unittest.TestCase):
     def test_get_edit_url_two_down(self):
         self.assertEqual(self.section5.get_edit_url(),
                          "edit/section-3/section-4/section-5/")
+
+    def test_clone_hierarchy(self):
+        self.section1.add_pageblock_from_dict({
+            'block_type': 'Test Block',
+            'body': 'test body',
+        })
+        duplicate = Hierarchy.clone(self.h, 'foo', '/foo/')
+
+        descendants = duplicate.get_root().get_descendants()
+        self.assertTrue(descendants[0].label, 'Section 1')
+        self.assertTrue(descendants[0].depth, 1)
+        self.assertEquals(descendants[0].pageblock_set.count(), 1)
+
+        self.assertTrue(descendants[1].label, 'Section 2')
+        self.assertTrue(descendants[1].depth, 1)
+
+        self.assertTrue(descendants[2].label, 'Section 3')
+        self.assertTrue(descendants[2].depth, 1)
+
+        self.assertTrue(descendants[3].label, 'Section 4')
+        self.assertTrue(descendants[3].depth, 2)
+
+        self.assertTrue(descendants[4].label, 'Section 5')
+        self.assertTrue(descendants[4].depth, 3)
 
 
 class SectionTest(TestCase):

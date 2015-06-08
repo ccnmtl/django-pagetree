@@ -152,6 +152,13 @@ class Hierarchy(models.Model):
         ul.path = path
         ul.save()
 
+    @classmethod
+    def clone(cls, original, name, base_url):
+        hierarchy = Hierarchy.objects.create(name=name, base_url=base_url)
+        root = Section.add_root(label="Root", slug="", hierarchy=hierarchy)
+        Section.clone(original.get_root(), root)
+        return hierarchy
+
 
 class Section(MP_Node):
     label = models.CharField(max_length=256)
@@ -635,6 +642,23 @@ class Section(MP_Node):
         # the current section?!
         assert False, "current section not found in traversal"
 
+    @classmethod
+    def clone(cls, original, section):
+        for b in original.pageblock_set.all():
+            section.add_pageblock_from_dict(b.as_dict())
+        section.save()
+
+        children = original.get_children()
+        for old_child in children:
+            child = section.append_child(label=old_child.label,
+                                         slug=old_child.slug,
+                                         show_toc=old_child.show_toc,
+                                         deep_toc=old_child.deep_toc)
+
+            Section.clone(old_child, child)
+
+        return section
+
 
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
@@ -807,3 +831,9 @@ class Version(models.Model):
                 versions.append(v)
         versions.sort(lambda a, b: cmp(b.saved_at, a.saved_at))
         return versions
+
+
+class CloneHierarchyForm(forms.ModelForm):
+    class Meta:
+        model = Hierarchy
+        fields = ['name', 'base_url']
