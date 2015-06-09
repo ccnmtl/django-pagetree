@@ -18,7 +18,7 @@ class HierarchyFactory(factory.DjangoModelFactory):
         model = Hierarchy
 
     name = "main"
-    base_url = ""
+    base_url = "/pages/"
 
 
 class RootSectionFactory(factory.DjangoModelFactory):

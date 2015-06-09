@@ -3,8 +3,7 @@ Custom Pageblocks
 
 .. currentmodule:: pagetree.generic.models
 
-Sometimes you might want to define a custom pageblock type specific to
-your application.
+You might want to define custom pageblock types specific to your application.
 
 It's possible to define a custom pageblock from scratch by defining a
 model with all the necessary hooks and a ``GenericRelation`` to django-pagetree's
