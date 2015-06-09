@@ -19,7 +19,7 @@ Here's an example of a factory that you can put alongside
 
   class CustomPagetreeModuleFactory(object):
       def __init__(self):
-          hierarchy = HierarchyFactory()
+          hierarchy = HierarchyFactory(name='main', base_url='/pages/')
           root = hierarchy.get_root()
           root.add_child_section_from_dict({
               'label': 'Welcome to the Intro Page',
@@ -59,7 +59,7 @@ And navigate the hierarchy in the feature file:
 
    Feature: Navigate the pagetree hierarchy
      Scenario: Access custom block on Step 2
-       When I visit "/"
+       When I visit "/pages/"
        Then I see the text "Welcome to the Intro Page"
 
        When I click the next button
