@@ -20,6 +20,13 @@ class BasePageBlock(models.Model):
     display_name = None
     """The name for this block that's used in pagetree's menus."""
 
+    def as_dict(self):
+        """Returns the PageBlock as a dictionary.
+
+        :rtype: dictionary
+        """
+        return dict(block_type=self.display_name)
+
     def allow_redo(self):
         """Determines whether this block allows users to resubmit answers.
 
