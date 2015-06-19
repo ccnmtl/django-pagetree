@@ -540,6 +540,7 @@ class Section(MP_Node):
     def add_pageblock_from_dict(self, d):
         target_type = d.get('block_type', '')
 
+
         # now we need to figure out which kind of pageblock to create
         found_pbclass = None
         for pb_class in self.available_pageblocks():

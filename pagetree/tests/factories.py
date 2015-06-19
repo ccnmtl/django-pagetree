@@ -7,7 +7,7 @@ import factory
 
 class UserFactory(factory.DjangoModelFactory):
     class Meta:
-        model  = User
+        model = User
 
     username = factory.Sequence(lambda n: "user%03d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
