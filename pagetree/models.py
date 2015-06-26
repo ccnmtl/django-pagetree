@@ -437,16 +437,18 @@ class Section(MP_Node):
     def reset(self, user):
         """ clear a user's responses to all pageblocks on this page """
         for p in self.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
-                    p.block().clear_user_submissions(user)
+            block = p.block()
+            if hasattr(block, 'needs_submit'):
+                if block.needs_submit():
+                    block.clear_user_submissions(user)
 
     def submit(self, request_data, user):
         """ store users's responses to the pageblocks on this page """
         proceed = True
         for p in self.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
+            block = p.block()
+            if hasattr(block, 'needs_submit'):
+                if block.needs_submit():
                     prefix = "pageblock-%d-" % p.id
                     data = dict()
                     for k in request_data.keys():
@@ -457,33 +459,35 @@ class Section(MP_Node):
                                 data[k[len(prefix):]] = request_data[k]
                             else:
                                 data[k[len(prefix):]] = v
-                    p.block().submit(user, data)
-                    if hasattr(p.block(), 'redirect_to_self_on_submit'):
+                    block.submit(user, data)
+                    if hasattr(block, 'redirect_to_self_on_submit'):
                         # semi bug here?
                         # proceed will only be set by the last submittable
                         # block on the page. previous ones get ignored.
-                        proceed = not p.block().redirect_to_self_on_submit()
+                        proceed = not block.redirect_to_self_on_submit()
         return proceed
 
     def needs_submit(self):
         """ if any blocks on the page need to be submitted """
         for p in self.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
+            block = p.block()
+            if hasattr(block, 'needs_submit'):
+                if block.needs_submit():
                     return True
         return False
 
     def allow_redo(self, **kwargs):
         """ if any blocks on the page are allowed to be resubmitted """
         for p in self.pageblock_set.all():
-            if hasattr(p.block(), 'allow_redo'):
-                if hasattr(p.block().allow_redo, '__call__'):
-                    if p.block().allow_redo(**kwargs):
+            block = p.block()
+            if hasattr(block, 'allow_redo'):
+                if hasattr(block.allow_redo, '__call__'):
+                    if block.allow_redo(**kwargs):
                         return True
                 else:
                     # not callable, so we expect it
                     # to just be a boolean property
-                    if p.block().allow_redo:
+                    if block.allow_redo:
                         return True
         return False
 
@@ -491,10 +495,11 @@ class Section(MP_Node):
         """ if all blocks on the page that require submissions
         have been submitted """
         for p in self.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
+            block = p.block()
+            if hasattr(block, 'needs_submit'):
+                if block.needs_submit():
                     try:
-                        s = p.block().unlocked(user)
+                        s = block.unlocked(user)
                         if not s:
                             # there's an unsubmitted block
                             return False
@@ -686,10 +691,11 @@ class PageBlock(models.Model):
     def edit_label(self):
         """ provide a label for the pageblock to make the
         edit interface easier to read """
-        if hasattr(self.block(), 'edit_label'):
-            return self.block().edit_label()
+        block = self.block()
+        if hasattr(block, 'edit_label'):
+            return block.edit_label()
         else:
-            return self.block().display_name
+            return block.display_name
 
     def render(self, **kwargs):
         if hasattr(self.content_object, "template_file"):
