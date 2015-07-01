@@ -2,14 +2,14 @@
 {% load render %}
 
 {% block js %}
-{% for block in section.pageblock_set.all %}
-{% renderjs block %}
+{% for pageblock in section.pageblock_set.all %}
+{% renderjs pageblock %}
 {% endfor %}
 {% endblock %}
 
 {% block css %}
-{% for block in section.pageblock_set.all %}
-{% rendercss block %}
+{% for pageblock in section.pageblock_set.all %}
+{% rendercss pageblock %}
 {% endfor %}
 {% endblock %}
 
@@ -58,10 +58,10 @@
 {% endif %}
 
 
-{% for block in section.pageblock_set.all %}
-<div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
-{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-{% render block %}
+{% for pageblock in section.pageblock_set.all %}
+<div class="pageblock{% if pageblock.css_extra %} {{pageblock.css_extra}}{% endif %}">
+{% if pageblock.label %}<h3>{{pageblock.label}}</h3>{% endif %}
+{% render pageblock %}
 </div>
 {% endfor %}
 
