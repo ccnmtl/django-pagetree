@@ -701,7 +701,8 @@ class PageBlock(models.Model):
         if hasattr(self.content_object, "template_file"):
             t = get_template(getattr(self.content_object, "template_file"))
             d = kwargs
-            d['block'] = self.content_object
+            d['pageblock'] = self.content_object
+            d['block'] = d['pageblock']
             c = Context(d)
             return t.render(c)
         else:

@@ -180,6 +180,7 @@
     <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
 
     {% for pageblock in section.pageblock_set.all %}
+    {% with block=pageblock %}
     <div class="row block-dragger" id="pageblock-{{pageblock.id}}">
 
         <div class="col-md-1 draghandle">
@@ -219,10 +220,12 @@
 
 
     </div>
+    {% endwith %}
     {% endfor %}
 
 
     {% for pageblock in section.pageblock_set.all %}
+    {% with block=pageblock %}
     <div class="modal fade block-edit" id="edit-pageblock-{{pageblock.id}}" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -261,6 +264,7 @@
                 </form>
         </div></div>
     </div>
+    {% endwith %}
     {% endfor %}
 
     {% else %}
