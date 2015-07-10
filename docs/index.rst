@@ -26,5 +26,6 @@ as possible.
 
    installation
    custom_pageblocks
-   API
+   api
+   testing
    glossary

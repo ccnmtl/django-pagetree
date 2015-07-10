@@ -45,10 +45,12 @@ from pagetree.models import CloneHierarchyForm, Hierarchy
 
 
 def has_responses(section):
-    quizzes = [p.block() for p in section.pageblock_set.all()
-               if hasattr(p.block(), 'needs_submit') and
-               p.block().needs_submit()]
-    return quizzes != []
+    for p in section.pageblock_set.all():
+        block = p.block()
+        if hasattr(block, 'needs_submit') and block.needs_submit():
+            return True
+
+    return False
 
 
 def visit_root(section, fallback_url="/admin/"):
@@ -276,9 +278,12 @@ def generic_instructor_page(request, path, hierarchy="main",
     section = get_section_from_path(path, hierarchy=hierarchy)
     root = section.hierarchy.get_root()
 
-    quizzes = [p.block() for p in section.pageblock_set.all()
-               if hasattr(p.block(), 'needs_submit') and
-               p.block().needs_submit()]
+    quizzes = []
+    for p in section.pageblock_set.all():
+        block = p.block()
+        if hasattr(block, 'needs_submit') and block.needs_submit():
+            return quizzes.append(block)
+
     context = dict(section=section,
                    quizzes=quizzes,
                    module=section.get_module(),
@@ -307,9 +312,12 @@ class InstructorView(SectionMixin, TemplateView):
         section = self.get_section(path)
         root = section.hierarchy.get_root()
 
-        quizzes = [p.block() for p in section.pageblock_set.all()
-                   if hasattr(p.block(), 'needs_submit') and
-                   p.block().needs_submit()]
+        quizzes = []
+        for p in section.pageblock_set.all():
+            block = p.block()
+            if hasattr(block, 'needs_submit') and block.needs_submit():
+                return quizzes.append(block)
+
         context = dict(section=section,
                        quizzes=quizzes,
                        module=section.get_module(),

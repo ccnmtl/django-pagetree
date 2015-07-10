@@ -5,6 +5,7 @@ from django.http import Http404
 import django.db
 
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
+from pagetree.test_models import TestBlock
 from pagetree.tests.factories import (
     RootSectionFactory, TestBlockFactory, UserFactory, UserPageVisitFactory
 )
@@ -424,7 +425,7 @@ class OneLevelWithBlocksTest(unittest.TestCase):
             normal_order)
 
     def test_import_from_dict(self):
-        b = self.section1.pageblock_set.all()[0]
+        b = self.section1.pageblock_set.first()
         d = {'label': 'new label',
              'css_extra': 'new css_extra',
              'body': 'new body'}
@@ -434,6 +435,18 @@ class OneLevelWithBlocksTest(unittest.TestCase):
 
         sub = b.block()
         self.assertEquals(sub.body, 'new body')
+
+    def test_import_custom_block_dict(self):
+        b = self.section1.pageblock_set.first()
+        d = {
+            'block_type': 'Test Block',
+            'body': 'abc',
+        }
+        b.import_from_dict(d)
+
+        sub = b.block()
+        self.assertEquals(sub.display_name, 'Test Block')
+        self.assertEquals(sub.body, 'abc')
 
 
 class UserTrackingTest(unittest.TestCase):
@@ -765,6 +778,9 @@ class SectionTest(TestCase):
         block = self.section.pageblock_set.first()
         assert(block is not None)
         self.assertEqual(block.block().body, 'test body')
+        self.assertEqual(
+            self.section.pageblock_set.first(), block,
+            'The PageBlock has been added to the Section')
 
     def test_empty_section_is_unlocked(self):
         self.assertTrue(self.section.unlocked(self.user))
@@ -779,9 +795,18 @@ class SectionTest(TestCase):
 
 
 class TestBlockTest(TestCase):
+    def setUp(self):
+        self.b = TestBlockFactory()
+
     def test_is_valid_from_factory(self):
-        block = TestBlockFactory()
-        block.full_clean()
+        self.b.full_clean()
+
+    def test_create_from_dict(self):
+        testblock = TestBlock.create_from_dict({
+            'body': 'abc',
+        })
+        self.assertEqual(testblock.display_name, 'Test Block')
+        self.assertEqual(testblock.body, 'abc')
 
 
 class UserPageVisitTest(TestCase):

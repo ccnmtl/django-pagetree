@@ -200,8 +200,9 @@ def exporter(request):
         protocol = "https"
     url_base = protocol + "//" + request.get_host()
     for pb in PageBlock.objects.filter(section__hierarchy=h):
-        if hasattr(pb.block(), 'list_resources'):
-            for r in pb.block().list_resources():
+        block = pb.block()
+        if hasattr(block, 'list_resources'):
+            for r in block.list_resources():
                 resources.append(url_base + r)
     data['resources'] = resources
     resp = HttpResponse(dumps(data))

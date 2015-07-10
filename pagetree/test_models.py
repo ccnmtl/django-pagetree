@@ -67,7 +67,9 @@ class TestBlock(BasePageBlock):
         self.save()
 
     def as_dict(self):
-        return dict(body=self.body)
+        d = super(TestBlock, self).as_dict()
+        d['body'] = self.body
+        return d
 
     def import_from_dict(self, d):
         self.body = d.get('body', '')
