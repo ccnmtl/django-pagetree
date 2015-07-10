@@ -21,6 +21,7 @@
     <div id="clone-hierarchy-tab" class="tab-pane">
        <form action="{% url 'clone-hierarchy' hierarchy.id %}"
         method="post" class="form-inline">
+            {% csrf_token %}
             {{form|bootstrap }}
             <input type="submit" value="clone" class="btn btn-primary" />
         </form>
