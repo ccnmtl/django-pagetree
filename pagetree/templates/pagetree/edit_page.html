@@ -179,39 +179,40 @@
 
     <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
 
-    {% for block in section.pageblock_set.all %}
-    <div class="row block-dragger" id="pageblock-{{block.id}}">
+    {% for pageblock in section.pageblock_set.all %}
+    {% with block=pageblock %}
+    <div class="row block-dragger" id="pageblock-{{pageblock.id}}">
 
         <div class="col-md-1 draghandle">
             <span class="glyphicon glyphicon-resize-vertical"></span>
         </div>
 
         <div class="col-md-2">
-            <b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
+            <b><a data-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.block.display_name}}</a></b>
         </div>
 
         <div class="col-md-6">
-            <a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
-            {% rendersummary block %}
+            <a data-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.label}}</a>
+            {% rendersummary pageblock %}
         </div>
 
         <div class="col-md-3">
             <div class="btn-group">
                 <a data-toggle="modal" class="btn btn-default btn-sm"
-                   href="#edit-pageblock-{{block.id}}" title="Edit">
+                   href="#edit-pageblock-{{pageblock.id}}" title="Edit">
                     <span class="glyphicon glyphicon-edit"></span> edit</a>
 
-                <a href="{% url 'delete-pageblock' block.id %}"
+                <a href="{% url 'delete-pageblock' pageblock.id %}"
                    class="btn btn-danger btn-sm" title="Delete">
                     <span class="glyphicon glyphicon-trash"></span></a>
             </div>
 
             <div class="btn-group">
-                {% if block.block.exportable %}
+                {% if pageblock.block.exportable %}
                 <a class="btn btn-sm"
                    rel="tooltip" title="Download JSON dump of this block"
-                   id="export-{{block.id}}"
-                   href="{% url 'export-pageblock-json' block.id %}">
+                   id="export-{{pageblock.id}}"
+                   href="{% url 'export-pageblock-json' pageblock.id %}">
                     <span class="glyphicon glyphicon-download"></span> export</a>
                 {% endif %}
             </div>
@@ -219,32 +220,34 @@
 
 
     </div>
+    {% endwith %}
     {% endfor %}
 
 
-    {% for block in section.pageblock_set.all %}
-    <div class="modal fade block-edit" id="edit-pageblock-{{block.id}}" role="dialog">
+    {% for pageblock in section.pageblock_set.all %}
+    {% with block=pageblock %}
+    <div class="modal fade block-edit" id="edit-pageblock-{{pageblock.id}}" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3>Edit {{block.block.display_name}}</h3>
+                    <h3>Edit {{pageblock.block.display_name}}</h3>
                 </div>
                 <div class="modal-body">
 
-                    {% if block.block.importable %}
-                    <a href="{% url 'import-pageblock-json' block.id %}">import json</a>
+                    {% if pageblock.block.importable %}
+                    <a href="{% url 'import-pageblock-json' pageblock.id %}">import json</a>
                     {% endif %}
 
-                    <form action="{% url 'edit-pageblock' block.id %}" method="post"
+                    <form action="{% url 'edit-pageblock' pageblock.id %}" method="post"
                           class=""
-                          {% if block.edit_form.is_multipart %}
+                          {% if pageblock.edit_form.is_multipart %}
                           enctype="multipart/form-data"
                           {% endif %}>
                         {% csrf_token %}
 
-                        {{ block.default_edit_form|bootstrap }}
-                        {% with block.edit_form as ef %}
+                        {{ pageblock.default_edit_form|bootstrap }}
+                        {% with pageblock.edit_form as ef %}
                         {{ ef|bootstrap }}
                         {% if ef.alt_text %}
                         <div>{{ ef.alt_text|safe }}</div>
@@ -261,6 +264,7 @@
                 </form>
         </div></div>
     </div>
+    {% endwith %}
     {% endfor %}
 
     {% else %}
