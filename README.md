@@ -1,4 +1,3 @@
-[![Latest Version](https://pypip.in/version/django-pagetree/badge.svg)](https://pypi.python.org/pypi/django-pagetree/)
 [![Build Status](https://travis-ci.org/ccnmtl/django-pagetree.svg?branch=master)](https://travis-ci.org/ccnmtl/django-pagetree)
 [![Documentation Status](https://readthedocs.org/projects/django-pagetree/badge/?version=latest)](https://readthedocs.org/projects/django-pagetree/?badge=latest)
 
