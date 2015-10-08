@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/ccnmtl/django-pagetree.svg?branch=master)](https://travis-ci.org/ccnmtl/django-pagetree)
-[![Documentation Status](https://readthedocs.org/projects/django-pagetree/badge/?version=latest)](https://readthedocs.org/projects/django-pagetree/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/django-pagetree/badge/?version=latest)](https://django-pagetree.readthedocs.org/en/latest/?badge=latest)
 
 pagetree is a helper for building sites that are organized
 as a hierarchy of pages which the user/visitor goes through
