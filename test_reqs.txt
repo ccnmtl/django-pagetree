@@ -1,9 +1,8 @@
 django-treebeard==3.0
 Markdown==2.6.2
-South==1.0.2
-coverage==3.7.1
+coverage==4.0.3
 flake8==2.3.0
-django-jenkins==0.17.0
+django-jenkins==0.18.1
 pep8==1.5.7
 pyflakes==0.8.1
 django-markwhat==1.3
