@@ -1,11 +1,7 @@
 import abc
 
 from django.contrib.auth.models import User
-try:
-    from django.apps import apps
-except ImportError:
-    # Django <= 1.6
-    from django.db import models
+from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 
 

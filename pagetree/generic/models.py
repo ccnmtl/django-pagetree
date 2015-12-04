@@ -1,10 +1,6 @@
 from django import forms
 from django.db import models
-try:
-    from django.contrib.contenttypes.fields import GenericRelation
-except ImportError:
-    # Old location for django 1.6
-    from django.contrib.contenttypes.generic import GenericRelation
+from django.contrib.contenttypes.fields import GenericRelation
 
 from pagetree.models import PageBlock
 
