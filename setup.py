@@ -27,7 +27,7 @@ from setuptools import setup
 
 setup(
     name="django-pagetree",
-    version="1.1.8",
+    version="1.1.9",
     author="Anders Pearson",
     author_email="anders@columbia.edu",
     url="https://github.com/ccnmtl/django-pagetree",
