@@ -13,6 +13,7 @@ install:
 
 # command to run tests
 script:
+  - flake8 pagetree runtests.py
   - python runtests.py
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
