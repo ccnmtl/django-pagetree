@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load render %}
 {% block title %}{{hierarchy.label}} (clone){% endblock %}
 
@@ -22,7 +22,7 @@
        <form action="{% url 'clone-hierarchy' hierarchy.id %}"
         method="post" class="form-inline">
             {% csrf_token %}
-            {{form|bootstrap }}
+            {% bootstrap_form form %}
             <input type="submit" value="clone" class="btn btn-primary" />
         </form>
     </div>

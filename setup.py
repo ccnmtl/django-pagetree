@@ -39,7 +39,7 @@ setup(
         "Markdown",
         "coverage",
         "django-markwhat",
-        "django-bootstrap-form",
+        "django-bootstrap3",
         ],
     scripts=[],
     license="BSD",
