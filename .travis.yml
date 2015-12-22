@@ -8,8 +8,8 @@ env:
 
 # command to install dependencies
 install:
-  - pip install -q $DJANGO --use-mirrors
-  - pip install -q -r test_reqs.txt --use-mirrors
+  - pip install -q $DJANGO
+  - pip install -q -r test_reqs.txt
 
 # command to run tests
 script:
