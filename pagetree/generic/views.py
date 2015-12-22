@@ -40,8 +40,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 
+from pagetree.forms import CloneHierarchyForm
 from pagetree.helpers import get_section_from_path
-from pagetree.models import CloneHierarchyForm, Hierarchy
+from pagetree.models import Hierarchy
 
 
 def has_responses(section):
