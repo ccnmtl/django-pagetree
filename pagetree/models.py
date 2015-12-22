@@ -84,15 +84,9 @@ class Hierarchy(models.Model):
     def available_pageblocks(cls):
         if hasattr(settings, 'PAGEBLOCKS') and \
            settings.PAGEBLOCKS is not None:
-            try:
-                models = [
-                    apps.get_model(*pb.split('.'))
-                    for pb in settings.PAGEBLOCKS]
-            except NameError:
-                # Django <= 1.6
-                models = [
-                    get_model(*pb.split('.'))
-                    for pb in settings.PAGEBLOCKS]
+            models = [
+                apps.get_model(*pb.split('.'))
+                for pb in settings.PAGEBLOCKS]
             return models
         else:
             return []
@@ -540,7 +534,6 @@ class Section(MP_Node):
 
     def add_pageblock_from_dict(self, d):
         target_type = d.get('block_type', '')
-
 
         # now we need to figure out which kind of pageblock to create
         found_pbclass = None

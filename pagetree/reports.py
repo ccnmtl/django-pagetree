@@ -84,11 +84,7 @@ class PagetreeReport(object):
 
     def get_reportable_content_types(self):
         types = []
-        try:
-            hierarchy = apps.get_model('pagetree', 'hierarchy')
-        except NameError:
-            # Django <= 1.6
-            hierarchy = models.get_model('pagetree', 'hierarchy')
+        hierarchy = apps.get_model('pagetree', 'hierarchy')
         for block in hierarchy.available_pageblocks():
             if issubclass(block, ReportableInterface):
                 types.append(ContentType.objects.get_for_model(block))
