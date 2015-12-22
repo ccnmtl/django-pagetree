@@ -30,17 +30,17 @@ def main():
             'django_markwhat',
             'django_jenkins',
         ),
-        TEST_RUNNER = 'django.test.runner.DiscoverRunner',
+        TEST_RUNNER='django.test.runner.DiscoverRunner',
 
-        COVERAGE_EXCLUDES_FOLDERS = ['migrations'],
-        ROOT_URLCONF = 'pagetree.tests.urls',
-        PAGEBLOCKS = ['pagetree.TestBlock', ],
+        COVERAGE_EXCLUDES_FOLDERS=['migrations'],
+        ROOT_URLCONF='pagetree.tests.urls',
+        PAGEBLOCKS=['pagetree.TestBlock', ],
 
-        PROJECT_APPS = [
+        PROJECT_APPS=[
             'pagetree',
         ],
         # Django replaces this, but it still wants it. *shrugs*
-        DATABASES = {
+        DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': ':memory:',
