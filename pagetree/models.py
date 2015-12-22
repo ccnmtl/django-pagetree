@@ -1,5 +1,6 @@
 import random
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db import models
@@ -26,9 +27,6 @@ try:
     from django_statsd.clients import statsd
 except ImportError:
     pass
-
-settings = None
-from django.conf import settings
 
 
 class Hierarchy(models.Model):
@@ -297,8 +295,8 @@ class Section(MP_Node):
         slugs = [a.slug for a in ancestors[1:]]
         if len(slugs) == 0:
             return self.hierarchy.get_absolute_url() + self.slug + "/"
-        url = (self.hierarchy.get_absolute_url() + "/".join(slugs)
-               + "/" + self.slug + "/")
+        url = (self.hierarchy.get_absolute_url() + "/".join(slugs) +
+               "/" + self.slug + "/")
         return url
 
     def get_edit_url(self):
@@ -318,8 +316,8 @@ class Section(MP_Node):
         if len(slugs) == 0:
             return (
                 self.hierarchy.get_absolute_url() + "edit/" + self.slug + "/")
-        url = (self.hierarchy.get_absolute_url() + "edit/" + "/".join(slugs)
-               + "/" + self.slug + "/")
+        url = (self.hierarchy.get_absolute_url() + "edit/" + "/".join(slugs) +
+               "/" + self.slug + "/")
         return url
 
     def get_instructor_url(self):
