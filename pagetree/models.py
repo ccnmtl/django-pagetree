@@ -78,8 +78,8 @@ class Hierarchy(models.Model):
             raise Http404()
         return s
 
-    @classmethod
-    def available_pageblocks(cls):
+    @staticmethod
+    def available_pageblocks():
         if hasattr(settings, 'PAGEBLOCKS') and \
            settings.PAGEBLOCKS is not None:
             models = [
@@ -112,8 +112,8 @@ class Hierarchy(models.Model):
             s.add_child_section_from_dict(c)
         return s
 
-    @classmethod
-    def from_dict(cls, d):
+    @staticmethod
+    def from_dict(d):
         h = Hierarchy.objects.create(name=d.get('name', ''),
                                      base_url=d.get('base_url', '/'))
         for s in d.get('sections', []):
@@ -140,8 +140,8 @@ class Hierarchy(models.Model):
         ul.path = path
         ul.save()
 
-    @classmethod
-    def clone(cls, original, name, base_url):
+    @staticmethod
+    def clone(original, name, base_url):
         hierarchy = Hierarchy.objects.create(name=name, base_url=base_url)
         root = Section.add_root(label="Root", slug="", hierarchy=hierarchy)
         Section.clone(original.get_root(), root)
@@ -635,8 +635,8 @@ class Section(MP_Node):
         # the current section?!
         assert False, "current section not found in traversal"
 
-    @classmethod
-    def clone(cls, original, section):
+    @staticmethod
+    def clone(original, section):
         for b in original.pageblock_set.all():
             section.add_pageblock_from_dict(b.as_dict())
         section.save()
