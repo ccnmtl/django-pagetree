@@ -826,9 +826,3 @@ class Version(models.Model):
                 versions.append(v)
         versions.sort(lambda a, b: cmp(b.saved_at, a.saved_at))
         return versions
-
-
-class CloneHierarchyForm(forms.ModelForm):
-    class Meta:
-        model = Hierarchy
-        fields = ['name', 'base_url']
