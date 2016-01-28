@@ -23,6 +23,8 @@ class CloneHierarchyForm(forms.ModelForm):
                 'There\'s already a hierarchy with the base_url: {}'.format(
                     base_url))
 
+        return cleaned_data
+
 
 MoveSectionForm = movenodeform_factory(
     Section,
