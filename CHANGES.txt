@@ -1,9 +1,14 @@
-1.1.11 (2015.01-28)
+1.1.12 (2016-02-02)
+===================
+
+* Added instructions for base_url on clone form.
+
+1.1.11 (2016-01-28)
 ===================
 
 * clone hierarchy form returns cleaned_data when done validating
 
-1.1.10 (2015-01-28)
+1.1.10 (2016-01-28)
 ===================
 
 * support for treebeard 4.0
