@@ -1,3 +1,7 @@
+1.1.13 (2016-02-18)
+==================
+* get_descendants optimization. override to select the related hierarchy.
+
 1.1.12 (2016-02-02)
 ===================
 
