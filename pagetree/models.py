@@ -206,6 +206,9 @@ class Section(MP_Node):
             return self
         return self.get_ancestors()[1]
 
+    def get_descendants(self):
+        return MP_Node.get_descendants(self).select_related('hierarchy')
+
     def is_first_child(self):
         return self.get_first_sibling().id == self.id
 
