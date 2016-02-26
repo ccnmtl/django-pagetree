@@ -10,10 +10,14 @@ env:
 install:
   - pip install -q $DJANGO
   - pip install -q -r test_reqs.txt
+  - pip install coveralls
 
 # command to run tests
 script:
   - flake8 pagetree runtests.py
   - python runtests.py
+  - coverage run --source=pagetree runtests.py
 notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
+after_success:
+  - coveralls
