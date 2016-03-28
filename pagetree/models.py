@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import random
 from django.apps import apps
 from django.conf import settings
@@ -11,6 +13,7 @@ from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template.defaultfilters import slugify
+from django.utils.encoding import python_2_unicode_compatible
 from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
@@ -29,6 +32,7 @@ except ImportError:
     pass
 
 
+@python_2_unicode_compatible
 class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
     base_url = models.CharField(max_length=256, default="")
@@ -41,7 +45,7 @@ class Hierarchy(models.Model):
     def get_absolute_url(self):
         return self.base_url
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_root(self):
@@ -148,6 +152,7 @@ class Hierarchy(models.Model):
         return hierarchy
 
 
+@python_2_unicode_compatible
 class Section(MP_Node):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
@@ -279,7 +284,7 @@ class Section(MP_Node):
                                         css_extra=css_extra,
                                         content_object=content_object)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def get_absolute_url(self):
@@ -656,6 +661,7 @@ class Section(MP_Node):
         return section
 
 
+@python_2_unicode_compatible
 class PageBlock(models.Model):
     section = models.ForeignKey(Section)
     ordinality = models.PositiveIntegerField(default=1)
@@ -671,7 +677,7 @@ class PageBlock(models.Model):
     class Meta:
         ordering = ('section', 'ordinality',)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s [%d]: %s" % (self.section.label, self.ordinality,
                                 self.label)
 
@@ -820,6 +826,9 @@ class Version(models.Model):
     class Meta:
         ordering = ["-saved_at", ]
 
+    def __lt__(self, other):
+        return self.saved_at < other.saved_at
+
     def more_recent_versions(self):
         versions = list(
             self.section.version_set.filter(
@@ -827,5 +836,5 @@ class Version(models.Model):
         for s in self.section.get_descendants():
             for v in s.version_set.filter(saved_at__gt=self.saved_at):
                 versions.append(v)
-        versions.sort(lambda a, b: cmp(b.saved_at, a.saved_at))
+        versions.sort()
         return versions

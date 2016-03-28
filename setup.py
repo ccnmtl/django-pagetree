@@ -40,6 +40,7 @@ setup(
         "coverage",
         "django-markwhat",
         "django-bootstrap3",
+        "six",
         ],
     scripts=[],
     license="BSD",

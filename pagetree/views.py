@@ -1,4 +1,7 @@
+from __future__ import unicode_literals
+
 from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.encoding import smart_text
 from django.shortcuts import (
     get_object_or_404, render_to_response, render)
 from django.template.context import RequestContext
@@ -15,7 +18,7 @@ def reorder_pageblocks(request, section_id, id_prefix="pageblock_id_"):
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section, id=section_id)
     section.save_version(request.user, activity="reorder pageblocks")
-    keys = request.GET.keys()
+    keys = list(request.GET)
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     pageblocks = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
     section.update_pageblocks_order(pageblocks)
@@ -27,7 +30,7 @@ def reorder_section_children(request, section_id, id_prefix="section_id_"):
         return HttpResponse("only use POST for this")
     section = get_object_or_404(Section, id=section_id)
     section.save_version(request.user, activity="reorder children")
-    keys = request.GET.keys()
+    keys = list(request.GET)
     keys.sort(key=lambda x: int(x.split('_')[-1]))
     children = [int(request.GET[k]) for k in keys if k.startswith(id_prefix)]
     section.update_children_order(children)
@@ -40,7 +43,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
     if request.method == "POST":
         section = block.section
         section.save_version(request.user,
-                             activity="delete block [%s]" % unicode(block))
+                             activity="delete block [%s]" % smart_text(block))
         try:
             block.block().delete()
         except AttributeError:
@@ -70,7 +73,7 @@ def import_pageblock_json(request, pageblock_id):
     block = get_object_or_404(PageBlock, id=pageblock_id)
     block.section.save_version(
         request.user,
-        activity="importing pageblock json [%s]" % unicode(block))
+        activity="importing pageblock json [%s]" % smart_text(block))
     if request.method == "POST":
         if 'file' not in request.FILES:
             return HttpResponse("you must upload a json file")
@@ -87,7 +90,7 @@ def edit_pageblock(request, pageblock_id, success_url=None):
     section = block.section
     section.save_version(
         request.user,
-        activity="edit pageblock [%s]" % unicode(block))
+        activity="edit pageblock [%s]" % smart_text(block))
     block.edit(request.POST, request.FILES)
     if success_url is None:
         success_url = section.get_edit_url()
@@ -117,7 +120,7 @@ def delete_section(request, section_id, success_url=None):
         if parent:
             parent.save_version(
                 request.user,
-                activity="delete child section [%s]" % unicode(section))
+                activity="delete child section [%s]" % smart_text(section))
         section.delete()
         if success_url is None:
             if parent:

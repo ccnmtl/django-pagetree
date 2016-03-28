@@ -1,4 +1,6 @@
-from models import Hierarchy
+from __future__ import unicode_literals
+
+from pagetree.models import Hierarchy
 import warnings
 
 

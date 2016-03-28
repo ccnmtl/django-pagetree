@@ -1,7 +1,10 @@
+from __future__ import unicode_literals
+
 import unittest
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.http import Http404
+from django.utils.encoding import smart_text
 import django.db
 
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
@@ -72,13 +75,8 @@ class EmptyHierarchyTest(TestCase):
             self.h.id,
             Hierarchy.get_hierarchy("main").id)
 
-    def test_unicode(self):
-        self.assertEqual(
-            str(self.h),
-            "main")
-        self.assertEqual(
-            unicode(self.h),
-            "main")
+    def test_str(self):
+        self.assertEqual(smart_text(self.h), "main")
 
     def test_empty_top_level(self):
         self.assertEqual(
@@ -258,9 +256,9 @@ class OneLevelDeepTest(unittest.TestCase):
             self.root.get_previous(),
             None)
 
-    def test_section_unicode(self):
+    def test_section_str(self):
         self.assertEqual(
-            str(self.section1),
+            smart_text(self.section1),
             "Section 1")
 
     def test_section_get_absolute_url(self):
@@ -333,10 +331,10 @@ class OneLevelWithBlocksTest(unittest.TestCase):
     def tearDown(self):
         self.h.delete()
 
-    def test_unicode(self):
+    def test_str(self):
         b = self.section1.pageblock_set.all()[0]
         self.assertEqual(
-            str(b),
+            smart_text(b),
             "Section 1 [1]: ")
 
     def test_edit_label(self):

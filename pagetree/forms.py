@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import forms
 from treebeard.forms import movenodeform_factory
 from pagetree.models import Hierarchy, Section

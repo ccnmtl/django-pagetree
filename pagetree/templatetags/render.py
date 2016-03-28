@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 """ render templatetag
 
 let's us do {% render block %}
@@ -9,6 +11,7 @@ request context passed through
 
 """
 
+from six import string_types
 from django import template
 
 register = template.Library()
@@ -25,7 +28,7 @@ class BaseNode(template.Node):
             context_dict.update(d)
         # can only take string keys
         for k in context_dict.keys():
-            if not isinstance(k, str) and not isinstance(k, unicode):
+            if not isinstance(k, string_types):
                 del context_dict[k]
         return b, context_dict
 
