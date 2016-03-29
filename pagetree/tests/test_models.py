@@ -382,6 +382,8 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         self.assertEqual(
             "css_extra" in f.fields,
             True)
+        self.assertFalse(f.fields['label'].required)
+        self.assertFalse(f.fields['css_extra'].required)
 
     def test_edit(self):
         b = self.section1.pageblock_set.all()[0]
