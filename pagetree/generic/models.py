@@ -1,10 +1,14 @@
+from __future__ import unicode_literals
+
 from django import forms
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 
 from pagetree.models import PageBlock
 
 
+@python_2_unicode_compatible
 class BasePageBlock(models.Model):
     """An abstract pageblock to be used for custom pageblocks."""
 
@@ -99,8 +103,8 @@ class BasePageBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.first()
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     # TODO: I'd like to have all the following methods be inherited
     # somehow. For now these need to be copy and pasted for each custom

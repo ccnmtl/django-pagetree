@@ -1,6 +1,8 @@
+from __future__ import unicode_literals
+
 from django.test import TestCase
 from pagetree.forms import CloneHierarchyForm
-from .factories import HierarchyFactory
+from pagetree.tests.factories import HierarchyFactory
 
 
 class CloneHierarchyFormTest(TestCase):

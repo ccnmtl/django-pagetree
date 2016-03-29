@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from pagetree.models import Hierarchy
 from pagetree.reports import StandaloneReportColumn, PagetreeReport
 from pagetree.tests.factories import PagetreeTestCase, UserFactory

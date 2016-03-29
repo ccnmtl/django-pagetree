@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 """
 allow you to pull a pagetree root directly into a template variable.
 

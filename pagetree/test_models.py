@@ -1,5 +1,8 @@
+from __future__ import unicode_literals
+
 from django import forms
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 
 from pagetree.generic.models import BasePageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
@@ -18,6 +21,7 @@ class TestReportColumn(ReportColumnInterface):
         return user.username
 
 
+@python_2_unicode_compatible
 class TestBlock(BasePageBlock):
     """ this is a pageblock that is exclusively for pagetree's
     internal tests so we have some kind of block to test with
@@ -35,8 +39,8 @@ class TestBlock(BasePageBlock):
     template_file = "pagetree/testblock.html"
     display_name = "Test Block"
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def pageblock(self):
         return self.pageblocks.first()
