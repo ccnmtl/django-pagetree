@@ -745,12 +745,14 @@ class PageBlock(models.Model):
         class EditForm(forms.Form):
             label = forms.CharField(
                 initial=self.label,
+                required=False,
                 widget=forms.TextInput(
                     attrs={'id': 'id_label_%d' % self.pk}
                 ))
             css_extra = forms.CharField(
                 initial=self.css_extra,
                 label='extra CSS classes',
+                required=False,
                 widget=forms.TextInput(
                     attrs={'id': 'id_css_extra_%d' % self.pk}
                 ))
