@@ -1,3 +1,9 @@
+1.1.14 (2016-03-31)
+===================
+
+* label/css_extra required field bugfix
+* python3 support
+
 1.1.13 (2016-02-18)
 ==================
 * get_descendants optimization. override to select the related hierarchy.
