@@ -1,3 +1,5 @@
+* label/css_extra required field bugfix on add pageblock form
+
 1.1.14 (2016-03-31)
 ===================
 

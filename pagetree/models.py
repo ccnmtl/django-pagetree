@@ -409,11 +409,13 @@ class Section(MP_Node):
 
         class AddPageBlockForm(forms.Form):
             label = forms.CharField(
+                required=False,
                 widget=forms.TextInput(
                     attrs={'id': 'id_label_%d' % unique_id}
                 ))
             css_extra = forms.CharField(
                 label='extra CSS classes',
+                required=False,
                 widget=forms.TextInput(
                     attrs={'id': 'id_css_extra_%d' % unique_id}
                 ))
