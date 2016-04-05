@@ -178,6 +178,8 @@ class OneLevelDeepTest(unittest.TestCase):
         self.assertEqual(
             'css_extra' in f.fields,
             True)
+        self.assertFalse(f.fields['label'].required)
+        self.assertFalse(f.fields['css_extra'].required)
 
     def test_valid_path(self):
         self.assertEqual(self.h.find_section_from_path("section-1/"),
