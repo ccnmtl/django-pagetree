@@ -15,7 +15,7 @@ install:
 
 # command to run tests
 script:
-  - flake8 pagetree runtests.py
+  - flake8 pagetree runtests.py --max-complexity=8
   - python runtests.py
   - coverage run --source=pagetree runtests.py
 notifications:
