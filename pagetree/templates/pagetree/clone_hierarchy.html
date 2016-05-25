@@ -16,13 +16,16 @@
 {% endblock %}
 
 {% block content %}
+    {{ form.media }}
+
     <h1>Clone {{ hierarchy.name }}</h1>
     <div id="clone-hierarchy-tab" class="tab-pane">
-       <form action="{% url 'clone-hierarchy' hierarchy.id %}"
-        method="post" class="form-inline">
+        <form action="{% url 'clone-hierarchy' hierarchy.id %}"
+              method="post" class="form-inline pagetree-clone-form">
             {% csrf_token %}
             {% bootstrap_form form layout='inline' %}
-            <input type="submit" value="clone" class="btn btn-primary" />
+            <button class="btn btn-primary" type="submit">clone</button>
+            {% include 'pagetree/loading.html' %}
             <p class="help-block">
                 The Base URL field will be used as part of the clone's
                 URL. This should be something like: <code>my-clone</code>
