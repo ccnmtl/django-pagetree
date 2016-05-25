@@ -51,8 +51,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-pagetree'
-copyright = u'2015, Columbia CNMTL'
-author = u'Columbia CNMTL'
+copyright = u'2015 - 2016, Columbia University CTL'
+author = u'Columbia University CTL'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
