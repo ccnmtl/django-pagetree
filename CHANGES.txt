@@ -1,3 +1,7 @@
+1.1.15 (2016-05-25)
+===================
+* Updated jQuery to 1.12.3
+* Updated jQuery UI to 1.11.4
 * label/css_extra required field bugfix on add pageblock form
 
 1.1.14 (2016-03-31)
