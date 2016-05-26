@@ -10,6 +10,12 @@ class CloneHierarchyForm(forms.ModelForm):
         model = Hierarchy
         fields = ['name', 'base_url']
 
+    class Media:
+        css = {
+            'all': ('pagetree/css/loading.css',)
+        }
+        js = ('pagetree/js/src/clone-loading.js',)
+
     def clean(self):
         cleaned_data = super(CloneHierarchyForm, self).clean()
         name = cleaned_data.get('name')

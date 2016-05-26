@@ -15,6 +15,8 @@ install:
 
 # command to run tests
 script:
+  - make jshint
+  - make jscs
   - flake8 pagetree runtests.py --max-complexity=8
   - python runtests.py
   - coverage run --source=pagetree runtests.py
