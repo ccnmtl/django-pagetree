@@ -1,4 +1,4 @@
-1.2.0
+1.2.0 (2016-05-27)
 ===================
 * Added jshint/jscs checks
 * Moved pagetree's js files from `static/pagetree/js` to
