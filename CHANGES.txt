@@ -4,6 +4,7 @@
 * Moved pagetree's js files from `static/pagetree/js` to
   `static/pagetree/js/src`, separating from JS libraries which
   we don't run checks on.
+* Added loading animation to clone form.
 
 1.1.15 (2016-05-25)
 ===================
