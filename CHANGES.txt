@@ -1,3 +1,6 @@
+1.2.1 (2016-06-22)
+==================
+
 * migration to delete `TestBlock` if it exists (cleaning up an earlier
   migration snafu)
 
