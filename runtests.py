@@ -21,7 +21,7 @@ def main():
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
         ),
-        TEMPLATES = [
+        TEMPLATES=[
             {
                 'BACKEND': 'django.template.backends.django.DjangoTemplates',
                 'DIRS': [
@@ -30,8 +30,6 @@ def main():
                 'APP_DIRS': True,
                 'OPTIONS': {
                     'context_processors': [
-                        # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                        # list if you haven't customized them:
                         'django.contrib.auth.context_processors.auth',
                         'django.template.context_processors.debug',
                         'django.template.context_processors.i18n',
@@ -43,7 +41,6 @@ def main():
                 },
             },
         ],
-
         INSTALLED_APPS=(
             'django.contrib.auth',
             'django.contrib.contenttypes',
