@@ -608,8 +608,8 @@ class Section(MP_Node):
             data=json,
             activity=activity,
             comment=comment)
-        return v
         self.clear_tree_cache()
+        return v
 
     def gate_check(self, user):
         """ return bool, section tuple for whether the user
