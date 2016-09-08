@@ -193,6 +193,10 @@ class Section(MP_Node):
         cache.delete("pagetree.%d.is_last_child" % self.id)
         cache.delete("pagetree.%d.get_edit_url" % self.id)
 
+        if hasattr(settings, 'PAGETREE_CUSTOM_CACHE_CLEAR') and \
+           callable(settings.PAGETREE_CUSTOM_CACHE_CLEAR):
+            settings.PAGETREE_CUSTOM_CACHE_CLEAR(self)
+
     def clear_tree_cache(self):
         depth_first_traversal = self.get_root().get_annotated_list()
         for (s, ai) in depth_first_traversal:
