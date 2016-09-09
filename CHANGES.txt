@@ -1,3 +1,9 @@
+1.2.3 (2016-09-09)
+==================
+
+* Fixed a missing call to `clear_tree_cache()`
+* Added the `PAGETREE_CUSTOM_CACHE_CLEAR` configuration option
+
 1.2.2 (2016-08-03)
 ==================
 
