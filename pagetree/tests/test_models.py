@@ -304,6 +304,11 @@ class OneLevelDeepTest(unittest.TestCase):
         r = self.root.get_children()
         self.assertEqual([s.id for s in r], normal_order)
 
+    def test_get_tree_depth(self):
+        self.assertEqual(self.section1.get_tree_depth(), 1)
+        self.assertEqual(self.section2.get_tree_depth(), 2)
+        self.assertEqual(self.section3.get_tree_depth(), 3)
+
 
 class OneLevelWithBlocksTest(unittest.TestCase):
     def setUp(self):

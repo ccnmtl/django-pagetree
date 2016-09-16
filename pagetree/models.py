@@ -192,6 +192,7 @@ class Section(MP_Node):
         cache.delete("pagetree.%d.get_absolute_url" % self.id)
         cache.delete("pagetree.%d.is_last_child" % self.id)
         cache.delete("pagetree.%d.get_edit_url" % self.id)
+        cache.delete("pagetree.%d.get_tree_depth" % self.id)
 
         if hasattr(settings, 'PAGETREE_CUSTOM_CACHE_CLEAR') and \
            callable(settings.PAGETREE_CUSTOM_CACHE_CLEAR):
@@ -664,6 +665,17 @@ class Section(MP_Node):
             Section.clone(old_child, child)
 
         return section
+
+    def get_tree_depth(self):
+        key = 'pagetree.{}.get_tree_depth'.format(self.pk)
+        v = cache.get(key)
+        if v is not None:
+            return v
+
+        for idx, sec in enumerate(self.get_tree()):
+            if sec == self:
+                cache.set(key, idx)
+                return idx
 
 
 @python_2_unicode_compatible
