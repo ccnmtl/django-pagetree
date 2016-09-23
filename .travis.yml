@@ -1,20 +1,16 @@
 language: python
 sudo: false
 python:
-  - "2.7"
-  - "3.5"
+  - '2.7'
+  - '3.5'
 env:
   - DJANGO="Django>=1.8.0,<1.9.0"
   - DJANGO="Django>=1.9.0,<1.10.0"
   - DJANGO="Django>=1.10,<1.11.0"
-
-# command to install dependencies
 install:
   - pip install -q $DJANGO
   - pip install -q -r test_reqs.txt
   - pip install coveralls
-
-# command to run tests
 script:
   - make jshint
   - make jscs
@@ -25,3 +21,12 @@ notifications:
   slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
 after_success:
   - coveralls
+deploy:
+  provider: pypi
+  user: ctlpypi
+  password:
+    secure: QIkQv0T6VKP4PUNzI9JXRi2IUy9gGpf0pO4kKgzgaUOOavfwnWrcpWD0RpVOqFu9+hcreKPENAxnXomMu8GSnSsW/61YZ97bM6ZqzstgRDZvmwK4UijYDrqw4nc5Jq9H3h/TQSvtTL+UBzCyLP/F/p6Jsx08Cacciv3CJVKo9Qs=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: ccnmtl/django-pagetree
