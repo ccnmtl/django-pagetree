@@ -29,7 +29,8 @@ class RootSectionFactory(factory.DjangoModelFactory):
 
     hierarchy = factory.SubFactory(HierarchyFactory)
     label = "Root"
-    slug = ""
+    path = "path"
+    slug = "slug"
     depth = 0
 
 

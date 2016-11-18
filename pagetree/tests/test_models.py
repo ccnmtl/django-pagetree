@@ -10,8 +10,33 @@ import django.db
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 from pagetree.test_models import TestBlock
 from pagetree.tests.factories import (
-    RootSectionFactory, TestBlockFactory, UserFactory, UserPageVisitFactory
+    RootSectionFactory, TestBlockFactory, UserFactory, UserPageVisitFactory,
+    HierarchyFactory
 )
+
+
+class UserTest(TestCase):
+    def setUp(self):
+        self.u = UserFactory()
+
+    def test_is_valid_from_factory(self):
+        self.u.full_clean()
+
+
+class HierarchyTest(TestCase):
+    def setUp(self):
+        self.h = HierarchyFactory()
+
+    def test_is_valid_from_factory(self):
+        self.h.full_clean()
+
+
+class RootSectionTest(TestCase):
+    def setUp(self):
+        self.s = RootSectionFactory()
+
+    def test_is_valid_from_factory(self):
+        self.s.full_clean()
 
 
 class EmptyHierarchyTest(TestCase):
