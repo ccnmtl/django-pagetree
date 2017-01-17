@@ -21,12 +21,12 @@ class CloneHierarchyForm(forms.ModelForm):
         name = cleaned_data.get('name')
         base_url = cleaned_data.get('base_url')
 
-        if Hierarchy.objects.filter(name=name).count() > 0:
+        if Hierarchy.objects.filter(name=name).exists():
             raise forms.ValidationError(
                 'There\'s already a hierarchy with the name: {}'.format(
                     name))
 
-        if Hierarchy.objects.filter(base_url=base_url).count() > 0:
+        if Hierarchy.objects.filter(base_url=base_url).exists():
             raise forms.ValidationError(
                 'There\'s already a hierarchy with the base_url: {}'.format(
                     base_url))
