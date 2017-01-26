@@ -44,42 +44,44 @@
 <script src="{% static 'pagetree/js/src/pagetree-admin.js' %}"></script>
 <script>
 (function($) {
-    // handle hash tag navigation
-    var hash = window.location.hash;
-    hash && $('.edit-page-nav a[href="' + hash + '"]').tab('show');
-    
-    // when the nav item is selected update the page hash
-    $('.edit-page-nav a').on('shown', function (e) {
-        window.location.hash = e.target.hash;
-        scrollTo(0,0);
-    });
-    
-  $("#children-order-list").sortable({
-    containment : 'parent'
-    ,axis : 'y'
-    ,tolerance: 'pointer'
-    ,activeClass: 'dragging'
-    ,handle: '.draghandle'
-    ,stop: function (event,ui) {
-        pagetree.saveOrderOfChildren(
-            "{% url 'reorder-section-children' section.id %}?");
-    }
-  });
-  $("#children-order-list").disableSelection();
+    $(document).ready(function() {
+        // handle hash tag navigation
+        var hash = window.location.hash;
+        hash && $('.edit-page-nav a[href="' + hash + '"]').tab('show');
 
-  $("#edit-blocks-tab").sortable({
-    items : 'div.block-dragger'
-    ,axis: 'y'
-    ,containment: 'parent'
-    ,handle: '.draghandle'
-    ,activeClass: 'dragging'
-    ,tolerance: 'pointer'
-    ,stop: function (event,ui) {
-        pagetree.saveOrderOfPageBlocks(
-            "{% url 'reorder-pageblocks' section.id %}?");
-    }
-  });
-  $("#edit-blocks-tab").disableSelection();
+        // when the nav item is selected update the page hash
+        $('.edit-page-nav a').on('shown', function (e) {
+            window.location.hash = e.target.hash;
+            scrollTo(0,0);
+        });
+
+        $("#children-order-list").sortable({
+            containment : 'parent'
+            ,axis : 'y'
+            ,tolerance: 'pointer'
+            ,activeClass: 'dragging'
+            ,handle: '.draghandle'
+            ,stop: function (event,ui) {
+                pagetree.saveOrderOfChildren(
+                    "{% url 'reorder-section-children' section.id %}?");
+            }
+        });
+        $("#children-order-list").disableSelection();
+
+        $("#edit-blocks-tab").sortable({
+            items : 'div.block-dragger'
+            ,axis: 'y'
+            ,containment: 'parent'
+            ,handle: '.draghandle'
+            ,activeClass: 'dragging'
+            ,tolerance: 'pointer'
+            ,stop: function (event, ui) {
+                pagetree.saveOrderOfPageBlocks(
+                    "{% url 'reorder-pageblocks' section.id %}?");
+            }
+        });
+        $("#edit-blocks-tab").disableSelection();
+    });
 })(pagetree.$);
 </script>
 
