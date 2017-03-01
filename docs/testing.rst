@@ -3,12 +3,11 @@ Testing
 
 It can be useful to programmatically set up a pagetree site for
 testing purposes. If you have custom pageblocks that rely on
-JavaScript for essential functionality, you won't be able to
-test that code with django's built-in testing features. You can
-Selenium with Behave or Lettuce to do this kind of testing. This
-page shows how to mock a version of your pagetree site in code.
-It can then be used for Selenium tests or for Django-style
-unittests.
+JavaScript for essential functionality, you won't be able to test that
+code with django's built-in testing features. You can use Selenium
+with Behave or Lettuce to do this kind of testing. This page shows how
+to mock a version of your pagetree site in code.  It can then be used
+for Selenium tests or for Django-style unittests.
 
 
 Here's an example of a factory that you can put alongside
