@@ -355,16 +355,21 @@ class Section(MP_Node):
             i += 1
 
     def edit_form(self):
+        TRUE_FALSE=((True, 'Yes'), (False, 'No'))
         class EditSectionForm(forms.Form):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
             show_toc = forms.BooleanField(
                 initial=self.show_toc,
+                required=False,
+                widget=forms.RadioSelect(choices=TRUE_FALSE),
                 label="Show Table of Contents",
                 help_text=("list table of contents of "
                            "immediate child sections (if applicable)"))
             deep_toc = forms.BooleanField(
                 initial=self.deep_toc,
+                required=False,
+                widget=forms.RadioSelect(choices=TRUE_FALSE),
                 label="Show Deep Table of Contents",
                 help_text=(
                     "include children of children (etc) in TOC. "
