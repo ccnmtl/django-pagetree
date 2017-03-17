@@ -355,7 +355,8 @@ class Section(MP_Node):
             i += 1
 
     def edit_form(self):
-        TRUE_FALSE=((True, 'Yes'), (False, 'No'))
+        TRUE_FALSE = ((True, 'Yes'), (False, 'No'))
+
         class EditSectionForm(forms.Form):
             label = forms.CharField(initial=self.label)
             slug = forms.CharField(initial=self.slug)
