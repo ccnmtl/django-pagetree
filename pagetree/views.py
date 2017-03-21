@@ -102,8 +102,13 @@ def edit_section(request, section_id, success_url=None):
     section.save_version(request.user, activity="edit section")
     section.label = request.POST.get('label', '')
     section.slug = slugify(request.POST.get('slug', section.label))[:50]
-    section.show_toc = request.POST.get('show_toc', False)
-    section.deep_toc = request.POST.get('deep_toc', False)
+
+    value = request.POST.get('show_toc', False)
+    section.show_toc = value in ('True', True, 'on')
+
+    value = request.POST.get('deep_toc', False)
+    section.deep_toc = value in ('True', True, 'on')
+
     section.save()
     section.enforce_slug()
     section.save()
