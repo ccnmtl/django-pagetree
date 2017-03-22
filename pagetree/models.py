@@ -360,11 +360,13 @@ class Section(MP_Node):
             slug = forms.CharField(initial=self.slug)
             show_toc = forms.BooleanField(
                 initial=self.show_toc,
+                required=False,
                 label="Show Table of Contents",
                 help_text=("list table of contents of "
                            "immediate child sections (if applicable)"))
             deep_toc = forms.BooleanField(
                 initial=self.deep_toc,
+                required=False,
                 label="Show Deep Table of Contents",
                 help_text=(
                     "include children of children (etc) in TOC. "
