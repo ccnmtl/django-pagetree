@@ -15,8 +15,7 @@ class CloneHierarchyFormTest(TestCase):
         f = CloneHierarchyForm({
             'name': 'new name',
             'base_url': 'new',
-        },
-                               instance=h)
+        }, instance=h)
         self.assertTrue(f.is_valid())
         new_hier = f.save()
         self.assertEqual(new_hier.name, 'new name')
@@ -27,8 +26,7 @@ class CloneHierarchyFormTest(TestCase):
         f = CloneHierarchyForm({
             'name': 'new name',
             'base_url': '',
-        },
-                               instance=h)
+        }, instance=h)
         self.assertTrue(f.is_valid())
         new_hier = f.save()
         self.assertEqual(new_hier.name, 'new name')
@@ -39,8 +37,7 @@ class CloneHierarchyFormTest(TestCase):
         f = CloneHierarchyForm({
             'name': h.name,
             'base_url': 'new',
-        },
-                               instance=h)
+        }, instance=h)
         self.assertFalse(f.is_valid())
         self.assertEqual(f.errors, {
             '__all__': [
@@ -52,8 +49,7 @@ class CloneHierarchyFormTest(TestCase):
         f = CloneHierarchyForm({
             'name': 'new name',
             'base_url': h.base_url,
-        },
-                               instance=h)
+        }, instance=h)
         self.assertFalse(f.is_valid())
         self.assertEqual(f.errors, {
             '__all__': [
