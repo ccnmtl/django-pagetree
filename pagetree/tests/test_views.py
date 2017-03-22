@@ -67,8 +67,8 @@ class TestEditViews(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.section3.refresh_from_db()
-        self.assertEquals(self.section3.label, 'new label')
-        self.assertEquals(self.section3.slug, 'new-label')
+        self.assertEqual(self.section3.label, 'new label')
+        self.assertEqual(self.section3.slug, 'new-label')
         self.assertFalse(self.section3.show_toc)
         self.assertFalse(self.section3.deep_toc)
 
@@ -78,10 +78,21 @@ class TestEditViews(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.section3.refresh_from_db()
-        self.assertEquals(self.section3.label, 'Longer Label')
-        self.assertEquals(self.section3.slug, 'longer-label')
+        self.assertEqual(self.section3.label, 'Longer Label')
+        self.assertEqual(self.section3.slug, 'longer-label')
         self.assertTrue(self.section3.show_toc)
         self.assertTrue(self.section3.deep_toc)
+
+        response = self.c.post(
+            "/pagetree/edit_section/%d/" % self.section3.id,
+            dict(label="Longer Label", show_toc='False', deep_toc=False))
+        self.assertEqual(response.status_code, 302)
+
+        self.section3.refresh_from_db()
+        self.assertEqual(self.section3.label, 'Longer Label')
+        self.assertEqual(self.section3.slug, 'longer-label')
+        self.assertFalse(self.section3.show_toc)
+        self.assertFalse(self.section3.deep_toc)
 
     def test_add_child_section(self):
         response = self.c.post(
