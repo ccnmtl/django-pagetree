@@ -22,6 +22,18 @@ class CloneHierarchyFormTest(TestCase):
         self.assertEqual(new_hier.name, 'new name')
         self.assertEqual(new_hier.base_url, 'new')
 
+    def test_clean_no_base_url(self):
+        h = HierarchyFactory()
+        f = CloneHierarchyForm({
+            'name': 'new name',
+            'base_url': '',
+        },
+                               instance=h)
+        self.assertTrue(f.is_valid())
+        new_hier = f.save()
+        self.assertEqual(new_hier.name, 'new name')
+        self.assertEqual(new_hier.base_url, 'new-name')
+
     def test_clean_prevents_duplicate_name(self):
         h = HierarchyFactory()
         f = CloneHierarchyForm({
