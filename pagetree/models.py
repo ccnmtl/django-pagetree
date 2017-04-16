@@ -312,6 +312,7 @@ class Section(MP_Node):
         return url
 
     def get_edit_url(self):
+        self.clear_caches()
         key = "pagetree.%d.get_edit_url" % self.id
         v = cache.get(key)
         if v is not None:
