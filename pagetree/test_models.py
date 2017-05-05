@@ -91,4 +91,5 @@ class TestBlock(BasePageBlock):
     def report_values(self):
         return [TestReportColumn()]
 
+
 ReportableInterface.register(TestBlock)

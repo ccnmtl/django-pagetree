@@ -77,5 +77,6 @@ def main():
     call_command('test')
     call_command('jenkins', '--enable-coverage')
 
+
 if __name__ == '__main__':
     main()
