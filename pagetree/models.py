@@ -23,7 +23,10 @@ from treebeard.forms import movenodeform_factory
 class dummystatsd(object):
     def incr(self, metric):
         pass
+
+
 statsd = dummystatsd()
+
 
 try:
     from django_statsd.clients import statsd
