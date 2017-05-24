@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.encoding import smart_text
 from django.shortcuts import get_object_or_404, render
-from django.template.context import RequestContext
 from django.template.defaultfilters import slugify
 from django.template.response import TemplateResponse
 from json import dumps, loads
@@ -80,8 +79,7 @@ def import_pageblock_json(request, pageblock_id):
         block.import_from_dict(json)
         return HttpResponseRedirect(block.section.get_edit_url())
     else:
-        return render(request, "import_json.html", dict(),
-                      context_instance=RequestContext(request))
+        return render(request, "import_json.html")
 
 
 def edit_pageblock(request, pageblock_id, success_url=None):
