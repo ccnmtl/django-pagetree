@@ -1,4 +1,4 @@
-1.3.2
+1.3.2 (2017-05-25)
 ==================
 
 * Fixed an issue with the json import view
