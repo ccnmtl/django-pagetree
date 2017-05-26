@@ -24,10 +24,10 @@ after_success:
   - coveralls
 deploy:
   provider: pypi
+  distributions: "sdist bdist_wheel"
   user: ctlpypi
   password:
     secure: QIkQv0T6VKP4PUNzI9JXRi2IUy9gGpf0pO4kKgzgaUOOavfwnWrcpWD0RpVOqFu9+hcreKPENAxnXomMu8GSnSsW/61YZ97bM6ZqzstgRDZvmwK4UijYDrqw4nc5Jq9H3h/TQSvtTL+UBzCyLP/F/p6Jsx08Cacciv3CJVKo9Qs=
   on:
     tags: true
-    distributions: sdist bdist_wheel
     repo: ccnmtl/django-pagetree
