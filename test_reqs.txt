@@ -4,7 +4,7 @@ coverage==4.4
 flake8==3.3.0
 django-jenkins==0.110.0
 pep8==1.7.0
-pyflakes==1.0.0
+pyflakes==1.5.0
 django-markwhat==1.5
 factory_boy==2.8.1
 six==1.10.0
