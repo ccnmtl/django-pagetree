@@ -1,4 +1,4 @@
-django-treebeard==4.0
+django-treebeard==4.1
 Markdown==2.6.2
 coverage==4.2
 flake8==3.3.0
