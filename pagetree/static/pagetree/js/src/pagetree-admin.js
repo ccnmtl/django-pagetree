@@ -1,3 +1,5 @@
+/* global pagetree: true */
+
 pagetree.getCsrfToken = function() {
     return pagetree.$.cookie('csrftoken');
 };
