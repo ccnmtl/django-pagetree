@@ -1,16 +1,16 @@
 JS_FILES=pagetree/static/pagetree/js/src
 
 node_modules/jshint/bin/jshint:
-	npm install jshint@~2.9.2 --prefix .
+	npm install jshint@~2.9.5 --prefix .
 
 node_modules/jscs/bin/jscs:
-	npm install jscs@~3.0.3 --prefix .
+	npm install jscs@~3.0.7 --prefix .
 
 jshint: node_modules/jshint/bin/jshint
-	jshint $(JS_FILES)
+	./node_modules/jshint/bin/jshint $(JS_FILES)
 
 jscs: node_modules/jscs/bin/jscs
-	jscs $(JS_FILES)
+	./node_modules/jscs/bin/jscs $(JS_FILES)
 
 clean:
 	rm -rf node_modules
