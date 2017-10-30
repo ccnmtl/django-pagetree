@@ -63,6 +63,6 @@ def block_submitted(block, user):
                 s = block.unlocked(user)
                 if not s:
                     return False
-            except:
+            except AttributeError:
                 pass
     return True

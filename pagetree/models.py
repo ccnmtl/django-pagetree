@@ -510,7 +510,7 @@ class Section(MP_Node):
                         if not s:
                             # there's an unsubmitted block
                             return False
-                    except:
+                    except (AttributeError, ValueError):
                         # most likely: no unlocked() method
                         pass
         # made it all the way through without any blocks
