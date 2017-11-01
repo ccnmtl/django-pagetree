@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import sys
 from django.db import (
     migrations,
     DatabaseError, OperationalError, ProgrammingError
@@ -7,7 +8,12 @@ from django.db import (
 
 
 class ConditionalDeleteModel(migrations.DeleteModel):
-    def database_forwards(self, app_label, schema_editor, from_state, to_state):
+    def database_forwards(
+            self, app_label, schema_editor, from_state, to_state):
+        # The tests use this model
+        if 'runtests.py' in sys.argv:
+            return
+
         try:
             super(ConditionalDeleteModel, self).database_forwards(
                 app_label, schema_editor, from_state, to_state)
