@@ -7,11 +7,10 @@ from django.db import (
 
 
 class ConditionalDeleteModel(migrations.DeleteModel):
-    def database_forwards(self, app_label, schema_editor, from_state,
-                          to_state):
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
         try:
             super(ConditionalDeleteModel, self).database_forwards(
-                self, app_label, schema_editor, from_state, to_state)
+                app_label, schema_editor, from_state, to_state)
         except (DatabaseError, OperationalError, ProgrammingError):
             """ if it fails, it's totally fine. it just means that the
             table we wanted to delete doesn't exist. so we ignore it.
