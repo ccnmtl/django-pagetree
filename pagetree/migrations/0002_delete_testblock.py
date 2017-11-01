@@ -1,20 +1,26 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.db import migrations
+import sys
+from django.db import (
+    migrations,
+    DatabaseError, OperationalError, ProgrammingError
+)
 
 
 class ConditionalDeleteModel(migrations.DeleteModel):
-    def database_forwards(self, app_label, schema_editor, from_state,
-                          to_state):
+    def database_forwards(
+            self, app_label, schema_editor, from_state, to_state):
+        # The tests use this model
+        if 'runtests.py' in sys.argv:
+            return
+
         try:
             super(ConditionalDeleteModel, self).database_forwards(
-                self, app_label, schema_editor, from_state, to_state)
-        except:
+                app_label, schema_editor, from_state, to_state)
+        except (DatabaseError, OperationalError, ProgrammingError):
             """ if it fails, it's totally fine. it just means that the
             table we wanted to delete doesn't exist. so we ignore it.
-
-            it would be nice to catch a more specific exception, but
-            different databases raise different ones..."""
+            """
             pass
 
 
