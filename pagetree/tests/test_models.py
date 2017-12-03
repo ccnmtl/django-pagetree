@@ -576,7 +576,8 @@ class UserTrackingTest(TestCase):
         self.section1.user_pagevisit(self.user, status="complete")
         try:
             with transaction.atomic():
-                # then stuff another one in manually to simulate a race condition
+                # then stuff another one in manually to simulate a
+                # race condition
                 UserPageVisit.objects.create(section=self.section1,
                                              user=self.user,
                                              status="bad status")
