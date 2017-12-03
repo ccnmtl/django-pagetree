@@ -809,7 +809,7 @@ class PageBlock(models.Model):
 
     @classmethod
     def create_from_dict(cls, d):
-        return cls.objects.create()
+        return cls.objects.create(**d)
 
 
 class UserLocation(models.Model):
