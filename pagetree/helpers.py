@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from pagetree.compat import user_is_anonymous
 from pagetree.models import Hierarchy
 import warnings
 
@@ -54,7 +55,7 @@ def submitted(section, user):
 
 
 def block_submitted(block, user):
-    if user.is_anonymous:
+    if user_is_anonymous(user):
         # anon can't have submitted a block
         return False
     if hasattr(block, 'needs_submit'):

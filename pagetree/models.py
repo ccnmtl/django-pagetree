@@ -17,6 +17,7 @@ from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
 from treebeard.forms import movenodeform_factory
+from pagetree.compat import user_is_anonymous
 
 
 # dummy it out
@@ -127,7 +128,7 @@ class Hierarchy(models.Model):
         return h
 
     def get_user_location(self, user):
-        if user.is_anonymous:
+        if user_is_anonymous(user):
             return "/"
         (ul, created) = UserLocation.objects.get_or_create(
             user=user,
