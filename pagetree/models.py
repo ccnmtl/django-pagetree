@@ -127,7 +127,7 @@ class Hierarchy(models.Model):
         return h
 
     def get_user_location(self, user):
-        if user.is_anonymous():
+        if user.is_anonymous:
             return "/"
         (ul, created) = UserLocation.objects.get_or_create(
             user=user,
@@ -158,7 +158,7 @@ class Hierarchy(models.Model):
 class Section(MP_Node):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
-    hierarchy = models.ForeignKey(Hierarchy)
+    hierarchy = models.ForeignKey(Hierarchy, on_delete=models.CASCADE)
     show_toc = models.BooleanField(
         default=False,
         help_text=("list table of contents of "
@@ -685,14 +685,14 @@ class Section(MP_Node):
 
 @python_2_unicode_compatible
 class PageBlock(models.Model):
-    section = models.ForeignKey(Section)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
     ordinality = models.PositiveIntegerField(default=1)
     label = models.CharField(max_length=256, blank=True, null=True)
     css_extra = models.CharField(
         max_length=256, blank=True, null=True,
         help_text="extra CSS classes (space separated)")
 
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
@@ -814,8 +814,8 @@ class PageBlock(models.Model):
 
 class UserLocation(models.Model):
     """ last path a given user visited (for a particular hierarchy) """
-    user = models.ForeignKey(User)
-    hierarchy = models.ForeignKey(Hierarchy)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hierarchy = models.ForeignKey(Hierarchy, on_delete=models.CASCADE)
     path = models.CharField(max_length=256, default="/")
 
     class Meta:
@@ -824,8 +824,8 @@ class UserLocation(models.Model):
 
 class UserPageVisit(models.Model):
     """ for detailed tracking """
-    user = models.ForeignKey(User)
-    section = models.ForeignKey(Section)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
     status = models.CharField(max_length=256, default="incomplete")
     first_visit = models.DateTimeField(auto_now_add=True)
     last_visit = models.DateTimeField(auto_now=True)
@@ -836,8 +836,8 @@ class UserPageVisit(models.Model):
 
 class Version(models.Model):
     """ very basic versioning """
-    section = models.ForeignKey(Section)
-    user = models.ForeignKey(User)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     saved_at = models.DateTimeField(auto_now_add=True)
     activity = models.TextField(default="", blank=True, null=True)
     data = models.TextField(default="", blank=True, null=True)

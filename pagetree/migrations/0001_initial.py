@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('label', models.CharField(max_length=256, null=True, blank=True)),
                 ('css_extra', models.CharField(help_text=b'extra CSS classes (space separated)', max_length=256, null=True, blank=True)),
                 ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ('section', 'ordinality'),
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('slug', models.SlugField()),
                 ('show_toc', models.BooleanField(default=False, help_text=b'list table of contents of immediate child sections (if applicable)')),
                 ('deep_toc', models.BooleanField(default=False, help_text=b'include children of children in TOC. (this only makes sense if the above is checked)')),
-                ('hierarchy', models.ForeignKey(to='pagetree.Hierarchy')),
+                ('hierarchy', models.ForeignKey(to='pagetree.Hierarchy', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -73,8 +73,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('path', models.CharField(default=b'/', max_length=256)),
-                ('hierarchy', models.ForeignKey(to='pagetree.Hierarchy')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('hierarchy', models.ForeignKey(to='pagetree.Hierarchy', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -87,8 +87,8 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(default=b'incomplete', max_length=256)),
                 ('first_visit', models.DateTimeField(auto_now_add=True)),
                 ('last_visit', models.DateTimeField(auto_now=True)),
-                ('section', models.ForeignKey(to='pagetree.Section')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('section', models.ForeignKey(to='pagetree.Section', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -102,8 +102,8 @@ class Migration(migrations.Migration):
                 ('activity', models.TextField(default=b'', null=True, blank=True)),
                 ('data', models.TextField(default=b'', null=True, blank=True)),
                 ('comment', models.TextField(default=b'', null=True, blank=True)),
-                ('section', models.ForeignKey(to='pagetree.Section')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('section', models.ForeignKey(to='pagetree.Section', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-saved_at'],
@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pageblock',
             name='section',
-            field=models.ForeignKey(to='pagetree.Section'),
+            field=models.ForeignKey(to='pagetree.Section', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]
