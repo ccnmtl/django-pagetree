@@ -14,13 +14,11 @@ from pagetree.generic.views import generic_edit_page
 
 
 class Anon(object):
-    def is_anonymous(self):
-        return True
+    is_anonymous = True
 
 
 class NonAnon(object):
-    def is_anonymous(self):
-        return False
+    is_anonymous = False
 
 
 class MockSection(object):
