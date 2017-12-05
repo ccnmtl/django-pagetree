@@ -16,6 +16,12 @@ def main():
     # Dynamically configure the Django settings with the minimum necessary to
     # get Django running tests
     settings.configure(
+        MIDDLEWARE=(
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+        ),
+        # For django 1.8
         MIDDLEWARE_CLASSES=(
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,7 +82,6 @@ def main():
     # Fire off the tests
     call_command('migrate')
     call_command('test')
-    call_command('jenkins', '--enable-coverage')
 
 
 if __name__ == '__main__':

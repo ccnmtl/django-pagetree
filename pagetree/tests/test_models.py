@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
 
-import unittest
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.utils.encoding import smart_text
 import django.db
+from django.db import transaction
 
 from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 from pagetree.test_models import TestBlock
@@ -132,7 +132,7 @@ class EmptyHierarchyTest(TestCase):
         self.assertEqual(s.slug, '')
 
 
-class OneLevelDeepTest(unittest.TestCase):
+class OneLevelDeepTest(TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
@@ -335,7 +335,7 @@ class OneLevelDeepTest(unittest.TestCase):
         self.assertEqual(self.section3.get_tree_depth(), 3)
 
 
-class OneLevelWithBlocksTest(unittest.TestCase):
+class OneLevelWithBlocksTest(TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
@@ -481,7 +481,7 @@ class OneLevelWithBlocksTest(unittest.TestCase):
         self.assertEquals(sub.body, 'abc')
 
 
-class UserTrackingTest(unittest.TestCase):
+class UserTrackingTest(TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
@@ -575,12 +575,14 @@ class UserTrackingTest(unittest.TestCase):
     def test_user_pagevisit_multiple(self):
         self.section1.user_pagevisit(self.user, status="complete")
         try:
-            # then stuff another one in manually to simulate a race condition
-            UserPageVisit.objects.create(section=self.section1,
-                                         user=self.user,
-                                         status="bad status")
-            # should not be able to happen
-            self.assertEqual(True, False)
+            with transaction.atomic():
+                # then stuff another one in manually to simulate a
+                # race condition
+                UserPageVisit.objects.create(section=self.section1,
+                                             user=self.user,
+                                             status="bad status")
+                # should not be able to happen
+                self.assertEqual(True, False)
         except django.db.IntegrityError:
             self.assertEqual(True, True)
         self.section1.user_pagevisit(self.user, status="complete")
@@ -606,7 +608,7 @@ class UserTrackingTest(unittest.TestCase):
             children[1].gate_check(self.user), (False, children[0]))
 
 
-class VersionTest(unittest.TestCase):
+class VersionTest(TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
@@ -707,7 +709,7 @@ class VersionTest(unittest.TestCase):
             1)
 
 
-class MultipleLevelsTest(unittest.TestCase):
+class MultipleLevelsTest(TestCase):
     def setUp(self):
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()

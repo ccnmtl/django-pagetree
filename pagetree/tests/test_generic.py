@@ -5,7 +5,6 @@ from django.test.client import RequestFactory
 from django.test.client import Client
 from django.http import Http404
 from django.contrib.auth.models import User
-import unittest
 from pagetree.models import Hierarchy
 from pagetree.generic.views import has_responses, visit_root
 from pagetree.generic.views import UserPageVisitor
@@ -15,13 +14,11 @@ from pagetree.generic.views import generic_edit_page
 
 
 class Anon(object):
-    def is_anonymous(self):
-        return True
+    is_anonymous = True
 
 
 class NonAnon(object):
-    def is_anonymous(self):
-        return False
+    is_anonymous = False
 
 
 class MockSection(object):
@@ -43,7 +40,7 @@ class MockSection(object):
         return None
 
 
-class UserPageVisitorTest(unittest.TestCase):
+class UserPageVisitorTest(TestCase):
     def test_visit_anonymous(self):
         s = MockSection()
         upv = UserPageVisitor(s, Anon())
