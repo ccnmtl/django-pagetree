@@ -1,2 +1,2 @@
 # Used by readthedocs.org to build the documentation
-Django>=1.11.2,<1.12.0
+Django==2.0
