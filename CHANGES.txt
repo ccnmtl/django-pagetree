@@ -1,4 +1,4 @@
-1.4
+1.4.0 (2017-12-05)
 ==================
 
 * Removed bare except statements
