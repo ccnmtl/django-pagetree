@@ -1,5 +1,5 @@
 django-treebeard==4.2.0
-Markdown==2.6.10
+Markdown==2.6.11
 coverage==4.4.2
 flake8==3.5.0
 django-jenkins==0.110.0
