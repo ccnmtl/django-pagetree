@@ -6,5 +6,5 @@ django-jenkins==0.110.0
 pep8==1.7.1
 pyflakes==1.6.0
 django-markwhat==1.6.0
-factory_boy==2.10.0
+factory_boy==2.11.1
 six==1.11.0
