@@ -42,7 +42,6 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 
-from pagetree.compat import user_is_anonymous
 from pagetree.forms import CloneHierarchyForm
 from pagetree.helpers import get_section_from_path
 from pagetree.models import Hierarchy
@@ -99,7 +98,7 @@ class UserPageVisitor(object):
         self.user = user
 
     def visit(self, status=None):
-        if user_is_anonymous(self.user):
+        if self.user.is_anonymous:
             return
         if not status:
             prev = self.section.get_uservisit(self.user)
@@ -207,7 +206,7 @@ class PageView(SectionMixin, View):
 
         # If this view is gated, and we have no user or an anonymous
         # user, then just deny access.
-        if (not user) or user_is_anonymous(user):
+        if (not user) or user.is_anonymous:
             raise PermissionDenied()
 
         # we need to check that they have visited all previous pages
