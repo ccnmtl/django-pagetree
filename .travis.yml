@@ -12,7 +12,6 @@ matrix:
   exclude:
   - python: '2.7'
     env: DJANGO="Django>=2.2,<2.3"
-  exclude:
   - python: '2.7'
     env: DJANGO="Django>=3.0,<3.1"
 install:
