@@ -7,4 +7,4 @@ pep8==1.7.1
 pyflakes==2.1.1
 django-markwhat==1.6.2
 factory_boy==2.11.1
-six==1.13.0
+six==1.14.0
