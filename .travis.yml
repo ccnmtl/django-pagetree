@@ -21,8 +21,6 @@ script:
   - flake8 pagetree runtests.py --max-complexity=8
   - python runtests.py
   - coverage run --source=pagetree runtests.py
-notifications:
-  slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
 after_success:
   - coveralls
 deploy:
