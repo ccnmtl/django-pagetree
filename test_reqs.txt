@@ -1,5 +1,5 @@
 django-treebeard==4.3.1
-Markdown==2.6.11 # pyup: < 3
+Markdown>=2.6.11,<3
 coverage==5.1
 flake8==3.8.2
 django-jenkins==0.110.0
