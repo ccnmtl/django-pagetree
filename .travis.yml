@@ -1,7 +1,8 @@
 language: python
-dist: xenial
+dist: bionic
 python:
   - '3.6'
+  - '3.8'
 env:
   - DJANGO="Django>=2.2,<2.3"
 install:
