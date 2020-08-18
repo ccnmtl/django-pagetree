@@ -7,7 +7,7 @@ from pagetree.test_models import TestBlock
 import factory
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
@@ -15,7 +15,7 @@ class UserFactory(factory.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
-class HierarchyFactory(factory.DjangoModelFactory):
+class HierarchyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Hierarchy
 
@@ -23,7 +23,7 @@ class HierarchyFactory(factory.DjangoModelFactory):
     base_url = "/pages/"
 
 
-class RootSectionFactory(factory.DjangoModelFactory):
+class RootSectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Section
 
@@ -34,7 +34,7 @@ class RootSectionFactory(factory.DjangoModelFactory):
     depth = 0
 
 
-class TestBlockFactory(factory.DjangoModelFactory):
+class TestBlockFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TestBlock
 
