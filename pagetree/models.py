@@ -12,7 +12,6 @@ from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template.defaultfilters import slugify
-from django.utils.encoding import python_2_unicode_compatible
 from json import dumps
 from treebeard.mp_tree import MP_Node
 import django.core.exceptions
@@ -34,7 +33,6 @@ except ImportError:
     pass
 
 
-@python_2_unicode_compatible
 class Hierarchy(models.Model):
     name = models.CharField(max_length=256)
     base_url = models.CharField(max_length=256, default="")
@@ -154,7 +152,6 @@ class Hierarchy(models.Model):
         return hierarchy
 
 
-@python_2_unicode_compatible
 class Section(MP_Node):
     label = models.CharField(max_length=256)
     slug = models.SlugField()
@@ -683,7 +680,6 @@ class Section(MP_Node):
                 return idx
 
 
-@python_2_unicode_compatible
 class PageBlock(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     ordinality = models.PositiveIntegerField(default=1)
