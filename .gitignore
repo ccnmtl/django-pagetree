@@ -11,3 +11,4 @@ reports/
 django_pagetree.egg-info
 docs/_build/
 node_modules
+.settings

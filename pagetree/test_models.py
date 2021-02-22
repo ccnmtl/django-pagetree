@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.encoding import smart_text
 
@@ -32,6 +33,11 @@ class TestBlock(BasePageBlock):
 
     class Meta:
         app_label = 'pagetree'
+
+    def __init__(self, *args, **kwargs):
+        ContentType.objects.get_or_create(
+            app_label='pagetree', model='testblock')
+        super().__init__(*args, **kwargs)
 
     body = models.TextField(blank=True)
 
