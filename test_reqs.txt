@@ -4,7 +4,7 @@ coverage==5.5
 importlib-metadata==3.10.1  # for flake8
 typing_extensions==3.7.4.3
 zipp==3.4.1  # for flake8
-flake8==3.9.0
+flake8==3.9.1
 django-jenkins==0.110.0
 pep8==1.7.1
 pyflakes==2.3.1
