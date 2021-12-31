@@ -3,7 +3,7 @@ Markdown>=2.6.11,<3
 coverage==6.2
 importlib-metadata<4.11  # for flake8
 typing_extensions==4.0.1
-zipp==3.6.0  # for flake8
+zipp==3.7.0  # for flake8
 flake8==4.0.1
 django-jenkins==0.110.0
 pep8==1.7.1
