@@ -13,6 +13,6 @@ Faker==11.3.0
 factory_boy==3.2.1
 six==1.16.0
 pycodestyle==2.8.0
-mccabe==0.6.1
+mccabe==0.7.0
 python-dateutil==2.8.2
 text-unidecode==1.3
