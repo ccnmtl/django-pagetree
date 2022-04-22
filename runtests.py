@@ -21,6 +21,7 @@ def main():
             'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
         ),
+        SECRET_KEY="Something Super Secret",
         TEMPLATES=[
             {
                 'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -50,7 +51,7 @@ def main():
             'django_jenkins',
         ),
         TEST_RUNNER='django.test.runner.DiscoverRunner',
-
+        DEFAULT_AUTO_FIELD = 'django.db.models.AutoField',
         COVERAGE_EXCLUDES_FOLDERS=['migrations'],
         ROOT_URLCONF='pagetree.tests.urls',
         PAGEBLOCKS=['pagetree.TestBlock', ],
@@ -58,6 +59,7 @@ def main():
         PROJECT_APPS=[
             'pagetree',
         ],
+
         # Django replaces this, but it still wants it. *shrugs*
         DATABASES={
             'default': {
