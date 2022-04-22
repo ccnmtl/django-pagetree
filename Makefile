@@ -7,14 +7,16 @@ WHEEL_VERSION ?= 0.33.6
 PIP_VERSION ?= 20.0.2
 MAX_COMPLEXITY ?= 8
 PY_DIRS ?= $(APP)
-DJANGO ?= "Django==2.2.13"
+DJANGO ?= "Django==3.2.13"
 
 FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
 COVERAGE ?=$(VE)/bin/coverage
 JS_FILES=pagetree/static/pagetree/js/src
 
-all: flake8 coverage jshint jscs
+all: flake8 coverage eslint
+
+include *.mk
 
 clean:
 	rm -rf $(VE)
@@ -41,16 +43,5 @@ flake8: $(PY_SENTINAL)
 coverage: $(PY_SENTINAL)
 	$(COVERAGE) run --source=pagetree runtests.py
 
-node_modules/jshint/bin/jshint:
-	npm install jshint@~2.9.5 --prefix .
 
-node_modules/jscs/bin/jscs:
-	npm install jscs@~3.0.7 --prefix .
-
-jshint: node_modules/jshint/bin/jshint
-	./node_modules/jshint/bin/jshint $(JS_FILES)
-
-jscs: node_modules/jscs/bin/jscs
-	./node_modules/jscs/bin/jscs $(JS_FILES)
-
-.PHONY: flake8 test jshint jscs clean
+.PHONY: flake8 test eslint clean
