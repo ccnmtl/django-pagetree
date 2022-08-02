@@ -810,7 +810,7 @@ class SectionTest(TestCase):
             'body': 'test body',
         })
         block = self.section.pageblock_set.first()
-        assert(block is not None)
+        assert (block is not None)
         self.assertEqual(block.block().body, 'test body')
         self.assertEqual(
             self.section.pageblock_set.first(), block,
