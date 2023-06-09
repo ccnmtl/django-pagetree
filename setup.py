@@ -29,7 +29,7 @@ setup(
     name="django-pagetree",
     version="1.4.3",
     author="Anders Pearson",
-    author_email="ccnmtl-dev@columbia.edu",
+    author_email="ctl-dev@columbia.edu",
     url="https://github.com/ccnmtl/django-pagetree",
     description="Tree of Pages helper application",
     long_description="Application for managing trees of pages",
