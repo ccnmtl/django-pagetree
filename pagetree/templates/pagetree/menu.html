@@ -1,27 +1,27 @@
 <ul>
 {% for s in module.get_descendants %}
-{% ifequal s.id module.id %}
+{% if s.id == module.id %}
 {% else %}
 <li class="menu-{{s.depth}}">
-  {% ifnotequal s.id section.id %}
-{% ifequal menu_base "/edit" %}
+  {% if s.id != section.id %}
+{% if menu_base == "/edit" %}
   <a href="{{s.get_edit_url}}">
 {% else %}
-{% ifequal menu_base "/instructor" %}
+{% if menu_base == "/instructor" %}
   <a href="{{s.get_instructor_url}}">
 {% else %}
   <a href="{{menu_base}}{{s.get_absolute_url}}">
-{% endifequal %}
-{% endifequal %}
+{% endif %}
+{% endif %}
   {% else %}
      <b>
-  {% endifnotequal %}
+  {% endif %}
   {{s.label}}
-  {% ifnotequal s.id section.id %}
+  {% if s.id != section.id %}
     </a>
   {% else %}
     </b>
-  {% endifnotequal %}
+  {% endif %}
   {% if s.get_children %}
      <ul id="section-ul-{{s.id}}">
      {% else %}
@@ -35,6 +35,6 @@
 {% else %}
     </li>
 {% endif%}
-{% endifequal %}
+{% endif %}
 {% endfor %}
 </ul>

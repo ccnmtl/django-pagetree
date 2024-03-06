@@ -36,11 +36,11 @@ setup(
     install_requires=[
         "Django",
         "django-treebeard",
-        "Markdown",
         "coverage",
-        "django-markwhat",
         "django-bootstrap3",
         "six",
+        "Markdown",
+        "django-markdownify",
         ],
     scripts=[],
     license="BSD",

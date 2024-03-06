@@ -165,9 +165,9 @@ class TestEditViews(TestCase):
         the_json = loads(smart_str(response.content))
         self.assertEqual(the_json["body"],
                          "You should now use the edit link to add content")
-        self.assertEquals(the_json["css_extra"], "the-css-class")
-        self.assertEquals(the_json["block_type"], "Test Block")
-        self.assertEquals(the_json["label"], "Welcome to your new Forest Site")
+        self.assertEqual(the_json["css_extra"], "the-css-class")
+        self.assertEqual(the_json["block_type"], "Test Block")
+        self.assertEqual(the_json["label"], "Welcome to your new Forest Site")
 
     def test_edit_pageblock(self):
         p = PageBlock.objects.all()[0]
