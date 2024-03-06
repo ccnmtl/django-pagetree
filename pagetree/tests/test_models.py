@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.http import Http404
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 import django.db
 from django.db import transaction
 
@@ -101,7 +101,7 @@ class EmptyHierarchyTest(TestCase):
             Hierarchy.get_hierarchy("main").id)
 
     def test_str(self):
-        self.assertEqual(smart_text(self.h), "main")
+        self.assertEqual(smart_str(self.h), "main")
 
     def test_empty_top_level(self):
         self.assertEqual(
@@ -285,7 +285,7 @@ class OneLevelDeepTest(TestCase):
 
     def test_section_str(self):
         self.assertEqual(
-            smart_text(self.section1),
+            smart_str(self.section1),
             "Section 1")
 
     def test_section_get_absolute_url(self):
@@ -366,7 +366,7 @@ class OneLevelWithBlocksTest(TestCase):
     def test_str(self):
         b = self.section1.pageblock_set.all()[0]
         self.assertEqual(
-            smart_text(b),
+            smart_str(b),
             "Section 1 [1]: ")
 
     def test_edit_label(self):

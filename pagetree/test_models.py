@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from pagetree.generic.models import BasePageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
@@ -45,7 +45,7 @@ class TestBlock(BasePageBlock):
     display_name = "Test Block"
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def pageblock(self):
         return self.pageblocks.first()

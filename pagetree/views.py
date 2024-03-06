@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.shortcuts import get_object_or_404, render
 from django.template.defaultfilters import slugify
 from django.template.response import TemplateResponse
@@ -41,7 +41,7 @@ def delete_pageblock(request, pageblock_id, success_url=None):
     if request.method == "POST":
         section = block.section
         section.save_version(request.user,
-                             activity="delete block [%s]" % smart_text(block))
+                             activity="delete block [%s]" % smart_str(block))
         try:
             block.block().delete()
         except AttributeError:
@@ -71,7 +71,7 @@ def import_pageblock_json(request, pageblock_id):
     block = get_object_or_404(PageBlock, id=pageblock_id)
     block.section.save_version(
         request.user,
-        activity="importing pageblock json [%s]" % smart_text(block))
+        activity="importing pageblock json [%s]" % smart_str(block))
     if request.method == "POST":
         if 'file' not in request.FILES:
             return HttpResponse("you must upload a json file")
@@ -87,7 +87,7 @@ def edit_pageblock(request, pageblock_id, success_url=None):
     section = block.section
     section.save_version(
         request.user,
-        activity="edit pageblock [%s]" % smart_text(block))
+        activity="edit pageblock [%s]" % smart_str(block))
     block.edit(request.POST, request.FILES)
     if success_url is None:
         success_url = section.get_edit_url()
@@ -122,7 +122,7 @@ def delete_section(request, section_id, success_url=None):
         if parent:
             parent.save_version(
                 request.user,
-                activity="delete child section [%s]" % smart_text(section))
+                activity="delete child section [%s]" % smart_str(section))
         section.delete()
         if success_url is None:
             if parent:
