@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django import template
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 register = template.Library()
 
@@ -42,4 +42,4 @@ def is_section_unlocked(section, user):
         is_unlocked = True
 
     # Convert to 1 or 0 to parse it easily in the template.
-    return smart_text(int(is_unlocked))
+    return smart_str(int(is_unlocked))

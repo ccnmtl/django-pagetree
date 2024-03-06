@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.test.client import Client
 from pagetree.models import Hierarchy, PageBlock
 from json import loads
@@ -105,7 +105,7 @@ class TestEditViews(TestCase):
             "/pagetree/section/move/%d/" % self.section3.id,
             dict())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(smart_text(response.content),
+        self.assertEqual(smart_str(response.content),
                          "could not move section")
 
     def test_move_section_get(self):
@@ -113,7 +113,7 @@ class TestEditViews(TestCase):
             "/pagetree/section/move/%d/" % self.section3.id,
             dict())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(smart_text(response.content),
+        self.assertEqual(smart_str(response.content),
                          "only use POST for this")
 
     def test_add_pageblock(self):
@@ -127,13 +127,13 @@ class TestEditViews(TestCase):
             "/pagetree/reorder_section_children/%d/" % self.section3.id,
             dict())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(smart_text(response.content), "ok")
+        self.assertEqual(smart_str(response.content), "ok")
 
     def test_reorder_section_children_get(self):
         response = self.c.get(
             "/pagetree/reorder_section_children/%d/" % self.section3.id,
             dict())
-        self.assertEqual(smart_text(response.content),
+        self.assertEqual(smart_str(response.content),
                          "only use POST for this")
 
     def test_reorder_pageblocks_empty(self):
@@ -141,13 +141,13 @@ class TestEditViews(TestCase):
             "/pagetree/reorder_pageblocks/%d/" % self.section3.id,
             dict())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(smart_text(response.content), "ok")
+        self.assertEqual(smart_str(response.content), "ok")
 
     def test_reorder_pageblocks_get(self):
         response = self.c.get(
             "/pagetree/reorder_pageblocks/%d/" % self.section3.id,
             dict())
-        self.assertEqual(smart_text(response.content),
+        self.assertEqual(smart_str(response.content),
                          "only use POST for this")
 
     def test_delete_pageblock(self):
@@ -162,7 +162,7 @@ class TestEditViews(TestCase):
                               dict())
         self.assertEqual(response.status_code, 200)
 
-        the_json = loads(smart_text(response.content))
+        the_json = loads(smart_str(response.content))
         self.assertEqual(the_json["body"],
                          "You should now use the edit link to add content")
         self.assertEquals(the_json["css_extra"], "the-css-class")

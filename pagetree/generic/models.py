@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django import forms
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from pagetree.models import PageBlock
 
@@ -103,7 +103,7 @@ class BasePageBlock(models.Model):
         return self.pageblocks.first()
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     # TODO: I'd like to have all the following methods be inherited
     # somehow. For now these need to be copy and pasted for each custom
