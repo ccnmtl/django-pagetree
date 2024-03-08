@@ -24,7 +24,7 @@
 
 <ul class="nav navbar-nav">
     {% for section in modules %}
-    <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
+    <li{% if section.id == module.id %} class="active"{% endif %}><a href="{{section.get_instructor_url}}">{{section.label}}</a></li>
     {% endfor %}
 </ul>
 

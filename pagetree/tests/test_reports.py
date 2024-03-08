@@ -15,15 +15,15 @@ class PagetreeReportColumnTest(PagetreeTestCase):
                                              lambda x: x.username)
 
     def test_identifier(self):
-        self.assertEquals(self.column.identifier(), 'username')
+        self.assertEqual(self.column.identifier(), 'username')
 
     def test_metadata(self):
         key_row = ['', 'username', 'profile', 'string', 'Username']
-        self.assertEquals(self.column.metadata(), key_row)
+        self.assertEqual(self.column.metadata(), key_row)
 
     def test_user_value(self):
         user = UserFactory()
-        self.assertEquals(self.column.user_value(user), user.username)
+        self.assertEqual(self.column.user_value(user), user.username)
 
 
 class PagetreeReportTest(PagetreeTestCase):
@@ -34,34 +34,34 @@ class PagetreeReportTest(PagetreeTestCase):
         self.user = UserFactory()
 
     def test_users(self):
-        self.assertEquals(len(self.report.users()), 1)
+        self.assertEqual(len(self.report.users()), 1)
 
     def test_standalone_columns(self):
-        self.assertEquals(len(self.report.standalone_columns()), 0)
+        self.assertEqual(len(self.report.standalone_columns()), 0)
 
     def test_metadata_columns(self):
         hierarchies = Hierarchy.objects.all()
-        self.assertEquals(len(hierarchies), 2)
+        self.assertEqual(len(hierarchies), 2)
         columns = self.report.metadata_columns(hierarchies)
-        self.assertEquals(len(columns), 2)
+        self.assertEqual(len(columns), 2)
 
     def test_metadata(self):
         hierarchies = Hierarchy.objects.all()
         rows = []
         for row in self.report.metadata(hierarchies):
             rows.append(row)
-        self.assertEquals(len(rows), 4)
+        self.assertEqual(len(rows), 4)
 
     def test_value_columns(self):
         hierarchies = Hierarchy.objects.all()
         columns = self.report.value_columns(hierarchies)
-        self.assertEquals(len(columns), 2)
+        self.assertEqual(len(columns), 2)
 
     def test_values(self):
         hierarchies = Hierarchy.objects.all()
         rows = []
         for row in self.report.values(hierarchies):
             rows.append(row)
-        self.assertEquals(len(rows), 2)
+        self.assertEqual(len(rows), 2)
 
-        self.assertEquals(rows[1][0], self.user.username)
+        self.assertEqual(rows[1][0], self.user.username)

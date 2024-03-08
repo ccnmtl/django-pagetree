@@ -47,9 +47,29 @@ def main():
             'django.contrib.contenttypes',
             'django.contrib.sessions',
             'pagetree',
-            'django_markwhat',
             'django_jenkins',
+            'markdownify.apps.MarkdownifyConfig',
         ),
+
+        MARKDOWNIFY = {
+            "default": {
+                "WHITELIST_TAGS": [
+                    'a',
+                    'abbr',
+                    'acronym',
+                    'b',
+                    'blockquote',
+                    'em',
+                    'i',
+                    'li',
+                    'ol',
+                    'p',
+                    'strong',
+                    'ul'
+                ]
+            },
+        },
+
         TEST_RUNNER='django.test.runner.DiscoverRunner',
         DEFAULT_AUTO_FIELD = 'django.db.models.AutoField',
         COVERAGE_EXCLUDES_FOLDERS=['migrations'],

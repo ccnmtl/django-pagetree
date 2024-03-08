@@ -462,11 +462,11 @@ class OneLevelWithBlocksTest(TestCase):
              'css_extra': 'new css_extra',
              'body': 'new body'}
         b.import_from_dict(d)
-        self.assertEquals(b.label, 'new label')
-        self.assertEquals(b.css_extra, 'new css_extra')
+        self.assertEqual(b.label, 'new label')
+        self.assertEqual(b.css_extra, 'new css_extra')
 
         sub = b.block()
-        self.assertEquals(sub.body, 'new body')
+        self.assertEqual(sub.body, 'new body')
 
     def test_import_custom_block_dict(self):
         b = self.section1.pageblock_set.first()
@@ -477,8 +477,8 @@ class OneLevelWithBlocksTest(TestCase):
         b.import_from_dict(d)
 
         sub = b.block()
-        self.assertEquals(sub.display_name, 'Test Block')
-        self.assertEquals(sub.body, 'abc')
+        self.assertEqual(sub.display_name, 'Test Block')
+        self.assertEqual(sub.body, 'abc')
 
 
 class UserTrackingTest(TestCase):
@@ -784,7 +784,7 @@ class MultipleLevelsTest(TestCase):
         descendants = duplicate.get_root().get_descendants()
         self.assertTrue(descendants[0].label, 'Section 1')
         self.assertTrue(descendants[0].depth, 1)
-        self.assertEquals(descendants[0].pageblock_set.count(), 1)
+        self.assertEqual(descendants[0].pageblock_set.count(), 1)
 
         self.assertTrue(descendants[1].label, 'Section 2')
         self.assertTrue(descendants[1].depth, 1)

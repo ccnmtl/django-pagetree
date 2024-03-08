@@ -81,7 +81,7 @@
 
 <ul class="nav navbar-nav">
     {% for section in modules %}
-    <li{% ifequal section.id module.id %} class="active"{% endifequal %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
+    <li{% if section.id == module.id %} class="active"{% endif %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
     {% endfor %}
 </ul>
 
@@ -134,10 +134,10 @@
             <ul>
                 {% for s in root.get_descendants %}
                 <li class="menu" style="list-style: none; line-height: 150%">
-                    {% ifequal s section %}
+                    {% if s == section %}
                     <span class="glyphicon glyphicon-hand-right"></span>
                     <strong>
-                    {% endifequal %}
+                    {% endif %}
                         <span title="The number of pageblocks in this section"
                               class="pagetree-pageblock-section-count">
                             {{s.pageblock_set.count}}
@@ -147,10 +147,10 @@
                            >{{s.label|default:"Empty Label"}}
                             {% if s.label|length < 1 %} ({{s.slug}}) {% endif %}
                         </a>
-                    {% ifequal s section %}
+                    {% if s == section %}
                     </strong>
                     <span class="glyphicon glyphicon-hand-left"></span>
-                    {% endifequal %}
+                    {% endif %}
                     {% if s.get_children %}
                     <ul>
                         {% else %}{% if s.is_last_child %}
