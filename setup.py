@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2016, Columbia Center For New Media Teaching And Learning (CCNMTL)
+# Copyright (c) 2007-2024, Columbia Center For New Media Teaching And Learning (CCNMTL)
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@ from setuptools import setup
 
 setup(
     name="django-pagetree",
-    version="1.4.3",
+    version="1.5.0",
     author="Anders Pearson",
     author_email="ctl-dev@columbia.edu",
     url="https://github.com/ccnmtl/django-pagetree",
