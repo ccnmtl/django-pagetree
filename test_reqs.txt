@@ -10,7 +10,7 @@ pyflakes==3.2.0
 Faker==25.8.0
 factory_boy==3.3.0
 six==1.16.0
-pycodestyle==2.11.1
+pycodestyle==2.12.0
 mccabe==0.7.0
 python-dateutil==2.9.0.post0
 text-unidecode==1.3
