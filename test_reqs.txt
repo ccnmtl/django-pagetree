@@ -1,5 +1,5 @@
 django-treebeard==4.7.1
-coverage==7.7.0
+coverage==7.7.1
 importlib-metadata==8.6.1  # for flake8
 typing_extensions==4.12.2
 zipp==3.21.0  # for flake8
