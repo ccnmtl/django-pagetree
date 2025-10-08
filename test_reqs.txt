@@ -7,7 +7,7 @@ flake8==7.3.0
 django-jenkins==0.110.0
 pep8==1.7.1
 pyflakes==3.4.0
-Faker==37.8.0
+Faker==37.11.0
 factory_boy==3.3.3
 six==1.17.0
 pycodestyle==2.14.0
