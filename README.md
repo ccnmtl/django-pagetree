@@ -1,5 +1,4 @@
 [![Actions Status](https://github.com/ccnmtl/django-pagetree/workflows/build-and-test/badge.svg)](https://github.com/ccnmtl/django-pagetree/actions)
-[![Coverage Status](https://coveralls.io/repos/github/ccnmtl/django-pagetree/badge.svg?branch=master)](https://coveralls.io/github/ccnmtl/django-pagetree?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/django-pagetree/badge/?version=latest)](https://django-pagetree.readthedocs.org/en/latest/?badge=latest)
 
 pagetree is a helper for building sites that are organized
