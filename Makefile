@@ -3,18 +3,17 @@ VE ?= ./ve
 REQUIREMENTS ?= test_reqs.txt
 SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
-WHEEL_VERSION ?= 0.42.0
-PIP_VERSION ?= 24.0
+WHEEL_VERSION ?= 0.45.1
+PIP_VERSION ?= 25.3
 MAX_COMPLEXITY ?= 8
 PY_DIRS ?= $(APP)
 DJANGO ?= "Django==4.2.11"
 
 FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
-COVERAGE ?=$(VE)/bin/coverage
 JS_FILES=pagetree/static/pagetree/js/src
 
-all: flake8 coverage eslint
+all: flake8 eslint
 
 include *.mk
 
@@ -38,10 +37,5 @@ test: $(REQUIREMENTS) $(PY_SENTINAL)
 
 flake8: $(PY_SENTINAL)
 	$(FLAKE8) $(PY_DIRS) --max-complexity=$(MAX_COMPLEXITY)
-
-
-coverage: $(PY_SENTINAL)
-	$(COVERAGE) run --source=pagetree runtests.py
-
 
 .PHONY: flake8 test eslint clean
