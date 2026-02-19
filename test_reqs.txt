@@ -1,4 +1,4 @@
-django-treebeard==5.0.3
+django-treebeard==5.0.4
 importlib-metadata==8.7.1  # for flake8
 typing_extensions==4.15.0
 zipp==3.23.0  # for flake8
