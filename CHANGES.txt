@@ -1,6 +1,7 @@
 1.6.0
 ==================
 * Update to django-bootstrap5
+* Update to jquery-ui 1.14
 
 1.5.0 (2024-03-12)
 ==================
