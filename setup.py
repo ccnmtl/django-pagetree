@@ -36,7 +36,7 @@ setup(
     install_requires=[
         "Django",
         "django-treebeard",
-        "django-bootstrap3",
+        "django-bootstrap5",
         "six",
         "Markdown",
         "django-markdownify",
