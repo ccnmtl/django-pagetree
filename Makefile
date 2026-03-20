@@ -3,11 +3,11 @@ VE ?= ./ve
 REQUIREMENTS ?= test_reqs.txt
 SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
-WHEEL_VERSION ?= 0.45.1
-PIP_VERSION ?= 25.3
+WHEEL_VERSION ?= 0.46.3
+PIP_VERSION ?= 26.0.1
 MAX_COMPLEXITY ?= 8
 PY_DIRS ?= $(APP)
-DJANGO ?= "Django==4.2.11"
+DJANGO ?= "Django==5.2.12"
 
 FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
