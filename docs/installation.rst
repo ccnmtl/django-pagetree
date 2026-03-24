@@ -30,12 +30,16 @@ the generic views::
 
 Then add the following URL routes::
 
-  (r'^pagetree/', include('pagetree.urls')),
-  (r'^pages/edit/(?P<path>.*)$',
-   EditView.as_view(hierarchy_name="main", hierarchy_base="/pages/"),
-   {}, 'edit-page'),
-  (r'^pages/instructor/(?P<path>.*)$',
-   InstructorView.as_view(
-       hierarchy_name="main", hierarchy_base="/pages/")),
-  (r'^pages/(?P<path>.*)$',
-   PageView.as_view(hierarchy_name="main", hierarchy_base="/pages/")),
+    path('pagetree/', include('pagetree.urls')),
+    re_path(
+        r'^pages/edit/(?P<path>.*)$',
+        EditView.as_view(hierarchy_name='main', hierarchy_base='/pages/'),
+        name='edit-page'),
+    re_path(
+        r'^pages/instructor/(?P<path>.*)$',
+        InstructorView.as_view(
+            hierarchy_name='main', hierarchy_base='/pages/')),
+    re_path(
+        r'^pages/(?P<path>.*)$',
+        PageView.as_view(
+            hierarchy_name='main', hierarchy_base='/pages/')),
