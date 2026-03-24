@@ -1,5 +1,5 @@
 {% extends "pagetree/base_pagetree.html" %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 {% load render %}
 {% load static %}
 
@@ -33,7 +33,7 @@
     var _pagetree_define_backup = window.define;
     window.define = undefined;
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
 <script src="{% static 'pagetree/js/jquery-ui.min.js' %}"></script>
 <script src="{% static 'pagetree/js/jquery.cookie.js' %}"></script>
 <script>
