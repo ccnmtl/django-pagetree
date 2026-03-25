@@ -1,3 +1,7 @@
+1.6.4
+==================
+* Update jQuery UI images
+
 1.6.3 (2026-03-25)
 ==================
 * Update admin view templates for Bootstrap 5.
