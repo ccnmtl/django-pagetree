@@ -101,30 +101,40 @@
 <h1>{{ section.label }}</h1>
 
 <ul class="edit-page-nav nav nav-tabs">
-    <li {% if is_root %}class="active"{% endif%}>
-        <a href="#content-tree" data-toggle="tab">Hierarchy</a>
+    <li class="nav-item {% if is_root %}active{% endif %}">
+        <a class="nav-link" href="#content-tree" data-bs-toggle="tab">Hierarchy</a>
     </li>
-    <li {% if not is_root %}class="active"{% endif%}>
-        <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
+    <li class="nav-item {% if not is_root %}active{% endif %}" >
+        <a class="nav-link" href="#edit-blocks-tab" data-bs-toggle="tab">Edit Blocks</a>
     </li>
-    <li><a href="#children-tab" data-toggle="tab">Children</a></li>
-    <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
-    <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
-    <li><a href="#history-tab" data-toggle="tab">History</a></li>
-    <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
+    <li class="nav-item">
+        <a class="nav-link" href="#children-tab" data-bs-toggle="tab">Children</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#add-pageblock-tab" data-bs-toggle="tab">Add Pageblock</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#edit-page-tab" data-bs-toggle="tab">Edit Section</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#history-tab" data-bs-toggle="tab">History</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#move-section-tab" data-bs-toggle="tab">Move Section</a>
+    </li>
 </ul>
 
 <div class="tab-content">
     <div id="content-tree" class="tab-pane {% if is_root %}active{% endif%}">
         <div style="margin-left: 5px;">
-            <div class="btn-group pull-right">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            <div class="btn-group float-end dropdown">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Action
                 <span class="caret"></span>
-                </a>
+                </button>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{% url 'clone-hierarchy' section.hierarchy.id %}">
+                        <a class="dropdown-item" href="{% url 'clone-hierarchy' section.hierarchy.id %}">
                             Clone Hierarchy
                         </a>
                     </li>
@@ -179,17 +189,17 @@
         </div>
 
         <div class="col-md-2">
-            <b><a data-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.block.display_name}}</a></b>
+            <b><a data-bs-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.block.display_name}}</a></b>
         </div>
 
         <div class="col-md-6">
-            <a data-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.label}}</a>
+            <a data-bs-toggle="modal" href="#edit-pageblock-{{pageblock.id}}">{{pageblock.label}}</a>
             {% rendersummary pageblock %}
         </div>
 
         <div class="col-md-3">
             <div class="btn-group">
-                <a data-toggle="modal" class="btn btn-default btn-sm"
+                <a data-bs-toggle="modal" class="btn btn-default btn-sm"
                    href="#edit-pageblock-{{pageblock.id}}" title="Edit">
                     <span class="glyphicon glyphicon-edit"></span> edit</a>
 
@@ -221,7 +231,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <button type="button" class="close" data-bs-dismiss="modal">×</button>
                     <h3>Edit {{pageblock.block.display_name}}</h3>
                 </div>
                 <div class="modal-body">
@@ -247,7 +257,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn" data-bs-dismiss="modal">Cancel</a>
                     <input type="submit" value="Save"
                            class="btn btn-primary" />
                 </div>
@@ -297,7 +307,7 @@
 
     <ul>
         {% for blocktype in available_pageblocks %}
-        <li><a data-toggle="modal"
+        <li><a data-bs-toggle="modal"
                href="#add-block-{{forloop.counter}}">Add {{blocktype.display_name}}</a></li>
         {% endfor %}
     </ul>
@@ -316,7 +326,7 @@
 
 
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <button type="button" class="close" data-bs-dismiss="modal">×</button>
                         <h3>Add {{blocktype.display_name}}</h3>
                     </div>
                     <div class="modal-body">
@@ -331,7 +341,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn" data-bs-dismiss="modal">Cancel</a>
                         <input type="submit" value="add {{blocktype.display_name}}"
                                class="btn btn-primary" />
                     </div>

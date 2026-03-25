@@ -1,3 +1,7 @@
+1.6.3
+==================
+* Update admin view templates for Bootstrap 5.
+
 1.6.2 (2026-03-24)
 ==================
 * Add include_self=False to get_descendants() method, for
