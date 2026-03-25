@@ -13,7 +13,7 @@ FLAKE8 ?= $(VE)/bin/flake8
 PIP ?= $(VE)/bin/pip
 JS_FILES=pagetree/static/pagetree/js/src
 
-all: flake8 eslint
+all: flake8 eslint test
 
 include *.mk
 
