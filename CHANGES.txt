@@ -1,6 +1,7 @@
 1.6.4
 ==================
 * Update jQuery UI images
+* Update icons for bootstrap 5
 
 1.6.3 (2026-03-25)
 ==================
