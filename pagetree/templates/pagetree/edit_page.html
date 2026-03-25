@@ -145,7 +145,8 @@
                 {% for s in root.get_descendants %}
                 <li class="menu" style="list-style: none; line-height: 150%">
                     {% if s == section %}
-                    <span class="glyphicon glyphicon-hand-right"></span>
+                    <i class="bi bi-arrow-right"></i>
+
                     <strong>
                     {% endif %}
                         <span title="The number of pageblocks in this section"
@@ -159,7 +160,8 @@
                         </a>
                     {% if s == section %}
                     </strong>
-                    <span class="glyphicon glyphicon-hand-left"></span>
+                    <i class="bi bi-arrow-left"></i>
+
                     {% endif %}
                     {% if s.get_children %}
                     <ul>
@@ -178,14 +180,14 @@
     <div id="edit-blocks-tab" class="tab-pane {% if not is_root %}active{% endif%}"/>
     {% if section.pageblock_set.count %}
 
-    <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
+    <p>Drag the <i class="bi bi-arrows-vertical"></i> arrows to reorder pageblocks:</p>
 
     {% for pageblock in section.pageblock_set.all %}
     {% with block=pageblock %}
     <div class="row block-dragger" id="pageblock-{{pageblock.id}}">
 
         <div class="col-md-1 draghandle">
-            <span class="glyphicon glyphicon-resize-vertical"></span>
+            <i class="bi bi-arrows-vertical"></i>
         </div>
 
         <div class="col-md-2">
@@ -201,11 +203,12 @@
             <div class="btn-group">
                 <a data-bs-toggle="modal" class="btn btn-default btn-sm"
                    href="#edit-pageblock-{{pageblock.id}}" title="Edit">
-                    <span class="glyphicon glyphicon-edit"></span> edit</a>
+                    <i class="bi bi-pencil-square"></i> edit</a>
 
                 <a href="{% url 'delete-pageblock' pageblock.id %}"
                    class="btn btn-danger btn-sm" title="Delete">
-                    <span class="glyphicon glyphicon-trash"></span></a>
+                    <i class="bi bi-trash"></i>
+                </a>
             </div>
 
             <div class="btn-group">
@@ -214,7 +217,7 @@
                    rel="tooltip" title="Download JSON dump of this block"
                    id="export-{{pageblock.id}}"
                    href="{% url 'export-pageblock-json' pageblock.id %}">
-                    <span class="glyphicon glyphicon-download"></span> export</a>
+                    <i class="bi bi-download"></i> export</a>
                 {% endif %}
             </div>
         </div>
@@ -231,7 +234,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-bs-dismiss="modal">×</button>
+                    <button type="button" class="btn btn-dark close" data-bs-dismiss="modal">×</button>
                     <h3>Edit {{pageblock.block.display_name}}</h3>
                 </div>
                 <div class="modal-body">
@@ -326,7 +329,7 @@
 
 
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal">×</button>
+                        <button type="button" class="btn btn-dark close" data-bs-dismiss="modal">×</button>
                         <h3>Add {{blocktype.display_name}}</h3>
                     </div>
                     <div class="modal-body">
@@ -404,7 +407,7 @@
                 <td>{{version.user}}</td>
                 <td>{{version.activity}}</td>
                 <td><a href="{% url 'revert-to-version' version.id %}"
-                       class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-repeat"></span> revert</a>
+                       class="btn btn-sm btn-warning"><i class="bi bi-arrow-counterclockwise"></i> revert</a>
                 </td>
             </tr>
             {% endfor %}
