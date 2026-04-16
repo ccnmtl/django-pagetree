@@ -92,7 +92,9 @@
 {% endblock %}
 
 {% block navrightextra %}
-<a href="{{section.get_absolute_url}}" class="btn btn-success">view page</a>
+<a href="{{section.get_absolute_url}}" class="btn btn-success mt-2 float-end">
+    view page
+</a>
 {% endblock %}
 
 {% block content %}
@@ -230,12 +232,14 @@
 
     {% for pageblock in section.pageblock_set.all %}
     {% with block=pageblock %}
-    <div class="modal fade block-edit" id="edit-pageblock-{{pageblock.id}}" role="dialog">
+    <div class="modal fade block-edit" id="edit-pageblock-{{pageblock.id}}"
+         role="dialog" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn btn-dark close" data-bs-dismiss="modal">×</button>
-                    <h3>Edit {{pageblock.block.display_name}}</h3>
+                    <h5 class="modal-title">Edit {{pageblock.block.display_name}}</h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
@@ -318,7 +322,8 @@
     {% for blocktype in available_pageblocks %}
     {% if blocktype %}
 
-    <div class="modal fade" id="add-block-{{forloop.counter}}" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="add-block-{{forloop.counter}}"
+         role="dialog" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{% url 'add-pageblock' section.id %}"
@@ -329,8 +334,9 @@
 
 
                     <div class="modal-header">
-                        <button type="button" class="btn btn-dark close" data-bs-dismiss="modal">×</button>
-                        <h3>Add {{blocktype.display_name}}</h3>
+                        <h5 class="modal-title">Add {{blocktype.display_name}}</h5>
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <fieldset>
