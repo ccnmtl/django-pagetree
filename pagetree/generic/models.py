@@ -19,6 +19,8 @@ class BasePageBlock(models.Model):
     display_name = None
     """The name for this block that's used in pagetree's menus."""
 
+    form = None
+
     def as_dict(self) -> dict:
         """Returns the PageBlock as a dictionary.
 
@@ -105,12 +107,8 @@ class BasePageBlock(models.Model):
     def __str__(self) -> str:
         return smart_str(self.pageblock())
 
-    # TODO: I'd like to have all the following methods be inherited
-    # somehow. For now these need to be copy and pasted for each custom
-    # pageblock.
-    @staticmethod
-    def add_form():
-        return BasePageBlockForm()
+    def add_form(self):
+        return self.form()
 
     def edit_form(self):
         return BasePageBlockForm(instance=self)
@@ -125,7 +123,7 @@ class BasePageBlock(models.Model):
         return cls.objects.create(**d)
 
     def edit(self, vals, files):
-        form = BasePageBlockForm(data=vals, files=files, instance=self)
+        form = self.form(data=vals, files=files, instance=self)
         if form.is_valid():
             form.save()
 
@@ -140,3 +138,6 @@ class BasePageBlockForm(forms.ModelForm):
     class Meta:
         model = BasePageBlock
         fields = '__all__'
+
+
+BasePageBlock.form = BasePageBlockForm

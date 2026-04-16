@@ -1,6 +1,8 @@
-1.6.5
+1.7.0
 ==================
 * Bootstrap style fix for pageblock modals
+* Introduced BasePageBlock.form attribute, which is now needed when
+  implementing this abstract base class.
 
 1.6.4 (2026-03-25)
 ==================
