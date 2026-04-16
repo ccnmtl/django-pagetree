@@ -19,14 +19,14 @@ class BasePageBlock(models.Model):
     display_name = None
     """The name for this block that's used in pagetree's menus."""
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         """Returns the PageBlock as a dictionary.
 
         :rtype: dictionary
         """
         return dict(block_type=self.display_name)
 
-    def allow_redo(self):
+    def allow_redo(self) -> bool:
         """Determines whether this block allows users to resubmit answers.
 
         This method is only used if ``needs_submit`` is True. If
@@ -39,7 +39,7 @@ class BasePageBlock(models.Model):
 
         return False
 
-    def needs_submit(self):
+    def needs_submit(self) -> bool:
         """Determines whether this pageblock needs form controls rendered.
 
         If ``needs_submit`` is True, then pagetree will create a <form>
@@ -57,7 +57,7 @@ class BasePageBlock(models.Model):
 
         return False
 
-    def unlocked(self, user):
+    def unlocked(self, user) -> bool:
         """Determines whether the user can proceed past this block.
 
         The current user is passed in to this function, allowing you to,
@@ -70,7 +70,7 @@ class BasePageBlock(models.Model):
 
         return True
 
-    def submit(self, user, request_data):
+    def submit(self, user, request_data) -> None:
         """This is a hook for handling this pageblock's form submission.
 
         :returns: None
@@ -78,7 +78,7 @@ class BasePageBlock(models.Model):
 
         pass
 
-    def redirect_to_self_on_submit(self):
+    def redirect_to_self_on_submit(self) -> bool:
         """Determines where the user is redirected to on page submission.
 
         If ``redirect_to_self_on_submit`` returns True, then the user will
@@ -91,7 +91,7 @@ class BasePageBlock(models.Model):
 
         return True
 
-    def clear_user_submissions(self, user):
+    def clear_user_submissions(self, user) -> None:
         """A hook to clear any user submissions for this block.
 
         :returns: None
@@ -102,7 +102,7 @@ class BasePageBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.first()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return smart_str(self.pageblock())
 
     # TODO: I'd like to have all the following methods be inherited
