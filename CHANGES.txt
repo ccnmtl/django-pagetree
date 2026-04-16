@@ -3,6 +3,7 @@
 * Bootstrap style fix for pageblock modals
 * Introduced BasePageBlock.form attribute, which is now needed when
   implementing this abstract base class.
+* Removed dependency on `six`
 
 1.6.4 (2026-03-25)
 ==================
