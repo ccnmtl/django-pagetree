@@ -37,7 +37,6 @@ setup(
         "Django",
         "django-treebeard",
         "django-bootstrap5",
-        "six",
         "Markdown",
         "django-markdownify",
         ],
