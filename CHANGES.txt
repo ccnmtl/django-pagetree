@@ -1,3 +1,7 @@
+1.6.5
+==================
+* Bootstrap style fix for pageblock modals
+
 1.6.4 (2026-03-25)
 ==================
 * Update jQuery UI images
