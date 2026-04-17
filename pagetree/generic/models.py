@@ -111,7 +111,7 @@ class BasePageBlock(models.Model):
         return self.form()
 
     def edit_form(self):
-        return BasePageBlockForm(instance=self)
+        return self.form(instance=self)
 
     @staticmethod
     def create(request):
