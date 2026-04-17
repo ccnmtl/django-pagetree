@@ -1,4 +1,4 @@
-1.7.0
+1.7.0 (2026-04-17)
 ==================
 * Bootstrap style fix for pageblock modals
 * Introduced BasePageBlock.form attribute, which is now needed when
