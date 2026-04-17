@@ -1,12 +1,11 @@
-1.7.1
+1.7.1 (2026-04-17)
 ==================
 * BasePageBlock.edit_form() fix
 
 1.7.0 (2026-04-17)
 ==================
 * Bootstrap style fix for pageblock modals
-* Introduced BasePageBlock.form attribute, which is now needed when
-  implementing this abstract base class.
+* Introduced BasePageBlock.form attribute
 * Removed dependency on `six`
 
 1.6.4 (2026-03-25)
