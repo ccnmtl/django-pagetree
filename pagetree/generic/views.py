@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 """
 Generic View functions.
 
@@ -36,6 +34,7 @@ class MyEditView(EditView):
             request, *args, **kwargs)
 
 """
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -297,7 +296,7 @@ def generic_instructor_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class InstructorView(SectionMixin, TemplateView):
+class InstructorView(LoginRequiredMixin, SectionMixin, TemplateView):
     template_name = "pagetree/instructor_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
@@ -357,7 +356,7 @@ def generic_edit_page(request, path, hierarchy="main",
     return render(request, template, context)
 
 
-class EditView(SectionMixin, TemplateView):
+class EditView(LoginRequiredMixin, SectionMixin, TemplateView):
     template_name = "pagetree/edit_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"

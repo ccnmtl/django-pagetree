@@ -1,3 +1,7 @@
+1.7.2
+==================
+* Use Django's new LoginRequiredMixin for EditView and InstructorView.
+
 1.7.1 (2026-04-17)
 ==================
 * BasePageBlock.edit_form() fix
