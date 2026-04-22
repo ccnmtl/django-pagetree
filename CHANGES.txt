@@ -2,6 +2,7 @@
 ==================
 * Use Django's new LoginRequiredMixin for EditView and InstructorView.
 * Fix query for Hierarchy.get_root() to fix an edge-case bug
+* Update templates from deprecated Bootstrap well to card
 
 1.7.1 (2026-04-17)
 ==================
