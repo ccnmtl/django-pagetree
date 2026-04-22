@@ -48,13 +48,14 @@ class Hierarchy(models.Model):
     def __str__(self):
         return self.name
 
-    def get_root(self):
+    def get_root(self) -> 'Section':
         # will create it if it doesn't exist
         try:
-            return Section.objects.get(hierarchy=self,
-                                       label="Root").get_root()
+            root_section = Section.objects.get(
+                hierarchy=self, label='Root', slug='')
+            return root_section.get_root()
         except Section.DoesNotExist:
-            return Section.add_root(label="Root", slug="", hierarchy=self)
+            return Section.add_root(hierarchy=self, label='Root', slug='')
 
     def get_top_level(self):
         return self.get_root().get_children()
