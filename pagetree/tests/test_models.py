@@ -157,6 +157,7 @@ class OneLevelDeepTest(TestCase):
                 'pageblocks': [],
                 'children': [],
             })
+
         r = self.root.get_children()
         self.section1 = r[0]
         self.section2 = r[1]
@@ -847,3 +848,53 @@ class UserPageVisitTest(TestCase):
     def test_is_valid_from_factory(self):
         upv = UserPageVisitFactory()
         upv.full_clean()
+
+
+class RootTest(TestCase):
+    def setUp(self):
+        self.h = Hierarchy.objects.create(name='main', base_url='')
+        self.root = self.h.get_root()
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 1',
+                'slug': 'section-1',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 2',
+                'slug': 'section-2',
+                'pageblocks': [],
+                'children': [],
+            })
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Section 3',
+                'slug': 'section-3',
+                'pageblocks': [],
+                'children': [],
+            })
+
+        # Test that using a Section with label: Root doesn't break
+        # Hierarchy.get_root()
+        self.root.add_child_section_from_dict(
+            {
+                'label': 'Root',
+                'slug': 'root',
+                'pageblocks': [],
+                'children': [],
+            })
+
+        r = self.root.get_children()
+        self.section1 = r[0]
+        self.section2 = r[1]
+        self.section3 = r[2]
+
+    def tearDown(self):
+        self.h.delete()
+
+    def test_root(self):
+        self.assertEqual(
+            self.h.get_root().id,
+            self.root.id)
