@@ -39,7 +39,7 @@
 
 {% block navrightextra %}
 {% if not request.user.is_anonymous %}
-<a href="{{section.get_edit_url}}" class="btn btn-success">edit page</a>
+<a href="{{section.get_edit_url}}" class="btn btn-success mt-2 float-end">edit page</a>
 {% endif %}
 {% endblock %}
 
