@@ -285,27 +285,30 @@
 
 <div id="children-tab" class="tab-pane">
     <h2>Reorder Children</h2>
-    <div class="well">
-        <p>Drag and drop arrows to reorder children</p>
-        <ul id="children-order-list">
-            {% for child in section.get_children %}
-            <li class="draggable"
-                id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
-                <a href="{{child.get_edit_url}}">{{child.label}}</a>
-            </li>
-            {% endfor %}
-        </ul>
+    <div class="card">
+        <div class="card-body">
+            <p>Drag and drop arrows to reorder children</p>
+            <ul id="children-order-list">
+                {% for child in section.get_children %}
+                <li class="draggable"
+                    id="child-{{child.id}}"><span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
+                    <a href="{{child.get_edit_url}}">{{child.label}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
     <h2>Add Child</h2>
     <form action="{% url 'add-child-section' section.id %}" method="post"
-          class="well form-inline">
+          class="card form-inline">
         {% csrf_token %}
+        <div class="card-body">
 
-        {% bootstrap_form section.add_child_section_form %}
+            {% bootstrap_form section.add_child_section_form %}
 
-        <input type="submit" value="add child section" class="btn btn-primary"
-               />
+            <input type="submit" value="add child section" class="btn btn-primary" />
+        </div>
     </form>
 </div>
 
@@ -365,18 +368,23 @@
 <div id="edit-page-tab" class="tab-pane">
 
     <form action="{% url 'edit-section' section.id %}" method="post"
-          class="form-horizontal well">{% csrf_token %}
-        <fieldset><legend>Edit Page</legend>
+          class="form-horizontal card mb-2">
+        {% csrf_token %}
+        <div class="card-body">
+            <fieldset><legend>Edit Page</legend>
 
-            {% bootstrap_form section.edit_form %}
+                {% bootstrap_form section.edit_form %}
 
-            <input type="submit" value="save" class="btn btn-primary" />
-        </fieldset>
+                <input type="submit" value="save" class="btn btn-primary" />
+            </fieldset>
+        </div>
     </form>
 
 
-    <div class="well">
-        <a class="btn btn-danger" href="{% url 'delete-section' section.id %}">delete this page</a>
+    <div class="card">
+        <div class="card-body">
+            <a class="btn btn-danger" href="{% url 'delete-section' section.id %}">delete this page</a>
+        </div>
     </div>
 
 </div>
