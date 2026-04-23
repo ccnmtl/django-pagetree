@@ -1,4 +1,4 @@
-1.7.2
+1.7.2 (2026-04-23)
 ==================
 * Use Django's new LoginRequiredMixin for EditView and InstructorView.
 * Fix query for Hierarchy.get_root() to fix an edge-case bug
