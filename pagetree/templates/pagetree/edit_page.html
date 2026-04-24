@@ -81,7 +81,9 @@
 
 <ul class="nav navbar-nav">
     {% for section in modules %}
-    <li{% if section.id == module.id %} class="active"{% endif %}><a href="{{section.get_edit_url}}">{{section.label}}</a></li>
+    <li{% if section.id == module.id %} class="active"{% endif %}>
+        <a href="{{section.get_edit_url}}">{{section.label}}</a>
+    </li>
     {% endfor %}
 </ul>
 
@@ -103,26 +105,64 @@
 <h1>{{ section.label }}</h1>
 
 <ul class="edit-page-nav nav nav-tabs">
-    <li class="nav-item {% if is_root %}active{% endif %}">
-        <a class="nav-link" href="#content-tree" data-bs-toggle="tab">Hierarchy</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if is_root %}active{% endif %}" data-bs-target="#content-tree"
+                data-bs-toggle="tab" role="tab"
+                aria-controls="content-tree"
+                {% if is_root %}
+                aria-selected="true"
+                {% else %}
+                aria-selected="false"
+                {% endif %}>
+            Hierarchy
+        </button>
     </li>
-    <li class="nav-item {% if not is_root %}active{% endif %}" >
-        <a class="nav-link" href="#edit-blocks-tab" data-bs-toggle="tab">Edit Blocks</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if not is_root %}active{% endif %}" data-bs-target="#edit-blocks-tab"
+                data-bs-toggle="tab" role="tab"
+                aria-controls="edit-blocks-tab"
+                {% if not is_root %}
+                aria-selected="true"
+                {% else %}
+                aria-selected="false"
+                {% endif %}>
+            Edit Blocks
+        </button>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#children-tab" data-bs-toggle="tab">Children</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-target="#children-tab"
+                aria-controls="children-tab"
+                data-bs-toggle="tab" role="tab" aria-selected="false">
+            Children
+        </button>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#add-pageblock-tab" data-bs-toggle="tab">Add Pageblock</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-target="#add-pageblock-tab"
+                aria-controls="add-pageblock-tab"
+                data-bs-toggle="tab" role="tab" aria-selected="false">
+            Add Pageblock
+        </button>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#edit-page-tab" data-bs-toggle="tab">Edit Section</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-target="#edit-page-tab"
+                aria-controls="edit-page-tab"
+                data-bs-toggle="tab" role="tab" aria-selected="false">
+            Edit Section
+        </button>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#history-tab" data-bs-toggle="tab">History</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-target="#history-tab"
+                aria-controls="history-tab"
+                data-bs-toggle="tab" role="tab" aria-selected="false">
+            History
+        </button>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#move-section-tab" data-bs-toggle="tab">Move Section</a>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-target="#move-section-tab"
+                aria-controls="move-section-tab"
+                data-bs-toggle="tab" role="tab" aria-selected="false">
+            Move Section
+        </button>
     </li>
 </ul>
 
