@@ -1,3 +1,7 @@
+1.7.4 (2026-04-24)
+==================
+* Fix manifest issue.
+
 1.7.3 (2026-04-24)
 ==================
 * Update edit page tab template for current Bootstrap
