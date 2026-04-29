@@ -1,3 +1,7 @@
+1.7.5
+==================
+* Update pager style for current bootstrap
+
 1.7.4 (2026-04-24)
 ==================
 * Fix manifest issue.
