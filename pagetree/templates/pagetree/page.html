@@ -98,17 +98,28 @@
 
 {% block content-nav %}
 {% with previous=section.get_previous next_section=section.get_next %}
-<ul class="pager">
-{% if previous %}
-  <li class="previous">
-        <a href="{{previous.get_absolute_url}}">&larr; {{previous.label}}</a>
-  </li>
-{% endif %}
 
-{% if next_section %}
-<li class="next"><a href="{{next_section.get_absolute_url}}">{{next_section.label}} &rarr;</a></li>
+<nav>
+    <ul class="pager pagination">
+        {% if previous %}
+        <li class="previous page-item">
+            <a class="page-link" href="{{previous.get_absolute_url}}"
+               aria-label="Previous">
+                &laquo; {{previous.label}}
+            </a>
+        </li>
+        {% endif %}
 
-{% endif %}
-</ul>
+        {% if next_section %}
+        <li class="next page-item">
+            <a class="page-link" href="{{next_section.get_absolute_url}}"
+               aria-label="Next">
+                {{next_section.label}} &raquo;
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% endwith %}
 {% endblock %}

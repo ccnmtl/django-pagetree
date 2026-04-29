@@ -475,25 +475,31 @@
 {% endblock %}
 
 {% block content-nav %}
-<ul class="pager">
-    {% with previous=section.get_previous next_section=section.get_next %}
-    {% if not section.is_root %}
+<nav>
+    <ul class="pager pagination">
+        {% with previous=section.get_previous next_section=section.get_next %}
+        {% if not section.is_root %}
 
-    {% if previous %}
-    <li class="previous">
-        <a href="{% url 'edit-page' previous.get_path %}">
-            &larr; {{previous.label}}</a>
-    </li>
-    {% endif %}
-    {% endif %}
+        {% if previous %}
+        <li class="previous page-item">
+            <a href="{% url 'edit-page' previous.get_path %}"
+               aria-label="Previous">
+                &laquo; {{previous.label}}
+            </a>
+        </li>
+        {% endif %}
+        {% endif %}
 
-    {% if next_section %}
-    <li class="next">
-        <a href="{% url 'edit-page' next_section.get_path %}">
-            {{next_section.label}} &rarr;</a>
-    </li>
-    {% endif %}
-</ul>
+        {% if next_section %}
+        <li class="next page-item">
+            <a href="{% url 'edit-page' next_section.get_path %}"
+               aria-label="Next">
+                {{next_section.label}} &raquo;
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
 {% endwith %}
 
 {% endblock %}
