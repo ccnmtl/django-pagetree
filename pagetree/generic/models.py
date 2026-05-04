@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django import forms
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
@@ -26,7 +24,7 @@ class BasePageBlock(models.Model):
 
         :rtype: dictionary
         """
-        return dict(block_type=self.display_name)
+        return {'block_type': self.display_name}
 
     def allow_redo(self) -> bool:
         """Determines whether this block allows users to resubmit answers.
