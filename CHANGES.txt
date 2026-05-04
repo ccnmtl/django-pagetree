@@ -1,3 +1,7 @@
+1.7.6
+==================
+* Modernize python syntax in generic Pagetree classes
+
 1.7.5 (2026-04-29)
 ==================
 * Update pager style for current bootstrap

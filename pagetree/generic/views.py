@@ -14,24 +14,23 @@ from pagetree.generic.views import PageView, EditView
 
 class MyPageView(PageView):
     def get_extra_context(self):
-        ctx = super(MyPageView, self).get_extra_context()
+        context = super().get_extra_context()
         # Add extra context data
-        return ctx
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         # Example of a redirect based on user state
         if not request.user.profile.avatar:
             return redirect(reverse('avatar-selector'))
 
-        return super(MyPageView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MyEditView(EditView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         # Do any additional auth here
-        return super(MyEditView, self).dispatch(
-            request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 """
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -159,16 +158,16 @@ def generic_view_page(request, path, hierarchy="main",
             allow_redo = section.allow_redo()
         upv.visit()
         instructor_link = has_responses(section)
-        context = dict(
-            section=section,
-            module=module,
-            needs_submit=needs_submit,
-            allow_redo=allow_redo,
-            is_submitted=section.submitted(request.user),
-            modules=root.get_children(),
-            root=section.hierarchy.get_root(),
-            instructor_link=instructor_link,
-        )
+        context = {
+            'section': section,
+            'module': module,
+            'needs_submit': needs_submit,
+            'allow_redo': allow_redo,
+            'is_submitted': section.submitted(request.user),
+            'modules': root.get_children(),
+            'root': section.hierarchy.get_root(),
+            'instructor_link': instructor_link,
+        }
         if extra_context:
             context.update(extra_context)
         return render(request, template, context)
@@ -192,7 +191,7 @@ class PageView(SectionMixin, View):
     template_name = "pagetree/page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
-    extra_context = dict()
+    extra_context = {}
     gated = False
     no_root_fallback_url = "/admin/"
 
@@ -232,7 +231,7 @@ class PageView(SectionMixin, View):
         rv = self.perform_checks(request, path)
         if rv is not None:
             return rv
-        return super(PageView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, path):
         # user has submitted a form. deal with it
@@ -249,16 +248,16 @@ class PageView(SectionMixin, View):
             allow_redo = self.section.allow_redo()
         self.upv.visit()
         instructor_link = has_responses(self.section)
-        context = dict(
-            section=self.section,
-            module=self.module,
-            needs_submit=needs_submit,
-            allow_redo=allow_redo,
-            is_submitted=self.section.submitted(request.user),
-            modules=self.root.get_children(),
-            root=self.section.hierarchy.get_root(),
-            instructor_link=instructor_link,
-        )
+        context = {
+            'section': self.section,
+            'module': self.module,
+            'needs_submit': needs_submit,
+            'allow_redo': allow_redo,
+            'is_submitted': self.section.submitted(request.user),
+            'modules': self.root.get_children(),
+            'root': self.section.hierarchy.get_root(),
+            'instructor_link': instructor_link,
+        }
         context.update(self.get_extra_context())
         return render(request, self.template_name, context)
 
@@ -286,11 +285,13 @@ def generic_instructor_page(request, path, hierarchy="main",
         if hasattr(block, 'needs_submit') and block.needs_submit():
             return quizzes.append(block)
 
-    context = dict(section=section,
-                   quizzes=quizzes,
-                   module=section.get_module(),
-                   modules=root.get_children(),
-                   root=section.hierarchy.get_root())
+    context = {
+        'section': section,
+        'quizzes': quizzes,
+        'module': section.get_module(),
+        'modules': root.get_children(),
+        'root': section.hierarchy.get_root(),
+    }
     if extra_context:
         context.update(extra_context)
     return render(request, template, context)
@@ -300,14 +301,14 @@ class InstructorView(LoginRequiredMixin, SectionMixin, TemplateView):
     template_name = "pagetree/instructor_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
-    extra_context = dict()
+    extra_context = {}
 
     def dispatch(self, request, *args, **kwargs):
         path = kwargs['path']
         rv = self.perform_checks(request, path)
         if rv is not None:
             return rv
-        return super(InstructorView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         path = kwargs['path']
@@ -320,11 +321,13 @@ class InstructorView(LoginRequiredMixin, SectionMixin, TemplateView):
             if hasattr(block, 'needs_submit') and block.needs_submit():
                 return quizzes.append(block)
 
-        context = dict(section=section,
-                       quizzes=quizzes,
-                       module=section.get_module(),
-                       modules=root.get_children(),
-                       root=section.hierarchy.get_root())
+        context = {
+            'section': section,
+            'quizzes': quizzes,
+            'module': section.get_module(),
+            'modules': root.get_children(),
+            'root': section.hierarchy.get_root(),
+        }
         context.update(self.get_extra_context())
         return context
 
@@ -345,12 +348,13 @@ def generic_edit_page(request, path, hierarchy="main",
     """
     section = get_section_from_path(path, hierarchy=hierarchy)
     root = section.hierarchy.get_root()
-    context = dict(
-        section=section,
-        module=section.get_module(),
-        modules=root.get_children(),
-        available_pageblocks=section.available_pageblocks(),
-        root=section.hierarchy.get_root())
+    context = {
+        'section': section,
+        'module': section.get_module(),
+        'modules': root.get_children(),
+        'available_pageblocks': section.available_pageblocks(),
+        'root': section.hierarchy.get_root()
+    }
     if extra_context:
         context.update(extra_context)
     return render(request, template, context)
@@ -360,24 +364,25 @@ class EditView(LoginRequiredMixin, SectionMixin, TemplateView):
     template_name = "pagetree/edit_page.html"
     hierarchy_name = "main"
     hierarchy_base = "/"
-    extra_context = dict()
+    extra_context = {}
 
     def dispatch(self, request, *args, **kwargs):
         path = kwargs['path']
         rv = self.perform_checks(request, path)
         if rv is not None:
             return rv
-        return super(EditView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, path):
         section = self.get_section(path)
         root = section.hierarchy.get_root()
-        context = dict(
-            section=section,
-            module=section.get_module(),
-            modules=root.get_children(),
-            available_pageblocks=section.available_pageblocks(),
-            root=section.hierarchy.get_root())
+        context = {
+            'section': section,
+            'module': section.get_module(),
+            'modules': root.get_children(),
+            'available_pageblocks': section.available_pageblocks(),
+            'root': section.hierarchy.get_root(),
+        }
         context.update(self.get_extra_context())
         return context
 
@@ -387,7 +392,7 @@ class CloneHierarchyView(FormView):
     form_class = CloneHierarchyForm
 
     def get_context_data(self, **kwargs):
-        context = super(CloneHierarchyView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         hierarchy_id = self.kwargs.get('hierarchy_id')
         context['hierarchy'] = get_object_or_404(Hierarchy, id=hierarchy_id)
@@ -404,4 +409,4 @@ class CloneHierarchyView(FormView):
         clone = Hierarchy.clone(original, name, base_url)
 
         self.success_url = clone.get_root().get_edit_url()
-        return super(CloneHierarchyView, self).form_valid(form)
+        return super().form_valid(form)
