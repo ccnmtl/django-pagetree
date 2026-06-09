@@ -249,28 +249,28 @@ class Section(MP_Node):
             s = s.get_parent()
 
     def get_previous(self):
-        # previous node in the depth-first traversal
-        depth_first_traversal = self.get_root().get_annotated_list()
-        for (i, (s, ai)) in enumerate(depth_first_traversal):
-            if s.id == self.id:
-                # make sure we don't return the root
-                if i > 1 and not depth_first_traversal[i - 1][0].is_root():
-                    return depth_first_traversal[i - 1][0]
-                else:
-                    return None
-        # made it through without finding ourselves? weird.
+        prev_sibling = self.get_prev_sibling()
+        if prev_sibling:
+            return prev_sibling.get_last_leaf()
+
+        parent = self.get_parent()
+        if parent and not parent.is_root():
+            return parent
+
         return None
 
     def get_next(self):
-        # next node in the depth-first traversal
-        depth_first_traversal = self.get_root().get_annotated_list()
-        for (i, (s, ai)) in enumerate(depth_first_traversal):
-            if s.id == self.id:
-                if i < len(depth_first_traversal) - 1:
-                    return depth_first_traversal[i + 1][0]
-                else:
-                    return None
-        # made it through without finding ourselves? weird.
+        # next node in depth-first order, excluding root
+        if not self.is_leaf():
+            return self.get_children()[0]
+
+        node = self
+        while not node.is_root():
+            next_sibling = node.get_next_sibling()
+            if next_sibling:
+                return next_sibling
+            node = node.get_parent()
+
         return None
 
     def append_child(self, label, slug='', show_toc=False, deep_toc=False):

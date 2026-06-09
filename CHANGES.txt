@@ -1,6 +1,7 @@
 1.7.6
 ==================
 * Modernize python syntax in generic Pagetree classes
+* Simplify and improve performance of get_next and get_previous.
 
 1.7.5 (2026-04-29)
 ==================
