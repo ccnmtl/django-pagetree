@@ -61,20 +61,30 @@ class Hierarchy(models.Model):
         return self.get_root().get_children()
 
     def find_section_from_path(self, path):
-        if path.endswith("/"):
-            path = path[:-1]
+        path = path.strip("/")
+        key = "pagetree.{}.path.{}".format(self.pk, path or "__root__")
+
+        section_id = cache.get(key)
+
+        if section_id is not None:
+            try:
+                return Section.objects.get(pk=section_id)
+            except Section.DoesNotExist:
+                cache.delete(key)
+
         root = self.get_root()
-        current = root
+
         if path == "":
-            return current
+            cache.set(key, root.pk)
+            return root
+
+        current = root
         for slug in path.split("/"):
-            slugs = dict()
-            for c in current.get_children():
-                slugs[c.slug] = c
-            if slug in slugs:
-                current = slugs[slug]
-            else:
+            current = current.get_children().filter(slug=slug).first()
+            if current is None:
                 return None
+
+        cache.set(key, current.pk)
         return current
 
     def get_section_from_path(self, path):
