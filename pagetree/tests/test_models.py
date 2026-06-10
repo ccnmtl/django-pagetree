@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-from django.test import TestCase
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.utils.encoding import smart_str
@@ -11,42 +10,47 @@ from pagetree.models import Hierarchy, PageBlock, UserPageVisit
 from pagetree.test_models import TestBlock
 from pagetree.tests.factories import (
     RootSectionFactory, TestBlockFactory, UserFactory, UserPageVisitFactory,
-    HierarchyFactory
+    HierarchyFactory, CacheClearTestCase
 )
 
 
-class UserTest(TestCase):
+class UserTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.u = UserFactory()
 
     def test_is_valid_from_factory(self):
         self.u.full_clean()
 
 
-class HierarchyTest(TestCase):
+class HierarchyTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = HierarchyFactory()
 
     def test_is_valid_from_factory(self):
         self.h.full_clean()
 
 
-class RootSectionTest(TestCase):
+class RootSectionTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.s = RootSectionFactory()
 
     def test_is_valid_from_factory(self):
         self.s.full_clean()
 
 
-class EmptyHierarchyTest(TestCase):
+class EmptyHierarchyTest(CacheClearTestCase):
     """ a hierarchy with no sections in it
     (one Root gets created by default) """
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.from_dict({'name': "main",
                                       'base_url': ""})
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
 
     def test_easy(self):
@@ -132,8 +136,9 @@ class EmptyHierarchyTest(TestCase):
         self.assertEqual(s.slug, '')
 
 
-class OneLevelDeepTest(TestCase):
+class OneLevelDeepTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -164,6 +169,7 @@ class OneLevelDeepTest(TestCase):
         self.section3 = r[2]
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
 
     def test_root(self):
@@ -336,8 +342,9 @@ class OneLevelDeepTest(TestCase):
         self.assertEqual(self.section3.get_tree_depth(), 3)
 
 
-class OneLevelWithBlocksTest(TestCase):
+class OneLevelWithBlocksTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -362,6 +369,7 @@ class OneLevelWithBlocksTest(TestCase):
         self.section1 = r[0]
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
 
     def test_str(self):
@@ -482,8 +490,9 @@ class OneLevelWithBlocksTest(TestCase):
         self.assertEqual(sub.body, 'abc')
 
 
-class UserTrackingTest(TestCase):
+class UserTrackingTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -531,6 +540,7 @@ class UserTrackingTest(TestCase):
         self.user = User.objects.create(username='testuser')
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
         self.h2.delete()
         self.user.delete()
@@ -609,8 +619,9 @@ class UserTrackingTest(TestCase):
             children[1].gate_check(self.user), (False, children[0]))
 
 
-class VersionTest(TestCase):
+class VersionTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -648,6 +659,7 @@ class VersionTest(TestCase):
         self.user = User.objects.create(username='testuser')
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
         self.user.delete()
 
@@ -710,8 +722,9 @@ class VersionTest(TestCase):
             1)
 
 
-class MultipleLevelsTest(TestCase):
+class MultipleLevelsTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name="main", base_url="")
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -757,6 +770,7 @@ class MultipleLevelsTest(TestCase):
         self.section5 = self.section4.get_children()[0]
 
     def tearDown(self):
+        super().tearDown()
         Hierarchy.objects.all().delete()
 
     def test_get_absolute_url(self):
@@ -800,8 +814,9 @@ class MultipleLevelsTest(TestCase):
         self.assertTrue(descendants[4].depth, 3)
 
 
-class SectionTest(TestCase):
+class SectionTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.user = UserFactory()
         self.section = RootSectionFactory()
 
@@ -829,8 +844,9 @@ class SectionTest(TestCase):
         self.assertTrue(self.section.unlocked(self.user))
 
 
-class TestBlockTest(TestCase):
+class TestBlockTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.b = TestBlockFactory()
 
     def test_is_valid_from_factory(self):
@@ -844,14 +860,15 @@ class TestBlockTest(TestCase):
         self.assertEqual(testblock.body, 'abc')
 
 
-class UserPageVisitTest(TestCase):
+class UserPageVisitTest(CacheClearTestCase):
     def test_is_valid_from_factory(self):
         upv = UserPageVisitFactory()
         upv.full_clean()
 
 
-class RootTest(TestCase):
+class RootTest(CacheClearTestCase):
     def setUp(self):
+        super().setUp()
         self.h = Hierarchy.objects.create(name='main', base_url='')
         self.root = self.h.get_root()
         self.root.add_child_section_from_dict(
@@ -892,6 +909,7 @@ class RootTest(TestCase):
         self.section3 = r[2]
 
     def tearDown(self):
+        super().tearDown()
         self.h.delete()
 
     def test_root(self):

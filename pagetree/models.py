@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import random
 from django.apps import apps
 from django.conf import settings
@@ -49,13 +47,24 @@ class Hierarchy(models.Model):
         return self.name
 
     def get_root(self) -> 'Section':
-        # will create it if it doesn't exist
+        key = 'pagetree.{}.get_root'.format(self.pk)
+        root_id = cache.get(key)
+
+        if root_id is not None:
+            try:
+                return Section.objects.get(pk=root_id)
+            except Section.DoesNotExist:
+                cache.delete(key)
+
         try:
             root_section = Section.objects.get(
                 hierarchy=self, label='Root', slug='')
-            return root_section.get_root()
+            root = root_section.get_root()
         except Section.DoesNotExist:
-            return Section.add_root(hierarchy=self, label='Root', slug='')
+            root = Section.add_root(hierarchy=self, label='Root', slug='')
+
+        cache.set(key, root.pk)
+        return root
 
     def get_top_level(self):
         return self.get_root().get_children()
