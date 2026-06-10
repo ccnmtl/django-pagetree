@@ -1,7 +1,7 @@
 /* global pagetree: true */
 
 pagetree.getCsrfToken = function() {
-    return pagetree.$.cookie('csrftoken');
+    return pagetree.$('[name=csrfmiddlewaretoken]').val();
 };
 
 pagetree.saveOrderOfChildren = function(url) {
@@ -9,7 +9,7 @@ pagetree.saveOrderOfChildren = function(url) {
     var worktodo = 0;
     pagetree.$('#children-order-list li').each(function(index, element) {
         worktodo = 1;
-        var id = $(element).attr('id').split('-')[1];
+        var id = pagetree.$(element).attr('id').split('-')[1];
         url += 'section_id_' + index + '=' + id + ';';
     });
     if (worktodo == 1) {
@@ -29,7 +29,7 @@ pagetree.saveOrderOfPageBlocks = function(url) {
     pagetree.$('#edit-blocks-tab>div.block-dragger').each(
         function(index, element) {
             worktodo = 1;
-            var id = $(element).attr('id').split('-')[1];
+            var id = pagetree.$(element).attr('id').split('-')[1];
             url += 'pageblock_id_' + index + '=' + id + ';';
         });
     if (worktodo == 1) {
