@@ -1,3 +1,7 @@
+1.7.9
+==================
+* Improve instructor view page load performance.
+
 1.7.8 (2026-06-10)
 ==================
 * Fix redundant root lookups in views.py.
