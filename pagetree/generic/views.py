@@ -35,6 +35,7 @@ class MyEditView(EditView):
 """
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View, TemplateView
@@ -348,8 +349,14 @@ def generic_edit_page(request, path, hierarchy="main",
     """
     section = get_section_from_path(path, hierarchy=hierarchy)
     root = section.hierarchy.get_root()
+    descendants = (
+        root.get_descendants()
+        .annotate(pageblock_count=Count('pageblock'))
+        .select_related('hierarchy'))
+
     context = {
         'section': section,
+        'descendants': descendants,
         'module': section.get_module(),
         'modules': root.get_children(),
         'available_pageblocks': section.available_pageblocks(),
@@ -376,8 +383,14 @@ class EditView(LoginRequiredMixin, SectionMixin, TemplateView):
     def get_context_data(self, path):
         section = self.get_section(path)
         root = section.hierarchy.get_root()
+        descendants = (
+            root.get_descendants()
+            .annotate(pageblock_count=Count('pageblock'))
+            .select_related('hierarchy'))
+
         context = {
             'section': section,
+            'descendants': descendants,
             'module': section.get_module(),
             'modules': root.get_children(),
             'available_pageblocks': section.available_pageblocks(),

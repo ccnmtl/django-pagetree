@@ -184,34 +184,30 @@
             </div>
             <h3 style="margin-top: 0;"><a href="{{root.get_edit_url}}">{{section.hierarchy.name}}</a></h3>
             <ul>
-                {% for s in root.get_descendants %}
-                <li class="menu" style="list-style: none; line-height: 150%">
+                {% for s in descendants %}
+                <li class="menu menu-{{ s.depth }}"
+                    style="list-style: none; line-height: 150%; margin-left: {{ s.depth }}em;">
                     {% if s == section %}
                     <i class="bi bi-arrow-right"></i>
-
                     <strong>
                     {% endif %}
-                        <span title="The number of pageblocks in this section"
-                              class="pagetree-pageblock-section-count">
-                            {{s.pageblock_set.count}}
-                        </span>
-                        &nbsp;&nbsp;
-                        <a href="{{s.get_edit_url}}"
-                           >{{s.label|default:"Empty Label"}}
-                            {% if s.label|length < 1 %} ({{s.slug}}) {% endif %}
-                        </a>
+
+                    <span title="The number of pageblocks in this section"
+                          class="pagetree-pageblock-section-count">
+                        {{s.pageblock_count}}
+                    </span>
+                    &nbsp;&nbsp;
+
+                    <a href="{{s.get_edit_url}}">
+                        {{s.label|default:"Empty Label"}}
+                        {% if s.label|length < 1 %} ({{s.slug}}) {% endif %}
+                    </a>
+
                     {% if s == section %}
                     </strong>
                     <i class="bi bi-arrow-left"></i>
-
                     {% endif %}
-                    {% if s.get_children %}
-                    <ul>
-                        {% else %}{% if s.is_last_child %}
-                        {% for lc in s.closing_children %}
-                    </ul>
-                    {% endfor %}
-                    {% endif %}{% endif %}
+
                 </li>
                 {% endfor %}
             </ul>
