@@ -1,6 +1,7 @@
-1.7.7
+1.7.7 (2026-06-10)
 ==================
 * Add caching to get_root().
+* Add caching to find_section_from_path().
 
 1.7.6 (2026-06-09)
 ==================
