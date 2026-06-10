@@ -165,7 +165,7 @@ def generic_view_page(request, path, hierarchy="main",
             'allow_redo': allow_redo,
             'is_submitted': section.submitted(request.user),
             'modules': root.get_children(),
-            'root': section.hierarchy.get_root(),
+            'root': root,
             'instructor_link': instructor_link,
         }
         if extra_context:
@@ -290,7 +290,7 @@ def generic_instructor_page(request, path, hierarchy="main",
         'quizzes': quizzes,
         'module': section.get_module(),
         'modules': root.get_children(),
-        'root': section.hierarchy.get_root(),
+        'root': root,
     }
     if extra_context:
         context.update(extra_context)
@@ -326,7 +326,7 @@ class InstructorView(LoginRequiredMixin, SectionMixin, TemplateView):
             'quizzes': quizzes,
             'module': section.get_module(),
             'modules': root.get_children(),
-            'root': section.hierarchy.get_root(),
+            'root': root,
         }
         context.update(self.get_extra_context())
         return context
@@ -353,7 +353,7 @@ def generic_edit_page(request, path, hierarchy="main",
         'module': section.get_module(),
         'modules': root.get_children(),
         'available_pageblocks': section.available_pageblocks(),
-        'root': section.hierarchy.get_root()
+        'root': root,
     }
     if extra_context:
         context.update(extra_context)
@@ -381,7 +381,7 @@ class EditView(LoginRequiredMixin, SectionMixin, TemplateView):
             'module': section.get_module(),
             'modules': root.get_children(),
             'available_pageblocks': section.available_pageblocks(),
-            'root': section.hierarchy.get_root(),
+            'root': root,
         }
         context.update(self.get_extra_context())
         return context
