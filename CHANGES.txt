@@ -1,6 +1,7 @@
-1.7.9
+1.7.9 (2026-06-10)
 ==================
 * Improve instructor view page load performance.
+* Fix front-end bug with section and pageblock sorting.
 
 1.7.8 (2026-06-10)
 ==================

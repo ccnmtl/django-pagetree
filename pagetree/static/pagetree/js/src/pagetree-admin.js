@@ -5,17 +5,20 @@ pagetree.getCsrfToken = function() {
 };
 
 pagetree.saveOrderOfChildren = function(url) {
-    var me = this;
-    var worktodo = 0;
+    const me = this;
+    const params = {};
+    let worktodo = false;
+
     pagetree.$('#children-order-list li').each(function(index, element) {
-        worktodo = 1;
-        var id = pagetree.$(element).attr('id').split('-')[1];
-        url += 'section_id_' + index + '=' + id + ';';
+        worktodo = true;
+        const id = pagetree.$(element).attr('id').split('-')[1];
+        params['section_id_' + index] = id;
     });
-    if (worktodo == 1) {
+
+    if (worktodo) {
         pagetree.$.ajax({
             type: 'POST',
-            url: url,
+            url: url + (url.indexOf('?') === -1 ? '?' : '&') + pagetree.$.param(params),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader('X-CSRFToken', me.getCsrfToken());
             }
@@ -24,19 +27,22 @@ pagetree.saveOrderOfChildren = function(url) {
 };
 
 pagetree.saveOrderOfPageBlocks = function(url) {
-    var me = this;
-    var worktodo = 0;
+    const me = this;
+    const params = {};
+    let worktodo = false;
+
     pagetree.$('#edit-blocks-tab>div.block-dragger').each(
         function(index, element) {
-            worktodo = 1;
-            var id = pagetree.$(element).attr('id').split('-')[1];
-            url += 'pageblock_id_' + index + '=' + id + ';';
+            worktodo = true;
+            const id = pagetree.$(element).attr('id').split('-')[1];
+            params['pageblock_id_' + index] = id;
         });
-    if (worktodo == 1) {
+
+    if (worktodo) {
         /* only bother submitting if there are elements to be sorted */
         pagetree.$.ajax({
             type: 'POST',
-            url: url,
+            url: url + (url.indexOf('?') === -1 ? '?' : '&') + pagetree.$.param(params),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader('X-CSRFToken', me.getCsrfToken());
             }
