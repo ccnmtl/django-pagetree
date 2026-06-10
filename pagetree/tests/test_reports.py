@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from pagetree.models import Hierarchy
 from pagetree.reports import StandaloneReportColumn, PagetreeReport
 from pagetree.tests.factories import PagetreeTestCase, UserFactory
@@ -8,7 +6,7 @@ from pagetree.tests.factories import PagetreeTestCase, UserFactory
 class PagetreeReportColumnTest(PagetreeTestCase):
 
     def setUp(self):
-        super(PagetreeReportColumnTest, self).setUp()
+        super().setUp()
 
         self.column = StandaloneReportColumn('username', 'profile',
                                              'string', 'Username',
@@ -29,7 +27,7 @@ class PagetreeReportColumnTest(PagetreeTestCase):
 class PagetreeReportTest(PagetreeTestCase):
 
     def setUp(self):
-        super(PagetreeReportTest, self).setUp()
+        super().setUp()
         self.report = PagetreeReport()
         self.user = UserFactory()
 

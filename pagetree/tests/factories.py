@@ -1,6 +1,5 @@
-from __future__ import unicode_literals
-
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.test.testcases import TestCase
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.test_models import TestBlock
@@ -62,13 +61,24 @@ class ModuleFactory(object):
 
 class PagetreeTestCase(TestCase):
     def setUp(self):
-        super(PagetreeTestCase, self).setUp()
+        cache.clear()
 
         ModuleFactory("one", "/pages/one/")
         ModuleFactory("two", "/pages/two/")
 
         self.hierarchy_one = Hierarchy.objects.get(name='one')
         self.hierarchy_two = Hierarchy.objects.get(name='two')
+
+    def tearDown(self):
+        cache.clear()
+
+
+class CacheClearTestCase(TestCase):
+    def setUp(self):
+        cache.clear()
+
+    def tearDown(self):
+        cache.clear()
 
 
 class UserPageVisitFactory(factory.django.DjangoModelFactory):

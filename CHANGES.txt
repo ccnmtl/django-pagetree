@@ -1,3 +1,7 @@
+1.7.7
+==================
+* Add caching to get_root().
+
 1.7.6 (2026-06-09)
 ==================
 * Modernize python syntax in generic Pagetree classes
