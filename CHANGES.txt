@@ -1,4 +1,4 @@
-1.7.11
+1.7.11 (2026-06-12)
 ===================
 * toc.html: Avoid duplicate call to s.get_children()
 

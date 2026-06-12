@@ -479,6 +479,7 @@
         {% if previous %}
         <li class="previous page-item">
             <a href="{% url 'edit-page' previous.get_path %}"
+               title="Previous"
                aria-label="Previous">
                 &laquo; {{previous.label}}
             </a>
@@ -493,6 +494,7 @@
         {% if next_section %}
         <li class="next page-item">
             <a href="{% url 'edit-page' next_section.get_path %}"
+               title="Next"
                aria-label="Next">
                 {{next_section.label}} &raquo;
             </a>
