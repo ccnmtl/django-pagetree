@@ -1,6 +1,6 @@
-1.7.10
-==================
-* Edit page view: Add separator dot to mak pagination more clear.
+1.7.10 (2026-06-12)
+===================
+* Edit page view: Add separator dot to make pagination more clear.
 
 1.7.9 (2026-06-10)
 ==================
