@@ -7,21 +7,25 @@
 <ul class="toc">
 {% for s in section.get_descendants %}
 <li class="menu-{{s.depth}}">
-  <a href="{{s.get_absolute_url}}">{{s.label}}</a>
-  {% if s.get_children %}
-     <ul id="section-ul-{{s.id}}">
-  {% else %}
-     {% if s.is_last_child %}
-       {% for lc in s.closing_children %}
-         </ul>
-       {% endfor %}
-     {% endif %}
-  {% endif %}
+    <a href="{{s.get_absolute_url}}">{{s.label}}</a>
 
-  {% if s.get_children %}
-  {% else %}
-    </li>
-  {% endif %}
+    {% with s_children=s.get_children %}
+        {% if s_children %}
+        <ul id="section-ul-{{s.id}}">
+        {% else %}
+            {% if s.is_last_child %}
+            {% for lc in s.closing_children %}
+                </ul>
+            {% endfor %}
+            {% endif %}
+
+        {% endif %}
+
+        {% if not s_children %}
+            </li>
+        {% endif %}
+    {% endwith %}
+
 {% endfor %}
 </ul>
 

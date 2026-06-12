@@ -1,3 +1,7 @@
+1.7.11
+===================
+* toc.html: Avoid duplicate call to s.get_children()
+
 1.7.10 (2026-06-12)
 ===================
 * Edit page view: Add separator dot to make pagination more clear.
