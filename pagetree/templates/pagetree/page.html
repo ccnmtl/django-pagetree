@@ -100,10 +100,11 @@
 {% with previous=section.get_previous next_section=section.get_next %}
 
 <nav>
-    <ul class="pager pagination">
+    <ul class="pager pagination justify-content-center">
         {% if previous %}
         <li class="previous page-item">
             <a class="page-link" href="{{previous.get_absolute_url}}"
+               title="Previous"
                aria-label="Previous">
                 &laquo; {{previous.label}}
             </a>
@@ -113,6 +114,7 @@
         {% if next_section %}
         <li class="next page-item">
             <a class="page-link" href="{{next_section.get_absolute_url}}"
+               title="Next"
                aria-label="Next">
                 {{next_section.label}} &raquo;
             </a>
