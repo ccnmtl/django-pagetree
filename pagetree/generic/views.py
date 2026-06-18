@@ -244,11 +244,14 @@ class PageView(SectionMixin, View):
 
     def get(self, request, path):
         allow_redo = False
+
         needs_submit = self.section.needs_submit()
         if needs_submit:
             allow_redo = self.section.allow_redo()
+
         self.upv.visit()
         instructor_link = has_responses(self.section)
+
         context = {
             'section': self.section,
             'module': self.module,
@@ -256,9 +259,10 @@ class PageView(SectionMixin, View):
             'allow_redo': allow_redo,
             'is_submitted': self.section.submitted(request.user),
             'modules': self.root.get_children(),
-            'root': self.section.hierarchy.get_root(),
+            'root': self.root,
             'instructor_link': instructor_link,
         }
+
         context.update(self.get_extra_context())
         return render(request, self.template_name, context)
 
