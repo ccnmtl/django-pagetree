@@ -1,8 +1,9 @@
-1.7.12
+1.7.12 (2026-06-18)
 ===================
 * Pagination:
     - Add Next/Previous labels
     - Center pagination display
+* PageView.get: Avoid unnecessary get_root() call.
 
 1.7.11 (2026-06-12)
 ===================
