@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2026, Columbia Center For New Media Teaching And Learning (CCNMTL)
+# Copyright (c) 2007-2026, Columbia University Center for Teaching And Learning (CTL)
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -8,11 +8,11 @@
 #     * Redistributions in binary form must reproduce the above copyright
 #       notice, this list of conditions and the following disclaimer in the
 #       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CCNMTL nor the
+#     * Neither the name of the CTL nor the
 #       names of its contributors may be used to endorse or promote products
 #       derived from this software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY CCNMTL ``AS IS'' AND ANY
+# THIS SOFTWARE IS PROVIDED BY CTL ``AS IS'' AND ANY
 # EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 # DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
@@ -27,7 +27,7 @@ from setuptools import setup
 
 setup(
     name="django-pagetree",
-    version="1.7.12",
+    version="1.7.13",
     author="Anders Pearson",
     author_email="ctl-dev@columbia.edu",
     url="https://github.com/ccnmtl/django-pagetree",
