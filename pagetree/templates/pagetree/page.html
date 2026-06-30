@@ -23,10 +23,39 @@
 
 {% block title %}{{section.label}}{% endblock %}
 
+{% block modulebreadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">
+            <a href="/">Home</a>
+        </li>
+        {% with parent=section.get_parent %}
+
+        {% with grandparent=parent.get_parent %}
+        {% if grandparent %}
+        <li class="breadcrumb-item">
+            <a href="{{ grandparent.get_absolute_url }}">{{ grandparent.label }}</a>
+        </li>
+        {% endif %}
+        {% endwith %}
+
+        {% if parent %}
+        <li class="breadcrumb-item">
+            <a href="{{ parent.get_absolute_url }}">{{ parent.label }}</a>
+        </li>
+        {% endif %}
+        {% endwith %}
+
+        <li class="breadcrumb-item active" aria-current="page">
+            {{ section.label }}
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
 {% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
 
 {% block moduletabs %}
-
 <ul class="nav navbar-nav">
   {% for section in modules %}
   <li {% if section.id == module.id %}class="active"{% endif %}>
@@ -34,7 +63,6 @@
   </li>
   {% endfor %}
 </ul>
-
 {% endblock %}
 
 {% block navrightextra %}
