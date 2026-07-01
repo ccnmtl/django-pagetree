@@ -270,7 +270,7 @@
     {% with block=pageblock %}
     <div class="modal fade block-edit" id="edit-pageblock-{{pageblock.id}}"
          role="dialog" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit {{pageblock.block.display_name}}</h5>
@@ -363,7 +363,7 @@
 
     <div class="modal fade" id="add-block-{{forloop.counter}}"
          role="dialog" aria-hidden="true" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{% url 'add-pageblock' section.id %}"
                       {% if blocktype.add_form.is_multipart %}
