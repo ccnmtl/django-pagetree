@@ -1,3 +1,7 @@
+1.7.15
+===================
+* "edit page" button: Remove unnecessary styling, and only show for staff.
+
 1.7.14 (2026-07-01)
 ===================
 * Use modal-lg for large bootstrap modals.
