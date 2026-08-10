@@ -1,2 +1,2 @@
 # Used by readthedocs.org to build the documentation
-Django>=6.0.7,<7
+Django>=6.1,<7
