@@ -8,7 +8,7 @@ pep8==1.7.1
 pyflakes==4.0.1
 Faker==40.40.0
 factory_boy==3.3.3
-pycodestyle==2.14.0
+pycodestyle==2.15.0
 mccabe==0.7.0
 python-dateutil==2.9.0.post0
 text-unidecode==1.3
