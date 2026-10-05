@@ -2,7 +2,7 @@ django-treebeard==7.0.2
 importlib-metadata==9.0.1  # for flake8
 typing_extensions==4.16.0
 zipp==4.1.0  # for flake8
-flake8==7.3.0
+flake8==7.4.1
 django-jenkins==0.110.0
 pep8==1.7.1
 pyflakes==4.0.1
